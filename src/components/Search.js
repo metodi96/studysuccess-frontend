@@ -10,7 +10,8 @@ import { Link } from 'react-router-dom';
 const useStyles = makeStyles(() => ({
     inputRoot: {
         width: 500,
-        height:60,
+        height: 40,
+        borderRadius: 10,
         color: "black",
         backgroundColor: "#f2f2f2",
         "& .MuiOutlinedInput-notchedOutline": {
@@ -55,6 +56,7 @@ function Search() {
     return (
         <div>
             <Autocomplete
+                size='small'
                 onChange={handleAutocomplete}
                 fullWidth={false}
                 disableClearable
@@ -68,7 +70,7 @@ function Search() {
                         onChange={handleSearchInput}
                         InputProps={{ ...params.InputProps, type: 'search', 
                         endAdornment: (
-                            <IconButton disabled={disabled} component={Link} to="/tutors" aria-label="search">
+                            <IconButton disabled={disabled} size='small' component={Link} to="/tutors" aria-label="search">
                                 <SearchIcon />
                             </IconButton>
                           )
