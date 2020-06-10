@@ -1,9 +1,9 @@
 ## Step 1: 
-### npm start // to start the frontend component
+npm start // to start the frontend component
 ## Step 2: 
-### npm install bootstrap // used for styling
+npm install bootstrap // used for styling
 ## Step 3: 
-### npm install react-router-dom // set up the react router (to route different urls to different react components)
+npm install react-router-dom // set up the react router (to route different urls to different react components)
 
 
 
