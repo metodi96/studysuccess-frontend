@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
-function TutorsView() {
+function TutorsView({ match }) {
     const [tutors, setTutors] = useState([]);
     useEffect(() => {
         axios
-            .get("http://localhost:5000/tutors")
+            .get(`http://localhost:5000/tutors/${match.params.subjectId}`)
             .then(res => {
                 setTutors(res.data);
             })
@@ -15,9 +15,8 @@ function TutorsView() {
     });
     return (
         <div>
-            <p>Test</p>
             <ul>
-                {tutors.map(tutor => <li key={tutor._id}>{tutor.firstname}</li>)}
+    {tutors.map(tutor => <li key={tutor._id}>{tutor.firstname} {tutor.lastname}</li>)}
             </ul>
         </div>
     )

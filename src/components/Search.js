@@ -15,23 +15,24 @@ const useStyles = makeStyles(() => ({
         color: "black",
         backgroundColor: "#f2f2f2",
         "& .MuiOutlinedInput-notchedOutline": {
-          borderWidth: "1px",
-          borderColor: "grey"
+            borderWidth: "1px",
+            borderColor: "grey"
         },
         "&:hover .MuiOutlinedInput-notchedOutline": {
-          borderWidth: "1px",
-          borderColor: "grey"
+            borderWidth: "1px",
+            borderColor: "grey"
         },
         "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-          borderWidth: "1px",
-          borderColor: "grey"
+            borderWidth: "1px",
+            borderColor: "grey"
         }
-      }
+    }
 }));
 
 function Search() {
     const [subjects, setSubjects] = useState([]);
-    const [disabled, setDisabled] = useState(true)
+    const [disabled, setDisabled] = useState(true);
+    const [subjectId, setSubjectId] = useState({});
     const classes = useStyles();
 
     useEffect(() => {
@@ -46,11 +47,25 @@ function Search() {
     });
 
     const handleSearchInput = event => {
-        subjects.map((subject) => subject.name).indexOf(event.target.value) >= 0 ? setDisabled(false) : setDisabled(true);
+        subjects.forEach(subject => {
+            if (subject.name === event.target.value) {
+                setDisabled(false);
+                setSubjectId(subject._id);
+            } else {
+                setDisabled(false);
+            }
+        });
     }
 
     const handleAutocomplete = (event, value) => {
-        subjects.map((subject) => subject.name).indexOf(value) >= 0 ? setDisabled(false) : setDisabled(true);
+        subjects.forEach(subject => {
+            if (subject.name === value) {
+                setDisabled(false);
+                setSubjectId(subject._id);
+            } else {
+                setDisabled(false);
+            }
+        });
     }
 
     return (
@@ -68,18 +83,23 @@ function Search() {
                         {...params}
                         variant="outlined"
                         onChange={handleSearchInput}
-                        InputProps={{ ...params.InputProps, type: 'search', 
-                        endAdornment: (
-                            <IconButton disabled={disabled} size='small' component={Link} to="/tutors" aria-label="search">
-                                <SearchIcon />
-                            </IconButton>
-                          )
+                        InputProps={{
+                            ...params.InputProps, type: 'search',
+                            endAdornment: (
+                                <IconButton disabled={disabled}
+                                    size='small'
+                                    component={Link}
+                                    to={`/tutors/${subjectId}`}
+                                    aria-label="search">
+                                    <SearchIcon />
+                                </IconButton>
+                            )
                         }}
                     />
                 )}
             />
-            
-            
+
+
         </div>
     )
 }
