@@ -47,23 +47,21 @@ function Search() {
     });
 
     const handleSearchInput = event => {
+        setDisabled(true);
         subjects.forEach(subject => {
             if (subject.name === event.target.value) {
                 setDisabled(false);
                 setSubjectId(subject._id);
-            } else {
-                setDisabled(false);
             }
         });
     }
 
     const handleAutocomplete = (event, value) => {
+        setDisabled(true);
         subjects.forEach(subject => {
             if (subject.name === value) {
                 setDisabled(false);
                 setSubjectId(subject._id);
-            } else {
-                setDisabled(false);
             }
         });
     }
