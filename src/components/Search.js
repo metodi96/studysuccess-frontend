@@ -43,8 +43,8 @@ function Search() {
             })
             .catch(err => {
                 console.log(err);
-            })
-    });
+            });
+    }, []);
 
     const handleSearchInput = event => {
         setDisabled(true);
