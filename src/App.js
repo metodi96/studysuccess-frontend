@@ -3,18 +3,24 @@ import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import './App.css';
 import MainView from './views/MainView'
 import TutorsView from './views/TutorsView'
+import SignUpView from './views/SignUpView';
+
+//import Navbar from './components/Navbar.js' <Navbar /> 
 
 function App() {
     return (
-      <div>
-        <Router>
+      <div className='container'>        
+        <Router>                 
+          <br/>
           <Switch>
-            <Route path='/' exact component={MainView} />
+            <Route path='/homepage' exact component={MainView} />
             <Route path='/tutors/:subjectId' component={TutorsView} />
-          </Switch>
+            <Route path='/'component={SignUpView} />
+          </Switch>          
         </Router>
       </div>
     );
 }
 
 export default App;
+
