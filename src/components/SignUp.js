@@ -21,86 +21,88 @@ const validationSchema = Yup.object({
     university: Yup.string().required('This field is obligatory')
 })
 
-function SignUpForm() {
-    
+function SignUp() {
+
     const onSubmit = values => {
-            axios.post('http://localhost:5000/signup', values)
+        axios.post('http://localhost:5000/signup', values)
             .then(res => console.log(res.data))
             .catch(err => {
                 console.log(`Something went wrong ${err}`);
             })
     }
-  //console.log('Errors', formik.errors)  console.log('Visited fields', formik.touched)
+    //console.log('Errors', formik.errors)  console.log('Visited fields', formik.touched)
 
     return (
         <Formik
             initialValues={initialValues}
             validationSchema={validationSchema}
+            validateOnBlur={false}
+            validateOnChange={false}
             onSubmit={onSubmit}>
             <Form>
                 <div className='form-control'>
-                <label htmlFor='firstname'></label> 
-                <Field 
-                type='text' 
-                id='firstname' 
-                name='firstname' 
-                placeholder='First name'
-                />
-                <ErrorMessage name='firstname' component={TextError} />
+                    <label htmlFor='firstname'></label>
+                    <Field
+                        type='text'
+                        id='firstname'
+                        name='firstname'
+                        placeholder='First name'
+                    />
+                    <ErrorMessage name='firstname' component={TextError} />
                 </div>
 
                 <div className='form-control'>
-                <label htmlFor='lastname'></label>
-                <Field 
-                type='text' 
-                id='lastname' 
-                name='lastname' 
-                placeholder='Last name'
-                />
-                <ErrorMessage name='lastname' component={TextError} />
+                    <label htmlFor='lastname'></label>
+                    <Field
+                        type='text'
+                        id='lastname'
+                        name='lastname'
+                        placeholder='Last name'
+                    />
+                    <ErrorMessage name='lastname' component={TextError} />
                 </div>
 
                 <div className='form-control'>
-                <label htmlFor='email'></label>
-                <Field 
-                type='email' 
-                id='email' 
-                name='email' 
-                placeholder='Email'
-                />
-                <ErrorMessage name='email'>
-                    {errorMsg => <div className='error'>{errorMsg}</div>}                    
-                </ErrorMessage>                           
+                    <label htmlFor='email'></label>
+                    <Field
+                        type='email'
+                        id='email'
+                        name='email'
+                        placeholder='Email'
+                    />
+                    <ErrorMessage name='email'>
+                        {errorMsg => <div className='error'>{errorMsg}</div>}
+                    </ErrorMessage>
                 </div>
 
                 <div className='form-control'>
-                <label htmlFor='password'></label>
-                <Field 
-                type='password' 
-                id='password' 
-                name='password' 
-                placeholder='Password'
-                />
-                <ErrorMessage name='password'>
-                    {errorMsg => <div className='error'>{errorMsg}</div>}                    
-                </ErrorMessage>                           
+                    <label htmlFor='password'></label>
+                    <Field
+                        type='password'
+                        id='password'
+                        name='password'
+                        placeholder='Password'
+                    />
+                    <ErrorMessage name='password'>
+                        {errorMsg => <div className='error'>{errorMsg}</div>}
+                    </ErrorMessage>
                 </div>
 
                 <div className='form-control'>
-                <label htmlFor='university'></label>
-                <Field 
-                type='text' 
-                id='university' 
-                name='university' 
-                placeholder='University'
-                />
-                <ErrorMessage name='university' component={TextError} />
+                    <label htmlFor='university'></label>
+                    <Field
+                        type='text'
+                        id='university'
+                        name='university'
+                        placeholder='University'
+                    />
+                    <ErrorMessage name='university' component={TextError} />
                 </div>
 
                 <button type='submit'>Submit</button>
-            </Form>    
+            </Form>
         </Formik>
     )
 }
 
-export default SignUpForm
+export default SignUp
