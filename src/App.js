@@ -3,7 +3,7 @@ import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import './App.css';
 import MainView from './views/MainView'
 import TutorsView from './views/TutorsView'
-import SignUpView from './views/SignUpView';
+import LogInView from './views/LogInView';
 
 //import Navbar from './components/Navbar.js' <Navbar /> 
 
@@ -13,9 +13,10 @@ function App() {
         <Router>                 
           <br/>
           <Switch>
-            <Route path='/homepage' exact component={MainView} />
+            <Route path='/'exact component={MainView} />
+            <Route path='/auth/login' component={LogInView} />
             <Route path='/tutors/:subjectId' component={TutorsView} />
-            <Route path='/'component={SignUpView} />
+            <Route path='*' component={MainView} />
           </Switch>          
         </Router>
       </div>
