@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import UserService from '../services/UserService'
 import axios from 'axios';
+import CurrentBooking from '../components/CurrentBooking'
 
 function CurrentBookingsView(props) {
     const [bookings, setBookings] = useState(undefined);
@@ -36,8 +37,9 @@ function CurrentBookingsView(props) {
                     <div>
                         {
                             <p>Hello {UserService.getCurrentUser().email}!
-                        Your first booking is tutored by: {bookings[0].tutor.firstname}</p>
+                            Your first booking is tutored by: {bookings[0].tutor.firstname}</p>
                         }
+                        { bookings.map((booking) => <CurrentBooking key={booking._id} booking={booking} />) }
                     </div>
                 )
             } else {
