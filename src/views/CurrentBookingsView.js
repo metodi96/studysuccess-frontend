@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react'
 import UserService from '../services/UserService'
 import axios from 'axios';
 import CurrentBooking from '../components/CurrentBooking'
+import styles from './currentBookingsStyles.module.css'
 
 function CurrentBookingsView(props) {
     const [bookings, setBookings] = useState(undefined);
@@ -35,11 +36,14 @@ function CurrentBookingsView(props) {
             if (bookings.length > 0) {
                 return (
                     <div>
+                        <h3 className={styles.heading}>You have {bookings.length} scheduled lessons.</h3>
+                        <div className={styles.container}>
                         {
                             <p>Hello {UserService.getCurrentUser().email}!
                             Your first booking is tutored by: {bookings[0].tutor.firstname}</p>
                         }
                         { bookings.map((booking) => <CurrentBooking key={booking._id} booking={booking} />) }
+                        </div>
                     </div>
                 )
             } else {
