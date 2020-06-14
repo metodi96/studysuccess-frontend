@@ -11,6 +11,7 @@ function CurrentBookingsView(props) {
     useEffect(() => {
         setToken(window.localStorage.getItem('jwtToken'));
         if (window.localStorage.getItem('jwtToken') !== null) {
+            console.log(token)
             axios
                 .get('http://localhost:5000/bookings/current', {
                     headers: {
@@ -38,14 +39,13 @@ function CurrentBookingsView(props) {
                     <div>
                         <h3 className={styles.heading}>You have {bookings.length} scheduled lessons.</h3>
                         <div className={styles.container}>
-                        { bookings.map((booking) => (<div className={styles.currentBooking}><CurrentBooking key={booking._id} booking={booking} /></div>)) }
+                        { bookings.map((booking) => (<div key={booking._id} className={styles.currentBooking}><CurrentBooking booking={booking} /></div>)) }
                         </div>
                     </div>
                 )
             } else {
                 return (
                     <div>
-                        {console.log(token)}
                         <p>You currently don't have any bookings.</p>
                     </div>
                 )

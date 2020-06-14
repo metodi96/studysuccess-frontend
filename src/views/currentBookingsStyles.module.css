@@ -1,5 +1,5 @@
 .container {
-    background-color: honeydew;
+    background-color: rgba(152, 158, 157, 0.438);
     margin-left: 200px;
     margin-right: 200px;
 }
@@ -10,7 +10,7 @@
 }
 
 .currentBooking {
-    margin-left: 50px;
+    margin-left: 100px;
     margin-right: 50px;
     display: inline-block;
     margin-bottom: 50px;
