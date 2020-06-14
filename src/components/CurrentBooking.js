@@ -19,6 +19,7 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import axios from 'axios';
+import moment from 'moment'
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -97,7 +98,7 @@ function CurrentBooking({ booking }) {
                             <EventBusySharpIcon color='primary' />
                         </Avatar>
                     </ListItemAvatar>
-                    <ListItemText primary="Date and time" secondary={`${booking.timeslotStart} - ${booking.timeslotEnd}`} />
+                    <ListItemText primary="Date and time" secondary={`${moment(booking.timeslotStart).format("dddd, MMMM Do YYYY, h:mm a")} - ${moment(booking.timeslotEnd).format("dddd, MMMM Do YYYY, h:mm a")}`} />
                 </ListItem>
                 <Divider variant="inset" component="li" />
                 <ListItem>
@@ -143,8 +144,8 @@ function CurrentBooking({ booking }) {
                         <DialogTitle id="alert-dialog-title">{"Are you sure you want to cancel this booking?"}</DialogTitle>
                         <DialogContent>
                             <DialogContentText id="alert-dialog-description">
-                                This booking is for the subject {booking.subject.name} and is scheduled for {booking.timeslotStart} until {booking.timeslotEnd}.
-                                The tutor is {booking.tutor.firstname} {booking.tutor.lastname}.
+                                This booking is for the subject <b>{booking.subject.name}</b> and is scheduled for <b>{moment(booking.timeslotStart).format("dddd, MMMM Do YYYY, h:mm a")}</b> until <b>{moment(booking.timeslotEnd).format("dddd, MMMM Do YYYY, h:mm a")}</b>.
+                                The tutor is <b>{booking.tutor.firstname} {booking.tutor.lastname}</b>.
                             </DialogContentText>
                         </DialogContent>
                         <DialogActions>
