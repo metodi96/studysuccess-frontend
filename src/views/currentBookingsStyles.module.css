@@ -8,3 +8,11 @@
     margin-left: 200px;
     margin-top: 100px;
 }
+
+.currentBooking {
+    margin-left: 50px;
+    margin-right: 50px;
+    display: inline-block;
+    margin-bottom: 50px;
+    margin-top: 20px;
+} 

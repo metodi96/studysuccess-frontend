@@ -16,7 +16,7 @@ function TutorsView({ match }) {
     return (
         <div>
             <ul>
-    {tutors.map(tutor => <li key={tutor._id}>{tutor.firstname} {tutor.lastname}</li>)}
+                {tutors.map(tutor => <li key={tutor._id}>{tutor.firstname} {tutor.lastname}</li>)}
             </ul>
         </div>
     )

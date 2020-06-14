@@ -38,18 +38,14 @@ function CurrentBookingsView(props) {
                     <div>
                         <h3 className={styles.heading}>You have {bookings.length} scheduled lessons.</h3>
                         <div className={styles.container}>
-                        {
-                            <p>Hello {UserService.getCurrentUser().email}!
-                            Your first booking is tutored by: {bookings[0].tutor.firstname}</p>
-                        }
-                        { bookings.map((booking) => <CurrentBooking key={booking._id} booking={booking} />) }
+                        { bookings.map((booking) => (<div className={styles.currentBooking}><CurrentBooking key={booking._id} booking={booking} /></div>)) }
                         </div>
                     </div>
                 )
             } else {
                 return (
                     <div>
-                        {console.log(UserService.getCurrentUser())}
+                        {console.log(token)}
                         <p>You currently don't have any bookings.</p>
                     </div>
                 )
