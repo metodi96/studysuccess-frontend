@@ -5,13 +5,10 @@ import Typography from '@material-ui/core/Typography';
 import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
 import { makeStyles } from '@material-ui/core/styles';
-import Button from '@material-ui/core/Button';
 
 const useStylesNavBar = makeStyles((theme) => ({
     root: {
-        flexGrow: 1,
-        marginTop: '-10px',
-        marginLeft: '-5px',
+        flexGrow: 1
     },
     menuButton: {
         marginRight: theme.spacing(2),
@@ -27,7 +24,7 @@ function NavBar() {
 
     return (
         <div>
-            <AppBar position="static" className={classes.root}>
+            <AppBar position="fixed" className={classes.root}>
                 <Toolbar>
                     <IconButton edge="start" className={classes.menuButton} color="inherit" aria-label="menu">
                         <MenuIcon />
@@ -35,7 +32,6 @@ function NavBar() {
                     <Typography variant="h6" className={classes.title}>
                         News
                     </Typography>
-                    <Button color="inherit">Login</Button>
                 </Toolbar>
             </AppBar>
         </div>

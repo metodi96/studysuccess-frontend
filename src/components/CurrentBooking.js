@@ -103,9 +103,14 @@ function CurrentBooking({ booking }) {
                 <Divider variant="inset" component="li" />
                 <ListItem>
                     <ListItemAvatar>
-                        <Avatar classes={classesAvatar}>
-                            <PersonOutlineSharpIcon color='primary' />
-                        </Avatar>
+                        {
+                            booking.tutor.userImage ?
+                                <Avatar alt="Remy Sharp" src='http://localhost:5000/uploads/joseph.png' />
+                                :
+                                <Avatar classes={classesAvatar}>
+                                    <PersonOutlineSharpIcon color='primary' />
+                                </Avatar>
+                        }
                     </ListItemAvatar>
                     <ListItemText primary="Tutor" secondary={booking.tutor.firstname} />
                 </ListItem>

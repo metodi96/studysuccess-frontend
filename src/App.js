@@ -13,6 +13,7 @@ function App() {
     return (
       <div className='container'>    
         <NavBar />    
+        <div className='routerContainer'>
         <Router>                 
           <br/>
           <Switch>
@@ -23,6 +24,7 @@ function App() {
             <Route path='*' component={MainView} />
           </Switch>          
         </Router>
+        </div>
       </div>
     );
 }
