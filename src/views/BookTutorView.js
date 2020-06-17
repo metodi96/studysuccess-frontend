@@ -14,6 +14,7 @@ import ShareIcon from '@material-ui/icons/Share';
 import { makeStyles } from '@material-ui/core/styles';
 import Rating from '@material-ui/lab/Rating';
 import styles from './bookTutor.module.css'
+import BookTutor from '../components/BookTutor'
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -78,7 +79,7 @@ function BookTutorView(props) {
     if (UserService.isAuthenticated()) {
         if (!loading) {
             return (
-                <div>
+                <div className={styles.container}>
                     <Card className={classes.root}>
                         <CardHeader
                             title={`${tutor.firstname} ${tutor.lastname}`}
@@ -99,18 +100,23 @@ function BookTutorView(props) {
                                 Tutor for {
                                     Object.values(tutor.subjectsToTeach).map((value, i) => (
                                         <span key={i}>{tutor.subjectsToTeach.length - 1 === i ? <b>{`${value.name}.`}</b> : <b>{`${value.name}, `}</b>}</span>
-                                    ))}
+                                    ))
+                                }
                             </Typography>
                         </CardContent>
                         <CardActions disableSpacing>
-                            <IconButton aria-label="add to favorites">
+                            <IconButton disabled aria-label="add to favorites">
                                 <FavoriteIcon />
                             </IconButton>
-                            <IconButton aria-label="share">
+                            <IconButton disabled aria-label="share">
                                 <ShareIcon />
                             </IconButton>
                         </CardActions>
                     </Card>
+                    <div className={styles.availability}>
+                        <h2>Book an online lesson</h2>
+                        <BookTutor tutor={tutor} />
+                    </div>
                 </div>
             )
         } else {
