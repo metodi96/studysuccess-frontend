@@ -19,6 +19,7 @@ import BookTutor from '../components/BookTutor'
 const useStyles = makeStyles((theme) => ({
     root: {
         maxWidth: 345,
+        minWidth: 345
     },
     media: {
         height: 0,
@@ -115,7 +116,7 @@ function BookTutorView(props) {
                     </Card>
                     <div className={styles.availability}>
                         <h2>Book an online lesson</h2>
-                        <BookTutor tutor={tutor} />
+                        <BookTutor tutor={tutor} subjectId={subjectId} />
                     </div>
                 </div>
             )
