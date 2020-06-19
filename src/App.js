@@ -7,6 +7,7 @@ import LogInView from './views/LogInView';
 import CurrentBookingsView from './views/CurrentBookingsView';
 import NavBar from './components/NavBar'
 import BookTutorView from './views/BookTutorView';
+import BookingAddSuccessView from './views/BookingAddSuccessView';
 
 //import Navbar from './components/Navbar.js' <Navbar /> 
 
@@ -23,6 +24,7 @@ function App() {
             <Route path='/tutors/:subjectId' exact component={TutorsView} />
             <Route path='/tutors/:subjectId/:tutorId' exact component={BookTutorView} />
             <Route path='/bookings/current' component={CurrentBookingsView} />
+            <Route path='/bookings/success' component={BookingAddSuccessView} />
             <Route path='*' component={MainView} />
           </Switch>          
         </Router>

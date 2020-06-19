@@ -75,7 +75,7 @@ function BookTutor({ tutor, subjectId }) {
         setSelectedTimeslot(event.target.value);
         setDisabled(false);
         console.log(event.target.value)
-        if (event.target.value !== null) {
+        if (event.target.value !== undefined) {
             setTimeslotStart(new Date(selectedDate.year(), selectedDate.month(), selectedDate.date(), event.target.value.substring(0, 2), event.target.value.substring(3, 5)))
             setTimeslotEnd(new Date(selectedDate.year(), selectedDate.month(), selectedDate.date(), event.target.value.substring(6, 8), event.target.value.substring(9, 11)))
         }
@@ -105,27 +105,35 @@ function BookTutor({ tutor, subjectId }) {
 
     const onSubmit = values => {
         setToken(window.localStorage.getItem('jwtToken'));
-        console.log(selectedDate.date())
         if (window.localStorage.getItem('jwtToken') !== null) {
-            console.log(token);
-            axios.post('http://localhost:5000/bookings/add',
+            const headers = {
+                Authorization: `Bearer ${token.slice(10, -2)}`
+            }
+            console.log(headers)
+            axios.post('http://localhost:5000/bookings/pay',
                 {
+                    firstname: tutor.firstname,
+                    lastname: tutor.lastname,
+                    price: tutor.pricePerHour,
                     timeslotStart: timeslotStart,
                     timeslotEnd: timeslotEnd,
                     participantNumber: values.participantNumber,
                     tutor: tutor._id,
-                    subject: subjectId
+                    subject: subjectId,
                 },
                 {
-                    headers: {
-                        Authorization: `Bearer ${token.slice(10, -2)}`
+                    headers: headers,
+                    maxRedirects: 0
+                })
+                .then(res => {
+                    if (res.status === 200) {
+                        console.log('WE PASSED THE FIRST REQUEST')
+                        console.log(res.data);
+                        window.location = res.data.forwardLink;
                     }
                 })
-                .then(res => console.log(res.data))
                 .catch(err => {
-                    console.log(timeslotStart)
-                    console.log(timeslotEnd)
-                    console.log(`Something went wrong ${err}`);
+                    console.log(`Something went wrong with payment ${err}`);
                 })
         }
     }
