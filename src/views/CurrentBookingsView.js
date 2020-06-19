@@ -39,7 +39,7 @@ function CurrentBookingsView(props) {
                     <div>
                         <h3 className={styles.heading}>You have {bookings.length} scheduled lessons.</h3>
                         <div className={styles.container}>
-                        { bookings.map((booking) => (<div key={booking._id} className={styles.currentBooking}><CurrentBooking booking={booking} /></div>)) }
+                        { bookings.sort((bookingA, bookingB) => bookingB.createdAt.localeCompare(bookingA.createdAt)).map((booking) => (<div key={booking._id} className={styles.currentBooking}><CurrentBooking booking={booking} /></div>)) }
                         </div>
                     </div>
                 )

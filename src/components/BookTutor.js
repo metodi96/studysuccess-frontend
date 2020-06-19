@@ -16,12 +16,15 @@ import FormLabel from '@material-ui/core/FormLabel';
 
 const useStyles = makeStyles(() => ({
     root: {
-        width: 800,
-        height: 500,
+        maxWidth: 1200,
+        maxHeight: 500,
         border: '1px solid black',
         borderRadius: '10px',
         backgroundColor: 'white',
-        justifyContent: 'center'
+        justifyContent: 'center',
+        paddingTop: '20px',
+        paddingBottom: '20px',
+        marginBottom: '5px'
     }
 }));
 
@@ -37,7 +40,8 @@ const useStylesDatePicker = makeStyles(() => ({
 const useStylesButton = makeStyles(() => ({
     root: {
         justifyContent: 'center',
-        display: 'flex'
+        display: 'flex',
+        maxHeight: '300px'
     }
 }));
 
@@ -104,6 +108,7 @@ function BookTutor({ tutor, subjectId }) {
     };
 
     const onSubmit = values => {
+        setDisabled(true);
         setToken(window.localStorage.getItem('jwtToken'));
         if (window.localStorage.getItem('jwtToken') !== null) {
             const headers = {
@@ -142,14 +147,14 @@ function BookTutor({ tutor, subjectId }) {
         <div>
             {
                 !loading ?
-                    <Box classes={classesBox}>
-                        <div style={{ padding: 20 }}>
-                            <Formik
-                                initialValues={initialValues}
-                                validateOnBlur={false}
-                                validateOnChange={false}
-                                onSubmit={onSubmit}>
-                                <Form>
+                    <Formik
+                        initialValues={initialValues}
+                        validateOnBlur={false}
+                        validateOnChange={false}
+                        onSubmit={onSubmit}>
+                        <Form>
+                            <Box classes={classesBox}>
+                                <div style={{ padding: 20 }}>
                                     <MuiPickersUtilsProvider utils={MomentUtils}>
                                         <Grid container
                                             alignItems="center"
@@ -163,6 +168,7 @@ function BookTutor({ tutor, subjectId }) {
                                                 format="DD.MM.YYYY"
                                                 value={selectedDate}
                                                 onChange={handleDateChange}
+                                                maxDate={new Date(moment().year(), 11, 31)}
                                             />
                                         </Grid>
                                     </MuiPickersUtilsProvider>
@@ -202,17 +208,20 @@ function BookTutor({ tutor, subjectId }) {
                                             </RadioGroup>
                                         </FormControl>
                                     </div>
-                                    <div className={classesButton.root}>
-                                        <Button
-                                            disabled={disabled}
-                                            variant="outlined"
-                                            type="submit"
-                                        >Book tutorial</Button>
-                                    </div>
-                                </Form>
-                            </Formik>
-                        </div>
-                    </Box> :
+
+                                </div>
+                            </Box>
+                            <Box classes={classesBox}>
+                                <div className={classesButton.root}>
+                                    <Button
+                                        disabled={disabled}
+                                        variant="outlined"
+                                        type="submit"
+                                    >Book tutorial</Button>
+                                </div>
+                            </Box>
+                        </Form>
+                    </Formik> :
                     <p>Loading form...</p>
             }
 
