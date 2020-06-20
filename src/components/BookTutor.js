@@ -18,8 +18,7 @@ const useStyles = makeStyles(() => ({
     root: {
         maxWidth: 1200,
         maxHeight: 500,
-        border: '1px solid black',
-        borderRadius: '10px',
+        borderRadius: '5px',
         backgroundColor: 'white',
         justifyContent: 'center',
         paddingTop: '20px',
@@ -75,10 +74,8 @@ function BookTutor({ tutor, subjectId }) {
     };
 
     const handleRadioClick = (event) => {
-
         setSelectedTimeslot(event.target.value);
         setDisabled(false);
-        console.log(event.target.value)
         if (event.target.value !== undefined) {
             setTimeslotStart(new Date(selectedDate.year(), selectedDate.month(), selectedDate.date(), event.target.value.substring(0, 2), event.target.value.substring(3, 5)))
             setTimeslotEnd(new Date(selectedDate.year(), selectedDate.month(), selectedDate.date(), event.target.value.substring(6, 8), event.target.value.substring(9, 11)))
@@ -92,6 +89,7 @@ function BookTutor({ tutor, subjectId }) {
     const handleDateChange = (date) => {
         if (!loading) {
             setSelectedDate(date);
+            setThereIsRadio(false);
             tutor.timePreferences.map((timePreference, index, timePreferences) => {
                 if (timePreference.day !== date.day() && !disabled) {
                     setDisabled(true);
@@ -195,9 +193,8 @@ function BookTutor({ tutor, subjectId }) {
                                                                 />
                                                             </div>
                                                         }
+                                                        //first condition to display message only once
                                                         else if (index === timePreferences.length - 1 && (timePreference.day !== selectedDate.day() || timePreference === null) && disabled && !thereIsRadio) {
-                                                            console.log(timePreference.day)
-                                                            console.log(selectedDate.day())
                                                             return <div key={index}>
                                                                 <p>Sorry, I am not available on the selected date, please choose another.</p>
                                                             </div>
