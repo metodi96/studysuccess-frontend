@@ -55,6 +55,7 @@ function BookTutor({ tutor, subjectId }) {
     const [timeslotStart, setTimeslotStart] = useState('');
     const [timeslotEnd, setTimeslotEnd] = useState('');
     const [loading, setLoading] = useState(true);
+    const [week, setWeek] = useState(-1);
 
     const initialValues = {
         timeslotStart: '',
@@ -89,6 +90,7 @@ function BookTutor({ tutor, subjectId }) {
     const handleDateChange = (date) => {
         if (!loading) {
             setSelectedDate(date);
+            setWeek(date.week())
             setThereIsRadio(false);
             tutor.timePreferences.map((timePreference, index, timePreferences) => {
                 if (timePreference.day !== date.day() && !disabled) {
@@ -123,6 +125,7 @@ function BookTutor({ tutor, subjectId }) {
                     participantNumber: values.participantNumber,
                     tutor: tutor._id,
                     subject: subjectId,
+                    week: week
                 },
                 {
                     headers: headers,
@@ -130,7 +133,6 @@ function BookTutor({ tutor, subjectId }) {
                 })
                 .then(res => {
                     if (res.status === 200) {
-                        console.log('WE PASSED THE FIRST REQUEST')
                         console.log(res.data);
                         window.location = res.data.forwardLink;
                     }
@@ -182,7 +184,7 @@ function BookTutor({ tutor, subjectId }) {
                                             >
                                                 {
                                                     tutor.timePreferences.map((timePreference, index, timePreferences) => {
-                                                        if (timePreference.day === selectedDate.day()) {
+                                                        if (timePreference.day === selectedDate.day() && (tutor.busyOnWeek === undefined || !tutor.busyOnWeek.includes(selectedDate.week()))) {
                                                             return <div key={index}>
                                                                 <FormControlLabel
                                                                     name={`${timePreference.startTime.hours}:${timePreference.startTime.minutes}-${timePreference.endTime.hours}:${timePreference.endTime.minutes}${index}`}
@@ -194,7 +196,7 @@ function BookTutor({ tutor, subjectId }) {
                                                             </div>
                                                         }
                                                         //first condition to display message only once
-                                                        else if (index === timePreferences.length - 1 && (timePreference.day !== selectedDate.day() || timePreference === null) && disabled && !thereIsRadio) {
+                                                        else if (index === timePreferences.length - 1 && (timePreference.day !== selectedDate.day() || timePreference === null || tutor.busyOnWeek.includes(selectedDate.week())) && disabled && !thereIsRadio) {
                                                             return <div key={index}>
                                                                 <p>Sorry, I am not available on the selected date, please choose another.</p>
                                                             </div>

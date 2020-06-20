@@ -10,6 +10,7 @@ function BookingAddSuccessView(props) {
         setToken(window.localStorage.getItem('jwtToken'));
         if (window.localStorage.getItem('jwtToken') !== null) {
             console.log(token)
+            // to be added behind /success
             axios
                 .get(`http://localhost:5000/bookings/success${props.location.search}`, {
                     headers: {
@@ -22,6 +23,7 @@ function BookingAddSuccessView(props) {
                     props.history.push('/bookings/current')
                 })
                 .catch(err => {
+                    console.log('Something went wrong')
                     console.log(err);
                 })
         }
