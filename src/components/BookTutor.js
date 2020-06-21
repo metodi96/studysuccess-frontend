@@ -47,6 +47,7 @@ const useStylesButton = makeStyles(() => ({
 
 
 function BookTutor({ tutor, subjectId }) {
+    const [timePreferences, setTimePreferences] = useState([]);
     const [selectedDate, setSelectedDate] = useState(moment());
     const [selectedTimeslot, setSelectedTimeslot] = useState(null);
     const [disabled, setDisabled] = useState(true);
@@ -56,6 +57,7 @@ function BookTutor({ tutor, subjectId }) {
     const [timeslotEnd, setTimeslotEnd] = useState('');
     const [loading, setLoading] = useState(true);
     const [week, setWeek] = useState(-1);
+    const [timePreferenceId, setTimePreferenceId] = useState('');
 
     const initialValues = {
         timeslotStart: '',
@@ -66,8 +68,17 @@ function BookTutor({ tutor, subjectId }) {
     }
 
     useEffect(() => {
-        setLoading(false);
-    }, [])
+        axios.get(`http://localhost:5000/tutors/${tutor._id}/timePreferences`)
+        .then(res => {
+            if (res.status === 200) {
+                setTimePreferences(res.data);
+                setLoading(false);
+            }
+        })
+        .catch(err => {
+            console.log(`Something went wrong with getting time preferences ${err}`);
+        })
+    }, [tutor._id])
 
     const handleTimeslotChange = (event) => {
         setSelectedTimeslot(event.target.value);
@@ -77,7 +88,8 @@ function BookTutor({ tutor, subjectId }) {
     const handleRadioClick = (event) => {
         setSelectedTimeslot(event.target.value);
         setDisabled(false);
-        if (event.target.value !== undefined) {
+        if (event.target.value !== undefined && event.target.name !== undefined) {
+            setTimePreferenceId(event.target.name);
             setTimeslotStart(new Date(selectedDate.year(), selectedDate.month(), selectedDate.date(), event.target.value.substring(0, 2), event.target.value.substring(3, 5)))
             setTimeslotEnd(new Date(selectedDate.year(), selectedDate.month(), selectedDate.date(), event.target.value.substring(6, 8), event.target.value.substring(9, 11)))
         }
@@ -92,7 +104,7 @@ function BookTutor({ tutor, subjectId }) {
             setSelectedDate(date);
             setWeek(date.week())
             setThereIsRadio(false);
-            tutor.timePreferences.map((timePreference, index, timePreferences) => {
+            timePreferences.map((timePreference, index, timePreferences) => {
                 if (timePreference.day !== date.day() && !disabled) {
                     setDisabled(true);
                 } else if (index === timePreferences.length - 1 && date.day !== date.day() && !disabled) {
@@ -125,7 +137,8 @@ function BookTutor({ tutor, subjectId }) {
                     participantNumber: values.participantNumber,
                     tutor: tutor._id,
                     subject: subjectId,
-                    week: week
+                    week: week,
+                    timePreferenceId: timePreferenceId,
                 },
                 {
                     headers: headers,
@@ -183,11 +196,11 @@ function BookTutor({ tutor, subjectId }) {
                                                 onChange={handleTimeslotChange}
                                             >
                                                 {
-                                                    tutor.timePreferences.map((timePreference, index, timePreferences) => {
-                                                        if (timePreference.day === selectedDate.day() && (tutor.busyOnWeek === undefined || !tutor.busyOnWeek.includes(selectedDate.week()))) {
+                                                    timePreferences.map((timePreference, index, timePreferences) => {
+                                                        if (timePreference.day === selectedDate.day() && (timePreference.bookedOnWeeks === undefined || !timePreference.bookedOnWeeks.includes(selectedDate.week()))) {
                                                             return <div key={index}>
                                                                 <FormControlLabel
-                                                                    name={`${timePreference.startTime.hours}:${timePreference.startTime.minutes}-${timePreference.endTime.hours}:${timePreference.endTime.minutes}${index}`}
+                                                                    name={timePreference._id}
                                                                     onClick={handleRadioClick}
                                                                     value={`${timePreference.startTime.hours}:${timePreference.startTime.minutes}-${timePreference.endTime.hours}:${timePreference.endTime.minutes}`}
                                                                     control={<Radio />}
@@ -196,7 +209,8 @@ function BookTutor({ tutor, subjectId }) {
                                                             </div>
                                                         }
                                                         //first condition to display message only once
-                                                        else if (index === timePreferences.length - 1 && (timePreference.day !== selectedDate.day() || timePreference === null || tutor.busyOnWeek.includes(selectedDate.week())) && disabled && !thereIsRadio) {
+                                                        else if (index === timePreferences.length - 1
+                                                            && disabled && !thereIsRadio) {
                                                             return <div key={index}>
                                                                 <p>Sorry, I am not available on the selected date, please choose another.</p>
                                                             </div>
