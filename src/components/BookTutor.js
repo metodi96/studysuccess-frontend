@@ -14,7 +14,7 @@ import FormControlLabel from '@material-ui/core/FormControlLabel';
 import FormControl from '@material-ui/core/FormControl';
 import FormLabel from '@material-ui/core/FormLabel';
 
-const useStyles = makeStyles(() => ({
+const useStylesBox = makeStyles(() => ({
     root: {
         maxWidth: 1200,
         maxHeight: 500,
@@ -32,7 +32,8 @@ const useStylesDatePicker = makeStyles(() => ({
         '& input': {
             border: 'none',
             backgroundColor: 'white !important'
-        }
+        },
+        marginBottom: '20px'
     }
 }));
 
@@ -40,7 +41,7 @@ const useStylesButton = makeStyles(() => ({
     root: {
         justifyContent: 'center',
         display: 'flex',
-        maxHeight: '300px'
+        maxHeight: '300px',
     }
 }));
 
@@ -48,16 +49,18 @@ const useStylesButton = makeStyles(() => ({
 
 function BookTutor({ tutor, subjectId }) {
     const [timePreferences, setTimePreferences] = useState([]);
-    const [selectedDate, setSelectedDate] = useState(moment());
+    const [selectedDate, setSelectedDate] = useState(moment().add(1, 'days'));
     const [selectedTimeslot, setSelectedTimeslot] = useState(null);
     const [disabled, setDisabled] = useState(true);
-    const [thereIsRadio, setThereIsRadio] = useState(false);
     const [token, setToken] = useState(window.localStorage.getItem('jwtToken'));
     const [timeslotStart, setTimeslotStart] = useState('');
     const [timeslotEnd, setTimeslotEnd] = useState('');
     const [loading, setLoading] = useState(true);
-    const [week, setWeek] = useState(-1);
+    const [week, setWeek] = useState(moment().week());
     const [timePreferenceId, setTimePreferenceId] = useState('');
+    const classesBox = useStylesBox();
+    const classesDatePicker = useStylesDatePicker();
+    const classesButton = useStylesButton();
 
     const initialValues = {
         timeslotStart: '',
@@ -69,53 +72,32 @@ function BookTutor({ tutor, subjectId }) {
 
     useEffect(() => {
         axios.get(`http://localhost:5000/tutors/${tutor._id}/timePreferences`)
-        .then(res => {
-            if (res.status === 200) {
-                setTimePreferences(res.data);
-                setLoading(false);
-            }
-        })
-        .catch(err => {
-            console.log(`Something went wrong with getting time preferences ${err}`);
-        })
+            .then(res => {
+                if (res.status === 200) {
+                    setTimePreferences(res.data);
+                    setLoading(false);
+                }
+            })
+            .catch(err => {
+                console.log(`Something went wrong with getting time preferences ${err}`);
+            })
     }, [tutor._id])
 
     const handleTimeslotChange = (event) => {
-        setSelectedTimeslot(event.target.value);
         setDisabled(false);
-    };
-
-    const handleRadioClick = (event) => {
         setSelectedTimeslot(event.target.value);
-        setDisabled(false);
         if (event.target.value !== undefined && event.target.name !== undefined) {
             setTimePreferenceId(event.target.name);
             setTimeslotStart(new Date(selectedDate.year(), selectedDate.month(), selectedDate.date(), event.target.value.substring(0, 2), event.target.value.substring(3, 5)))
             setTimeslotEnd(new Date(selectedDate.year(), selectedDate.month(), selectedDate.date(), event.target.value.substring(6, 8), event.target.value.substring(9, 11)))
         }
-    }
-
-    const classesBox = useStyles();
-    const classesDatePicker = useStylesDatePicker();
-    const classesButton = useStylesButton();
+    };
 
     const handleDateChange = (date) => {
+        setDisabled(true);
         if (!loading) {
             setSelectedDate(date);
-            setWeek(date.week())
-            setThereIsRadio(false);
-            timePreferences.map((timePreference, index, timePreferences) => {
-                if (timePreference.day !== date.day() && !disabled) {
-                    setDisabled(true);
-                } else if (index === timePreferences.length - 1 && date.day !== date.day() && !disabled) {
-                    setDisabled(false);
-                }
-                else if (timePreference.day === date.day()) {
-                    setThereIsRadio(true);
-                    setDisabled(false);
-                }
-                return setDisabled(true);
-            })
+            setWeek(date.week());
         }
     };
 
@@ -181,38 +163,32 @@ function BookTutor({ tutor, subjectId }) {
                                                 format="DD.MM.YYYY"
                                                 value={selectedDate}
                                                 onChange={handleDateChange}
+                                                minDate={new Date(moment().add(1, 'days'))}
                                                 maxDate={new Date(moment().year(), 11, 31)}
                                             />
                                         </Grid>
                                     </MuiPickersUtilsProvider>
                                     <div className={classesButton.root}>
                                         <br />
-                                        <FormControl component="fieldset">
-                                            <FormLabel component="legend" style={{ margin: 'auto' }}>Available at:</FormLabel>
+                                        <FormControl style={{ display: 'flex', justifyContent: 'center' }} component="fieldset">
+                                            <FormLabel component="legend" style={{ margin: 'auto', marginBottom: '10px' }}>Available at:</FormLabel>
                                             <RadioGroup
                                                 aria-label="timePreferences"
                                                 name="timePreferences"
                                                 value={selectedTimeslot}
                                                 onChange={handleTimeslotChange}
+                                                style={{ display: '-webkit-inline-box' }}
                                             >
                                                 {
-                                                    timePreferences.map((timePreference, index, timePreferences) => {
-                                                        if (timePreference.day === selectedDate.day() && (timePreference.bookedOnWeeks === undefined || !timePreference.bookedOnWeeks.includes(selectedDate.week()))) {
+                                                    timePreferences.map((timePreference, index) => {
+                                                        if (timePreference.day === selectedDate.day() && !timePreference.bookedOnWeeks.includes(selectedDate.week())) {
                                                             return <div key={index}>
                                                                 <FormControlLabel
                                                                     name={timePreference._id}
-                                                                    onClick={handleRadioClick}
                                                                     value={`${timePreference.startTime.hours}:${timePreference.startTime.minutes}-${timePreference.endTime.hours}:${timePreference.endTime.minutes}`}
                                                                     control={<Radio />}
                                                                     label={`${timePreference.startTime.hours}:${timePreference.startTime.minutes}-${timePreference.endTime.hours}:${timePreference.endTime.minutes}`}
                                                                 />
-                                                            </div>
-                                                        }
-                                                        //first condition to display message only once
-                                                        else if (index === timePreferences.length - 1
-                                                            && disabled && !thereIsRadio) {
-                                                            return <div key={index}>
-                                                                <p>Sorry, I am not available on the selected date, please choose another.</p>
                                                             </div>
                                                         }
                                                         return null;

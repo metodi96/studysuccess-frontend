@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState  } from 'react'
 import { makeStyles } from '@material-ui/core/styles';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
@@ -14,18 +14,9 @@ import DeleteIcon from '@material-ui/icons/Delete';
 import PersonAddOutlinedIcon from '@material-ui/icons/PersonAddOutlined';
 import Divider from '@material-ui/core/Divider';
 import { Button } from '@material-ui/core';
-import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogContentText from '@material-ui/core/DialogContentText';
-import DialogTitle from '@material-ui/core/DialogTitle';
-import TextField from '@material-ui/core/TextField';
-import { Formik, Form, Field, ErrorMessage } from 'formik';
-import * as Yup from 'yup'
-import axios from 'axios';
-import moment from 'moment'
-import UserService from '../services/UserService';
-import Invitation from './Invitation';
+import moment from 'moment';
+import InviteFriend from './InviteFriend';
+import CancelBooking from './CancelBooking';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -57,111 +48,20 @@ const useStylesInvitation = makeStyles(() => ({
 
 function CurrentBooking({ booking }) {
 
-    const initialValues = {
-        email: '',
-    }
     const classes = useStyles();
     const classesAvatar = useStylesAvatar();
     const classesButton = useStylesButton();
     const classesInvitation = useStylesInvitation();
-    const [token, setToken] = useState(window.localStorage.getItem('jwtToken'));
-    const [invitations, setInvitations] = useState([]);
-    const [loading, setLoading] = useState(true);
     const [openAlert, setOpenAlert] = useState(false);
     const [openInvitationAlert, setOpenInvitationAlert] = useState(false);
-
-    // define the validation object schema
-    const validationSchema = Yup.object({
-        email: Yup.string().email('Invalid email format'),
-    })
-
-    useEffect(() => {
-        setToken(window.localStorage.getItem('jwtToken'));
-        if (window.localStorage.getItem('jwtToken') !== null) {
-            axios
-                .get(`http://localhost:5000/bookings/current/${booking._id}/invitations`,
-                    {
-                        headers: {
-                            Authorization: `Bearer ${token.slice(10, -2)}`
-                        }
-                    })
-                .then(res => {
-                    setInvitations(res.data);
-                    setLoading(false);
-                })
-                .catch(err => {
-                    console.log(err);
-                })
-        }
-    }, [token, booking._id]);
 
     const handleClickOpenAlert = () => {
         setOpenAlert(true);
     };
 
-    const handleCloseAlert = () => {
-        setOpenAlert(false);
-    };
-
     const handleClickOpenInvitationAlert = () => {
         setOpenInvitationAlert(true);
     };
-
-    const handleCloseInvitationAlert = () => {
-        setOpenInvitationAlert(false);
-    };
-
-    const inviteFriend = values => {
-        setToken(window.localStorage.getItem('jwtToken'));
-        if (window.localStorage.getItem('jwtToken') !== null) {
-            console.log(`Inviting friend with email ${values.email} ${booking._id} now...`)
-            console.log(UserService.getCurrentUser().userId)
-            if (booking._id !== undefined) {
-                axios.post(`http://localhost:5000/bookings/current/invite/`,
-                    {
-                        friendEmail: values.email,
-                        bookingId: booking._id
-                    },
-                    {
-                        headers: {
-                            Authorization: `Bearer ${token.slice(10, -2)}`
-                        }
-                    })
-                    .then(res => {
-                        handleCloseInvitationAlert();
-                        window.location.reload(true);
-                    })
-                    .catch(err => {
-                        handleCloseInvitationAlert();
-                        window.location.reload(true);
-                        //use this to precisely tell what the response from the server is
-                        console.log('response: ', err.response.data);
-                    })
-            }
-        }
-    }
-
-    const cancelBooking = () => {
-        setToken(window.localStorage.getItem('jwtToken'));
-        if (window.localStorage.getItem('jwtToken') !== null) {
-            console.log(token);
-            console.log(booking._id);
-            axios
-                .delete(`http://localhost:5000/bookings/current/${booking._id}/cancel`,
-                    {
-                        headers: {
-                            Authorization: `Bearer ${token.slice(10, -2)}`
-                        }
-                    })
-                .then(res => {
-                    console.log(res.data);
-                    window.location.reload(true);
-                })
-                .catch(err => {
-                    console.log(err);
-                })
-        }
-    }
 
     return (
         <div>
@@ -232,75 +132,8 @@ function CurrentBooking({ booking }) {
                         onClick={handleClickOpenAlert}>
                         Cancel
                     </Button>
-                    <Dialog
-                        open={openInvitationAlert}
-                        onClose={handleCloseInvitationAlert}
-                        aria-labelledby="alert-dialog-title"
-                        aria-describedby="alert-dialog-description">
-                        <DialogTitle id="alert-dialog-title">{"Would you like to invite some friends to this tutorial?"}</DialogTitle>
-                        <DialogContent>
-                            <DialogContentText id="alert-dialog-description">
-                                Your tutor might decide to charge you more for each friend you invite.
-                            </DialogContentText>
-                            {
-                                !loading ?
-                                    invitations.map(invitation => (<Invitation key={invitation._id} bookingId={booking._id} classesAvatar={classesAvatar} invitation={invitation}/> ))
-                                    :
-                                    <span>Loading friends...</span>
-                            }
-                        </DialogContent>
-                        <DialogActions>
-                            <Button onClick={handleCloseInvitationAlert} color="primary" autoFocus>
-                                No
-                            </Button>
-                            <Formik
-                                initialValues={initialValues}
-                                validateOnBlur={false}
-                                validateOnChange={false}
-                                validationSchema={validationSchema}
-                                onSubmit={inviteFriend}>
-                                <Form>
-                                    <div className='form-control'>
-                                        <label htmlFor='email'></label>
-                                        <Field
-                                            type='email'
-                                            id='email'
-                                            name='email'
-                                            placeholder='Email'
-                                        />
-                                        <ErrorMessage name='email'>
-                                            {errorMsg => <div className='error'>{errorMsg}</div>}
-                                        </ErrorMessage>
-                                    </div>
-                                    <Button type="submit" color="primary">
-                                        Yes
-                                    </Button>
-
-                                </Form>
-                            </Formik>
-                        </DialogActions>
-                    </Dialog>
-                    <Dialog
-                        open={openAlert}
-                        onClose={handleCloseAlert}
-                        aria-labelledby="alert-dialog-title"
-                        aria-describedby="alert-dialog-description">
-                        <DialogTitle id="alert-dialog-title">{"Are you sure you want to cancel this booking?"}</DialogTitle>
-                        <DialogContent>
-                            <DialogContentText id="alert-dialog-description">
-                                This booking is for the subject <b>{booking.subject.name}</b> and is scheduled for <b>{moment(booking.timeslotStart).format("dddd, MMMM Do YYYY, h:mm a")}</b> until <b>{moment(booking.timeslotEnd).format("dddd, MMMM Do YYYY, h:mm a")}</b>.
-                                The tutor is <b>{booking.tutor.firstname} {booking.tutor.lastname}</b>.
-                            </DialogContentText>
-                        </DialogContent>
-                        <DialogActions>
-                            <Button onClick={handleCloseAlert} color="primary" autoFocus>
-                                No
-                            </Button>
-                            <Button onClick={cancelBooking} color="primary">
-                                Yes
-                            </Button>
-                        </DialogActions>
-                    </Dialog>
+                    <InviteFriend booking={booking} classesAvatar={classesAvatar} openInvitationAlert={openInvitationAlert} setOpenInvitationAlert={setOpenInvitationAlert} />
+                    <CancelBooking booking={booking} openAlert={openAlert} setOpenAlert={setOpenAlert} />
                 </ListItem>
             </List>
         </div >

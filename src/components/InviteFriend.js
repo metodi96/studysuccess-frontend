@@ -6,15 +6,14 @@ import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
-import PersonOutlineSharpIcon from '@material-ui/icons/PersonOutlineSharp';
-import Avatar from '@material-ui/core/Avatar';
 import axios from 'axios';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import Invitation from './Invitation';
 
-
-function InviteFriend({booking, classesAvatar, openInvitationAlert, setOpenInvitationAlert}) {
-
+function InviteFriend({ booking, classesAvatar, openInvitationAlert, setOpenInvitationAlert }) {
     const [token, setToken] = useState(window.localStorage.getItem('jwtToken'));
-    const [invitations, setInvitations] = useState(null);
+    const [invitations, setInvitations] = useState([]);
+    const [loading, setLoading] = useState(true);
     const initialValues = {
         email: '',
     }
@@ -23,6 +22,55 @@ function InviteFriend({booking, classesAvatar, openInvitationAlert, setOpenInvit
     const validationSchema = Yup.object({
         email: Yup.string().email('Invalid email format'),
     })
+
+    useEffect(() => {
+        setToken(window.localStorage.getItem('jwtToken'));
+        if (window.localStorage.getItem('jwtToken') !== null) {
+            axios
+                .get(`http://localhost:5000/bookings/current/${booking._id}/invitations`,
+                    {
+                        headers: {
+                            Authorization: `Bearer ${token.slice(10, -2)}`
+                        }
+                    })
+                .then(res => {
+                    setInvitations(res.data);
+                    setLoading(false);
+                })
+                .catch(err => {
+                    console.log(err);
+                })
+        }
+    }, [token, booking._id]);
+
+    const inviteFriend = values => {
+        setToken(window.localStorage.getItem('jwtToken'));
+        if (window.localStorage.getItem('jwtToken') !== null) {
+            console.log(`Inviting friend with email ${values.email} ${booking._id} now...`);
+            if (booking._id !== undefined) {
+                axios.post(`http://localhost:5000/bookings/current/invite/`,
+                    {
+                        friendEmail: values.email,
+                        bookingId: booking._id
+                    },
+                    {
+                        headers: {
+                            Authorization: `Bearer ${token.slice(10, -2)}`
+                        }
+                    })
+                    .then(() => {
+                        handleCloseInvitationAlert();
+                        window.location.reload(true);
+                    })
+                    .catch(err => {
+                        handleCloseInvitationAlert();
+                        window.location.reload(true);
+                        //use this to precisely tell what the response from the server is
+                        console.log('response: ', err.response.data);
+                    })
+            }
+        }
+    }
 
     const handleCloseInvitationAlert = () => {
         setOpenInvitationAlert(false);
@@ -39,43 +87,13 @@ function InviteFriend({booking, classesAvatar, openInvitationAlert, setOpenInvit
                         }
                     })
                 .then(res => {
-                    console.log(res.data);
                     setInvitations(res.data);
                 })
                 .catch(err => {
-                    console.log('something went wrong')
-                    console.log(err);
+                    console.log('response: ', err.response.data);
                 })
         }
     }, [token, booking._id]);
-
-    const inviteFriend = values => {
-        setToken(window.localStorage.getItem('jwtToken'));
-        if (window.localStorage.getItem('jwtToken') !== null) {
-            console.log(`Inviting friend with email ${values.email} ${booking._id} now...`)
-            const headers = {
-                Authorization: `Bearer ${token.slice(10, -2)}`
-            }
-            if (booking._id !== undefined) {
-                axios.post('http://localhost:5000/bookings/current/invite',
-                    {
-                        friendEmail: "tim.weber@tum.de",
-                        bookingId: booking._id,
-                    },
-                    {
-                        headers: headers
-                    })
-                    .then(res => {
-                        handleCloseInvitationAlert();
-                        //window.location.reload(true);
-                        console.log(res.data);
-                    })
-                    .catch(err => {
-                        console.log(`Something went wrong with invitation: ${err}`);
-                    })
-            }
-        }
-    }
 
 
     return (
@@ -87,18 +105,15 @@ function InviteFriend({booking, classesAvatar, openInvitationAlert, setOpenInvit
                 aria-describedby="alert-dialog-description">
                 <DialogTitle id="alert-dialog-title">{"Would you like to invite some friends to this tutorial?"}</DialogTitle>
                 <DialogContent>
-                    Invited are: {invitations !== null ? invitations.map(invitation => {
-                    if (invitation.toUser.userImage) {
-                        console.log(invitation.toUser.userImage)
-                        return <div key={invitation._id}><Avatar alt={`${invitation.toUser.firstname} ${invitation.toUser.lastname}`} src={`http://localhost:5000/${invitation.toUser.userImage}`} />
-                            <p>{`${invitation.toUser.firstname} ${invitation.toUser.lastname}`}</p></div>
-                    } else {
-                        console.log('we dont have it boys')
-                        return <Avatar key={invitation._id} alt={`${invitation.toUser.firstname} ${invitation.toUser.lastname}`} classes={classesAvatar}>
-                            <PersonOutlineSharpIcon color='primary' />
-                        </Avatar>
+                    <DialogContentText id="alert-dialog-description">
+                        Your tutor might decide to charge you more for each friend you invite.
+                            </DialogContentText>
+                    {
+                        !loading ?
+                            invitations.map(invitation => (<Invitation key={invitation._id} bookingId={booking._id} classesAvatar={classesAvatar} invitation={invitation} />))
+                            :
+                            <span>Loading friends...</span>
                     }
-                }) : <span>No friends for now are invited.</span>}
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={handleCloseInvitationAlert} color="primary" autoFocus>
@@ -125,8 +140,7 @@ function InviteFriend({booking, classesAvatar, openInvitationAlert, setOpenInvit
                             </div>
                             <Button type="submit" color="primary">
                                 Yes
-                                    </Button>
-
+                            </Button>
                         </Form>
                     </Formik>
                 </DialogActions>

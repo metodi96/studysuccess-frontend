@@ -1,44 +1,26 @@
-import React, { useState, useEffect } from 'react'
-import UserService from '../services/UserService'
+import React, { useState, useEffect } from 'react';
+import UserService from '../services/UserService';
 import axios from 'axios';
 import Card from '@material-ui/core/Card';
 import CardHeader from '@material-ui/core/CardHeader';
-import CardMedia from '@material-ui/core/CardMedia';
 import CardContent from '@material-ui/core/CardContent';
 import CardActions from '@material-ui/core/CardActions';
 import IconButton from '@material-ui/core/IconButton';
 import Typography from '@material-ui/core/Typography';
-import { red } from '@material-ui/core/colors';
 import FavoriteIcon from '@material-ui/icons/Favorite';
 import ShareIcon from '@material-ui/icons/Share';
 import { makeStyles } from '@material-ui/core/styles';
 import Rating from '@material-ui/lab/Rating';
-import styles from './bookTutor.module.css'
-import BookTutor from '../components/BookTutor'
+import styles from './bookTutor.module.css';
+import BookTutor from '../components/BookTutor';
 
-const useStyles = makeStyles((theme) => ({
+const useStylesCard = makeStyles((theme) => ({
     root: {
         maxWidth: 345,
-        minWidth: 345
-    },
-    media: {
-        height: 0,
-        paddingTop: '96.25%', // 16:9,
-
-    },
-    expand: {
-        transform: 'rotate(0deg)',
-        marginLeft: 'auto',
-        transition: theme.transitions.create('transform', {
-            duration: theme.transitions.duration.shortest,
-        }),
-    },
-    expandOpen: {
-        transform: 'rotate(180deg)',
-    },
-    avatar: {
-        backgroundColor: red[500],
-    },
+        minWidth: 345,
+        maxHeight: 500,
+        marginLeft: '50px'
+    }
 }));
 
 function BookTutorView(props) {
@@ -49,7 +31,7 @@ function BookTutorView(props) {
     const [token, setToken] = useState(window.localStorage.getItem('jwtToken'));
     //dummy value - to be replaced with real one when the tutor has rating
     const avgRating = 4.7;
-    const classes = useStyles();
+    const classesCard = useStylesCard();
 
     useEffect(() => {
         setTutorId('5edcb20be565ab3ed0219746');
@@ -81,21 +63,19 @@ function BookTutorView(props) {
         if (!loading) {
             return (
                 <div className={styles.container}>
-                    <Card className={classes.root}>
+                    <Card className={classesCard.root}>
                         <CardHeader
                             title={`${tutor.firstname} ${tutor.lastname}`}
                             subheader={
                                 <div className={styles.rating}>
-                                    <Rating name="read-only" value={avgRating} readOnly />
+                                    <Rating name="read-only" value={avgRating} precision={0.5} readOnly />
                                     <Typography component="legend">{avgRating}</Typography>
                                 </div>
                             }
                         />
-                        <CardMedia
-                            className={classes.media}
-                            image="http://localhost:5000/uploads/joseph.png"
-                            title={`${tutor.firstname} ${tutor.lastname}`}
-                        />
+                        <div style={{justifyContent: 'center', display: 'flex'}}>
+                            <img width='250px' height='250px' src={`http://localhost:5000/${tutor.userImage}`} alt={`${tutor.firstname} ${tutor.lastname}`} title={`${tutor.firstname} ${tutor.lastname}`} />
+                        </div>
                         <CardContent>
                             <Typography variant="body2" color="textSecondary" component="p">
                                 Tutor for {
