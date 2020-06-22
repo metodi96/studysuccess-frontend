@@ -24,6 +24,8 @@ import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup'
 import axios from 'axios';
 import moment from 'moment'
+import UserService from '../services/UserService';
+import Invitation from './Invitation';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -63,7 +65,7 @@ function CurrentBooking({ booking }) {
     const classesButton = useStylesButton();
     const classesInvitation = useStylesInvitation();
     const [token, setToken] = useState(window.localStorage.getItem('jwtToken'));
-    const [invitations, setInvitations] = useState(null);
+    const [invitations, setInvitations] = useState([]);
     const [loading, setLoading] = useState(true);
     const [openAlert, setOpenAlert] = useState(false);
     const [openInvitationAlert, setOpenInvitationAlert] = useState(false);
@@ -84,12 +86,10 @@ function CurrentBooking({ booking }) {
                         }
                     })
                 .then(res => {
-                    console.log(res.data);
                     setInvitations(res.data);
                     setLoading(false);
                 })
                 .catch(err => {
-                    console.log('something went wrong')
                     console.log(err);
                 })
         }
@@ -111,6 +111,36 @@ function CurrentBooking({ booking }) {
         setOpenInvitationAlert(false);
     };
 
+    const inviteFriend = values => {
+        setToken(window.localStorage.getItem('jwtToken'));
+        if (window.localStorage.getItem('jwtToken') !== null) {
+            console.log(`Inviting friend with email ${values.email} ${booking._id} now...`)
+            console.log(UserService.getCurrentUser().userId)
+            if (booking._id !== undefined) {
+                axios.post(`http://localhost:5000/bookings/current/invite/`,
+                    {
+                        friendEmail: values.email,
+                        bookingId: booking._id
+                    },
+                    {
+                        headers: {
+                            Authorization: `Bearer ${token.slice(10, -2)}`
+                        }
+                    })
+                    .then(res => {
+                        handleCloseInvitationAlert();
+                        window.location.reload(true);
+                    })
+                    .catch(err => {
+                        handleCloseInvitationAlert();
+                        window.location.reload(true);
+                        //use this to precisely tell what the response from the server is
+                        console.log('response: ', err.response.data);
+                    })
+            }
+        }
+    }
+
     const cancelBooking = () => {
         setToken(window.localStorage.getItem('jwtToken'));
         if (window.localStorage.getItem('jwtToken') !== null) {
@@ -130,36 +160,6 @@ function CurrentBooking({ booking }) {
                 .catch(err => {
                     console.log(err);
                 })
-        }
-    }
-
-    const inviteFriend = values => {
-        setToken(window.localStorage.getItem('jwtToken'));
-        if (window.localStorage.getItem('jwtToken') !== null) {
-            console.log(`Inviting friend with email ${values.email} now...`)
-            if (booking._id !== undefined) {
-                axios
-                    .post('http://localhost:5000/bookings/current/invite',
-                        {
-                            friendEmail: values.email,
-                            bookingId: booking._id
-                        },
-                        {
-                            headers: {
-                                Authorization: `Bearer ${token.slice(10, -2)}`
-                            }
-                        })
-                    .then(res => {
-                        handleCloseInvitationAlert();
-                        window.location.reload(true);
-                        console.log(res.data);
-                    })
-                    .catch(err => {
-                        handleCloseInvitationAlert();
-                        window.location.reload(true);
-                        console.log(err);
-                    })
-            }
         }
     }
 
@@ -188,7 +188,7 @@ function CurrentBooking({ booking }) {
                     <ListItemAvatar>
                         {
                             booking.tutor.userImage ?
-                                <Avatar alt={`${booking.tutor.firstname} ${booking.tutor.lastname}`} src='http://localhost:5000/uploads/joseph.png' />
+                                <Avatar alt={`${booking.tutor.firstname} ${booking.tutor.lastname}`} src={`http://localhost:5000/${booking.tutor.userImage}`} />
                                 :
                                 <Avatar classes={classesAvatar}>
                                     <PersonOutlineSharpIcon color='primary' />
@@ -239,18 +239,15 @@ function CurrentBooking({ booking }) {
                         aria-describedby="alert-dialog-description">
                         <DialogTitle id="alert-dialog-title">{"Would you like to invite some friends to this tutorial?"}</DialogTitle>
                         <DialogContent>
-                                Invited are: {invitations !== null ? invitations.map(invitation => {
-                                if (invitation.toUser.userImage) {
-                                    console.log(invitation.toUser.userImage)
-                                    return <div key={invitation._id}><Avatar alt={`${invitation.toUser.firstname} ${invitation.toUser.lastname}`} src={`http://localhost:5000/${invitation.toUser.userImage}`} />
-                                    <p>{`${invitation.toUser.firstname} ${invitation.toUser.lastname}`}</p></div>
-                                } else {
-                                    console.log('we dont have it boys')
-                                    return <Avatar key={invitation._id} alt={`${invitation.toUser.firstname} ${invitation.toUser.lastname}`} classes={classesAvatar}>
-                                        <PersonOutlineSharpIcon color='primary' />
-                                    </Avatar>
-                                }
-                            }) : <span>No friends for now are invited.</span>}
+                            <DialogContentText id="alert-dialog-description">
+                                Your tutor might decide to charge you more for each friend you invite.
+                            </DialogContentText>
+                            {
+                                !loading ?
+                                    invitations.map(invitation => (<Invitation key={invitation._id} bookingId={booking._id} classesAvatar={classesAvatar} invitation={invitation}/> ))
+                                    :
+                                    <span>Loading friends...</span>
+                            }
                         </DialogContent>
                         <DialogActions>
                             <Button onClick={handleCloseInvitationAlert} color="primary" autoFocus>

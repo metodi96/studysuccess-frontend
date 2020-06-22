@@ -52,14 +52,14 @@ function InviteFriend({booking, classesAvatar, openInvitationAlert, setOpenInvit
     const inviteFriend = values => {
         setToken(window.localStorage.getItem('jwtToken'));
         if (window.localStorage.getItem('jwtToken') !== null) {
-            console.log(`Inviting friend with email ${values.email} now...`)
+            console.log(`Inviting friend with email ${values.email} ${booking._id} now...`)
             const headers = {
                 Authorization: `Bearer ${token.slice(10, -2)}`
             }
             if (booking._id !== undefined) {
                 axios.post('http://localhost:5000/bookings/current/invite',
                     {
-                        friendEmail: values.email,
+                        friendEmail: "tim.weber@tum.de",
                         bookingId: booking._id,
                     },
                     {
@@ -67,11 +67,10 @@ function InviteFriend({booking, classesAvatar, openInvitationAlert, setOpenInvit
                     })
                     .then(res => {
                         handleCloseInvitationAlert();
-                        window.location.reload(true);
+                        //window.location.reload(true);
                         console.log(res.data);
                     })
                     .catch(err => {
-                        handleCloseInvitationAlert();
                         console.log(`Something went wrong with invitation: ${err}`);
                     })
             }
