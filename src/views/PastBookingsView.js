@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react'
 import UserService from '../services/UserService'
 import axios from 'axios';
-import CurrentBooking from '../components/CurrentBooking'
+import PastBooking from '../components/PastBooking'
 import styles from './bookingsStyles.module.css'
 
-function CurrentBookingsView(props) {
+function PastBookingsView(props) {
     const [bookings, setBookings] = useState(undefined);
     const [loading, setLoading] = useState(true);
     const [token, setToken] = useState(window.localStorage.getItem('jwtToken'));
@@ -13,7 +13,7 @@ function CurrentBookingsView(props) {
         if (window.localStorage.getItem('jwtToken') !== null) {
             console.log(token)
             axios
-                .get('http://localhost:5000/bookings/current', {
+                .get('http://localhost:5000/bookings/past', {
                     headers: {
                         Authorization: `Bearer ${token.slice(10, -2)}`
                     }
@@ -37,9 +37,9 @@ function CurrentBookingsView(props) {
             if (bookings.length > 0) {
                 return (
                     <div>
-                        <h3 className={styles.heading}>You have {bookings.length} scheduled lessons.</h3>
+                        <h3 className={styles.heading}>You had {bookings.length} scheduled lessons.</h3>
                         <div className={styles.container}>
-                        { bookings.sort((bookingA, bookingB) => bookingB.createdAt.localeCompare(bookingA.createdAt)).map((booking) => (<div key={booking._id} className={styles.currentBooking}><CurrentBooking booking={booking} /></div>)) }
+                        { bookings.map((booking) => (<div key={booking._id} className={styles.booking}><PastBooking booking={booking} /></div>)) }
                         </div>
                     </div>
                 )
@@ -69,4 +69,4 @@ function CurrentBookingsView(props) {
 
 }
 
-export default CurrentBookingsView
+export default PastBookingsView
