@@ -46,14 +46,14 @@ function PastBookingsView(props) {
             } else {
                 return (
                     <div>
-                        <p>You currently don't have any bookings.</p>
+                        <p>You currently don't have any past bookings.</p>
                     </div>
                 )
             }
         } else {
             return (
                 <div>
-                    <p>Loading bookings...</p>
+                    <p>Loading past bookings...</p>
                 </div>
             )
         }
