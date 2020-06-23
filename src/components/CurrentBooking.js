@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState  } from 'react'
 import { makeStyles } from '@material-ui/core/styles';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
@@ -11,15 +11,12 @@ import PersonOutlineSharpIcon from '@material-ui/icons/PersonOutlineSharp';
 import GroupSharpIcon from '@material-ui/icons/GroupSharp';
 import EuroSharpIcon from '@material-ui/icons/EuroSharp';
 import DeleteIcon from '@material-ui/icons/Delete';
+import PersonAddOutlinedIcon from '@material-ui/icons/PersonAddOutlined';
 import Divider from '@material-ui/core/Divider';
 import { Button } from '@material-ui/core';
-import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogContentText from '@material-ui/core/DialogContentText';
-import DialogTitle from '@material-ui/core/DialogTitle';
-import axios from 'axios';
-import moment from 'moment'
+import moment from 'moment';
+import InviteFriend from './InviteFriend';
+import CancelBooking from './CancelBooking';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -43,42 +40,28 @@ const useStylesButton = makeStyles(() => ({
     },
 }));
 
+const useStylesInvitation = makeStyles(() => ({
+    root: {
+        marginRight: '5px'
+    },
+}));
+
 function CurrentBooking({ booking }) {
+
     const classes = useStyles();
     const classesAvatar = useStylesAvatar();
     const classesButton = useStylesButton();
-    const [token, setToken] = useState(window.localStorage.getItem('jwtToken'));
+    const classesInvitation = useStylesInvitation();
     const [openAlert, setOpenAlert] = useState(false);
+    const [openInvitationAlert, setOpenInvitationAlert] = useState(false);
 
     const handleClickOpenAlert = () => {
         setOpenAlert(true);
     };
 
-    const handleCloseAlert = () => {
-        setOpenAlert(false);
+    const handleClickOpenInvitationAlert = () => {
+        setOpenInvitationAlert(true);
     };
-
-    const cancelBooking = () => {
-        setToken(window.localStorage.getItem('jwtToken'));
-        if (window.localStorage.getItem('jwtToken') !== null) {
-            console.log(token);
-            console.log(booking._id);
-            axios
-                .delete(`http://localhost:5000/bookings/current/${booking._id}/cancel`,
-                    {
-                        headers: {
-                            Authorization: `Bearer ${token.slice(10, -2)}`
-                        }
-                    })
-                .then(res => {
-                    console.log(res.data);
-                    window.location.reload(true);
-                })
-                .catch(err => {
-                    console.log(err);
-                })
-        }
-    }
 
     return (
         <div>
@@ -103,9 +86,14 @@ function CurrentBooking({ booking }) {
                 <Divider variant="inset" component="li" />
                 <ListItem>
                     <ListItemAvatar>
-                        <Avatar classes={classesAvatar}>
-                            <PersonOutlineSharpIcon color='primary' />
-                        </Avatar>
+                        {
+                            booking.tutor.userImage ?
+                                <Avatar alt={`${booking.tutor.firstname} ${booking.tutor.lastname}`} src={`http://localhost:5000/${booking.tutor.userImage}`} />
+                                :
+                                <Avatar classes={classesAvatar}>
+                                    <PersonOutlineSharpIcon color='primary' />
+                                </Avatar>
+                        }
                     </ListItemAvatar>
                     <ListItemText primary="Tutor" secondary={booking.tutor.firstname} />
                 </ListItem>
@@ -130,36 +118,25 @@ function CurrentBooking({ booking }) {
                 <Divider variant="inset" component="li" />
                 <ListItem classes={classesButton}>
                     <Button
+                        classes={classesInvitation}
+                        variant="contained"
+                        color="primary"
+                        startIcon={<PersonAddOutlinedIcon />}
+                        onClick={handleClickOpenInvitationAlert}>
+                        Invite friends
+                    </Button>
+                    <Button
                         variant="contained"
                         color="secondary"
                         startIcon={<DeleteIcon />}
                         onClick={handleClickOpenAlert}>
                         Cancel
                     </Button>
-                    <Dialog
-                        open={openAlert}
-                        onClose={handleCloseAlert}
-                        aria-labelledby="alert-dialog-title"
-                        aria-describedby="alert-dialog-description">
-                        <DialogTitle id="alert-dialog-title">{"Are you sure you want to cancel this booking?"}</DialogTitle>
-                        <DialogContent>
-                            <DialogContentText id="alert-dialog-description">
-                                This booking is for the subject <b>{booking.subject.name}</b> and is scheduled for <b>{moment(booking.timeslotStart).format("dddd, MMMM Do YYYY, h:mm a")}</b> until <b>{moment(booking.timeslotEnd).format("dddd, MMMM Do YYYY, h:mm a")}</b>.
-                                The tutor is <b>{booking.tutor.firstname} {booking.tutor.lastname}</b>.
-                            </DialogContentText>
-                        </DialogContent>
-                        <DialogActions>
-                            <Button onClick={handleCloseAlert} color="primary" autoFocus>
-                                No
-                            </Button>
-                            <Button onClick={cancelBooking} color="primary">
-                                Yes
-                            </Button>
-                        </DialogActions>
-                    </Dialog>
+                    <InviteFriend booking={booking} classesAvatar={classesAvatar} openInvitationAlert={openInvitationAlert} setOpenInvitationAlert={setOpenInvitationAlert} />
+                    <CancelBooking booking={booking} openAlert={openAlert} setOpenAlert={setOpenAlert} />
                 </ListItem>
             </List>
-        </div>
+        </div >
     )
 }
 

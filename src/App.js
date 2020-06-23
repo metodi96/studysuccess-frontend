@@ -6,6 +6,8 @@ import TutorsView from './views/TutorsView'
 import LogInView from './views/LogInView';
 import CurrentBookingsView from './views/CurrentBookingsView';
 import NavBar from './components/NavBar'
+import BookTutorView from './views/BookTutorView';
+import BookingAddSuccessView from './views/BookingAddSuccessView';
 import PastBookingsView from './views/PastBookingsView';
 
 //import Navbar from './components/Navbar.js' <Navbar /> 
@@ -14,17 +16,21 @@ function App() {
     return (
       <div className='container'>    
         <NavBar />    
+        <div className='routerContainer'>
         <Router>                 
           <br/>
           <Switch>
             <Route path='/'exact component={MainView} />
             <Route path='/auth/login' component={LogInView} />
-            <Route path='/tutors/:subjectId' component={TutorsView} />
+            <Route path='/tutors/:subjectId' exact component={TutorsView} />
+            <Route path='/tutors/:subjectId/:tutorId' exact component={BookTutorView} />
             <Route path='/bookings/current' component={CurrentBookingsView} />
+            <Route path='/bookings/success' component={BookingAddSuccessView} />
             <Route path='/bookings/past' component={PastBookingsView} />
             <Route path='*' component={MainView} />
           </Switch>          
         </Router>
+        </div>
       </div>
     );
 }
