@@ -169,11 +169,12 @@ function PastBooking({ booking }) {
                                             id='feedback'
                                             name='feedback'
                                             placeholder='Enter feedback here'
+                                            style = {{height: 150}}
                                         />
                                         <ErrorMessage name='feedback' component={TextError} />
                                     </div>
 
-                                    <Button type='submit' color="primary">Submit</Button>
+                                    <Button type='submit' color="primary" bottom = {10}>Submit</Button>
                                 </Form>
                             </Formik>                            
                         </DialogContent>
