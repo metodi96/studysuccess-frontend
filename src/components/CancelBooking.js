@@ -14,8 +14,6 @@ function CancelBooking({ booking, openAlert, setOpenAlert }) {
     const cancelBooking = () => {
         setToken(window.localStorage.getItem('jwtToken'));
         if (window.localStorage.getItem('jwtToken') !== null) {
-            console.log(token);
-            console.log(booking._id);
             axios.delete(`http://localhost:5000/bookings/current/${booking._id}/cancel`,
                 {
                     headers: {
