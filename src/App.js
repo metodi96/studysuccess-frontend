@@ -9,6 +9,7 @@ import NavBar from './components/NavBar'
 import BookTutorView from './views/BookTutorView';
 import BookingAddSuccessView from './views/BookingAddSuccessView';
 import PastBookingsView from './views/PastBookingsView';
+import PendingBookingsView from './views/PendingBookingsView';
 
 //import Navbar from './components/Navbar.js' <Navbar /> 
 
@@ -27,6 +28,7 @@ function App() {
             <Route path='/bookings/current' component={CurrentBookingsView} />
             <Route path='/bookings/success' component={BookingAddSuccessView} />
             <Route path='/bookings/past' component={PastBookingsView} />
+            <Route path='/bookings/pending' component={PendingBookingsView} />
             <Route path='*' component={MainView} />
           </Switch>          
         </Router>

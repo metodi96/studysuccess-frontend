@@ -1,4 +1,4 @@
-import React, { useState  } from 'react'
+import React, { useState  } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
@@ -18,7 +18,7 @@ import moment from 'moment';
 import InviteFriend from './InviteFriend';
 import CancelBooking from './CancelBooking';
 
-const useStyles = makeStyles((theme) => ({
+const useStylesList = makeStyles((theme) => ({
     root: {
         width: '100%',
         maxWidth: 360,
@@ -46,9 +46,9 @@ const useStylesInvitation = makeStyles(() => ({
     },
 }));
 
-function CurrentBooking({ booking }) {
+function CurrentBookingOwn({ booking }) {
 
-    const classes = useStyles();
+    const classesList = useStylesList();
     const classesAvatar = useStylesAvatar();
     const classesButton = useStylesButton();
     const classesInvitation = useStylesInvitation();
@@ -65,7 +65,7 @@ function CurrentBooking({ booking }) {
 
     return (
         <div>
-            <List className={classes.root}>
+            <List className={classesList.root}>
                 <ListItem>
                     <ListItemAvatar>
                         <Avatar classes={classesAvatar}>
@@ -140,4 +140,4 @@ function CurrentBooking({ booking }) {
     )
 }
 
-export default CurrentBooking
+export default CurrentBookingOwn
