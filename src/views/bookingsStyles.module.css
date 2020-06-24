@@ -2,6 +2,8 @@
     background-color: rgba(152, 158, 157, 0.438);
     margin-left: 200px;
     margin-right: 200px;
+    min-width: 1100px;
+    margin-bottom: 50px;
 }
 
 .heading {
@@ -15,4 +17,5 @@
     display: inline-block;
     margin-bottom: 50px;
     margin-top: 20px;
+    min-width: 400px;
 } 

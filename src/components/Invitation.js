@@ -4,6 +4,7 @@ import HighlightOffIcon from '@material-ui/icons/HighlightOff';
 import { IconButton } from '@material-ui/core';
 import Avatar from '@material-ui/core/Avatar';
 import PersonOutlineSharpIcon from '@material-ui/icons/PersonOutlineSharp';
+import CheckCircleOutlineOutlinedIcon from '@material-ui/icons/CheckCircleOutlineOutlined';
 
 function Invitation({ bookingId, invitation, classesAvatar }) {
     const [token, setToken] = useState(window.localStorage.getItem('jwtToken'));
@@ -49,9 +50,15 @@ function Invitation({ bookingId, invitation, classesAvatar }) {
                         <Avatar style={{ margin: 'auto' }} key={invitation._id} alt={`${invitation.toUser.firstname} ${invitation.toUser.lastname}`} classes={classesAvatar}>
                             <PersonOutlineSharpIcon color='primary' />
                         </Avatar>
-                        <IconButton onClick={removeInvitation} size='small' style={{ right: '0', bottom: '50%', position: 'absolute' }} aria-label="delete">
-                            <HighlightOffIcon color="secondary" />
-                        </IconButton>
+                        {
+                            invitation.accepted ? 
+                            <CheckCircleOutlineOutlinedIcon size='small' style={{ color: 'green', right: '0', bottom: '50%', position: 'absolute' }} />
+                            :
+                            <IconButton onClick={removeInvitation} size='small' style={{ right: '0', bottom: '50%', position: 'absolute' }} aria-label="delete">
+                                <HighlightOffIcon color="secondary" />
+                            </IconButton>
+                        }
+                        
                     </div>
                     <p style={{ display: 'block', textAlign: 'center' }}>{`${invitation.toUser.firstname} ${invitation.toUser.lastname}`}</p>
                 </div>
