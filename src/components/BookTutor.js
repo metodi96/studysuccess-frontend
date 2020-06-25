@@ -13,6 +13,7 @@ import RadioGroup from '@material-ui/core/RadioGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import FormControl from '@material-ui/core/FormControl';
 import FormLabel from '@material-ui/core/FormLabel';
+import TextField from '@material-ui/core/TextField';
 
 const useStylesBox = makeStyles(() => ({
     root: {
@@ -45,6 +46,14 @@ const useStylesButton = makeStyles(() => ({
     }
 }));
 
+const useStylesTimepicker = makeStyles((theme) => ({
+    textField: {
+        marginLeft: theme.spacing(1),
+        marginRight: theme.spacing(1),
+        width: 200,
+    },
+}));
+
 
 
 function BookTutor({ tutor, subjectId }) {
@@ -58,16 +67,21 @@ function BookTutor({ tutor, subjectId }) {
     const [loading, setLoading] = useState(true);
     const [week, setWeek] = useState(moment().week());
     const [timePreferenceId, setTimePreferenceId] = useState('');
+    const [proposedTimeslotFrom, setProposedTimeslotFrom] = useState('07:00');
+    const [proposedTimeslotTo, setProposedTimeslotTo] = useState('08:00');
     const classesBox = useStylesBox();
     const classesDatePicker = useStylesDatePicker();
     const classesButton = useStylesButton();
+    const classesTimePicker = useStylesTimepicker();
 
     const initialValues = {
-        timeslotStart: '',
-        timeslotEnd: '',
+        timeslotStart: timeslotEnd,
+        timeslotEnd: timeslotStart,
         participantNumber: 1,
         tutor: tutor._id,
-        subject: subjectId
+        subject: subjectId,
+        timeFrom: proposedTimeslotFrom,
+        timeTo: proposedTimeslotTo
     }
 
     useEffect(() => {
@@ -101,10 +115,23 @@ function BookTutor({ tutor, subjectId }) {
         }
     };
 
+    const onChangeFrom = (event) => {
+        setProposedTimeslotFrom(event.target.value);
+        console.log(event.target.value);
+    };
+
+    const onChangeTo = (event) => {
+        setProposedTimeslotTo(event.target.value);
+        console.log(event.target.value);
+    };
+
     const onSubmit = values => {
+        console.log(values)
+        console.log(proposedTimeslotFrom);
+        console.log(proposedTimeslotTo);
         setDisabled(true);
         setToken(window.localStorage.getItem('jwtToken'));
-        if (window.localStorage.getItem('jwtToken') !== null) {
+        /*if (window.localStorage.getItem('jwtToken') !== null) {
             const headers = {
                 Authorization: `Bearer ${token.slice(10, -2)}`
             }
@@ -135,7 +162,7 @@ function BookTutor({ tutor, subjectId }) {
                 .catch(err => {
                     console.log(`Something went wrong with payment ${err}`);
                 })
-        }
+        }*/
     }
 
     return (
@@ -194,10 +221,52 @@ function BookTutor({ tutor, subjectId }) {
                                                         return null;
                                                     })
                                                 }
+                                                <FormControlLabel
+                                                    name="proposeTime"
+                                                    value='Another timeslot'
+                                                    control={<Radio />}
+                                                    label='Another timeslot'
+                                                />
                                             </RadioGroup>
                                         </FormControl>
                                     </div>
+                                </div>
+                            </Box>
+                            <Box classes={classesBox}>
+                                <div className={classesButton.root}>
+                                    <TextField
+                                        id="timeFrom"
+                                        name="timeFrom"
+                                        label="From"
+                                        type="time"
+                                        className={classesTimePicker.textField}
+                                        onChange={onChangeFrom}
+                                        value={proposedTimeslotFrom}
+                                        InputLabelProps={{
+                                            shrink: true,
+                                        }}
+                                        inputProps={{
+                                            step: 300, // 5 min
+                                            min: "08:00"
+                                        }}
+                                    />
 
+                                    <TextField
+                                        id="timeTo"
+                                        name="timeTo"
+                                        label="To"
+                                        type="time"
+                                        className={classesTimePicker.textField}
+                                        value={proposedTimeslotTo}
+                                        onChange={onChangeTo}
+                                        InputLabelProps={{
+                                            shrink: true,
+                                        }}
+                                        inputProps={{
+                                            step: 300, // 5 min
+                                            min: {proposedTimeslotFrom}
+                                        }}
+                                    />
                                 </div>
                             </Box>
                             <Box classes={classesBox}>
