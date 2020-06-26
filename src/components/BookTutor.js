@@ -82,9 +82,10 @@ function BookTutor({ tutor, subjectId }) {
     }
 
     useEffect(() => {
+        let isMounted = true; // note this flag denote mount status
         axios.get(`http://localhost:5000/tutors/${tutor._id}/timePreferences`)
             .then(res => {
-                if (res.status === 200) {
+                if (res.status === 200 && isMounted) {
                     setTimePreferences(res.data);
                     setLoading(false);
                 }
@@ -92,6 +93,7 @@ function BookTutor({ tutor, subjectId }) {
             .catch(err => {
                 console.log(`Something went wrong with getting time preferences ${err}`);
             })
+            return () => { isMounted = false } // use effect cleanup to set flag false, if unmounted
     }, [tutor._id])
 
     const onChangeFrom = (event) => {
@@ -167,15 +169,19 @@ function BookTutor({ tutor, subjectId }) {
     };
 
     const onSubmitPropose = () => {
-        
+        console.log('Propose submit')
+        console.log(timeslotStart)
+        console.log(timeslotEnd)
+        setDisabled(true);
     }
 
     const onSubmit = () => {
+        console.log('Normal submit')
         console.log(timeslotStart)
         console.log(timeslotEnd)
         setDisabled(true);
         setToken(window.localStorage.getItem('jwtToken'));
-        /*if (window.localStorage.getItem('jwtToken') !== null) {
+       /* if (window.localStorage.getItem('jwtToken') !== null) {
             const headers = {
                 Authorization: `Bearer ${token.slice(10, -2)}`
             }
@@ -215,7 +221,7 @@ function BookTutor({ tutor, subjectId }) {
                 !loading ?
                     <Formik
                         initialValues={initialValues}
-                        onSubmit={onSubmit}>
+                        onSubmit={proposeOptionChosen ? onSubmitPropose : onSubmit}>
                         <Form>
                             <Box classes={classesBox}>
                                 <div style={{ padding: 20 }}>
