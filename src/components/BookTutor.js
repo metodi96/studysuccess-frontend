@@ -14,6 +14,7 @@ import FormControlLabel from '@material-ui/core/FormControlLabel';
 import FormControl from '@material-ui/core/FormControl';
 import FormLabel from '@material-ui/core/FormLabel';
 import TextField from '@material-ui/core/TextField';
+import { Redirect } from 'react-router-dom';
 
 const useStylesBox = makeStyles(() => ({
     root: {
@@ -71,6 +72,7 @@ function BookTutor({ tutor, subjectId }) {
     const [proposedTimeslotTo, setProposedTimeslotTo] = useState('');
     const [displayProposedTimeslots, setDisplayProposedTimeslots] = useState(false);
     const [proposeOptionChosen, setProposeOptionChosen] = useState(false);
+    const [redirectToCurrentBookings, setRedirectToCurrentBookings] = useState(false);
     const classesBox = useStylesBox();
     const classesDatePicker = useStylesDatePicker();
     const classesButton = useStylesButton();
@@ -93,7 +95,7 @@ function BookTutor({ tutor, subjectId }) {
             .catch(err => {
                 console.log(`Something went wrong with getting time preferences ${err}`);
             })
-            return () => { isMounted = false } // use effect cleanup to set flag false, if unmounted
+        return () => { isMounted = false } // use effect cleanup to set flag false, if unmounted
     }, [tutor._id])
 
     const onChangeFrom = (event) => {
@@ -170,18 +172,43 @@ function BookTutor({ tutor, subjectId }) {
 
     const onSubmitPropose = () => {
         console.log('Propose submit')
-        console.log(timeslotStart)
-        console.log(timeslotEnd)
-        setDisabled(true);
+        setToken(window.localStorage.getItem('jwtToken'));
+        if (window.localStorage.getItem('jwtToken') !== null) {
+            const headers = {
+                Authorization: `Bearer ${token.slice(10, -2)}`
+            }
+            console.log(headers)
+            axios.post('http://localhost:5000/bookings/add',
+                {
+                    firstname: tutor.firstname,
+                    lastname: tutor.lastname,
+                    price: tutor.pricePerHour,
+                    timeslotStart: timeslotStart,
+                    timeslotEnd: timeslotEnd,
+                    participantNumber: 1,
+                    tutor: tutor._id,
+                    subject: subjectId,
+                },
+                {
+                    headers: headers
+                })
+                .then(res => {
+                    if (res.status === 200) {
+                        console.log(res.data);
+                        setRedirectToCurrentBookings(true);
+                    }
+                })
+                .catch(err => {
+                    console.log(`Something went wrong with payment ${err}`);
+                })
+        }
     }
 
     const onSubmit = () => {
         console.log('Normal submit')
-        console.log(timeslotStart)
-        console.log(timeslotEnd)
         setDisabled(true);
         setToken(window.localStorage.getItem('jwtToken'));
-       /* if (window.localStorage.getItem('jwtToken') !== null) {
+        if (window.localStorage.getItem('jwtToken') !== null) {
             const headers = {
                 Authorization: `Bearer ${token.slice(10, -2)}`
             }
@@ -212,13 +239,13 @@ function BookTutor({ tutor, subjectId }) {
                 .catch(err => {
                     console.log(`Something went wrong with payment ${err}`);
                 })
-        }*/
+        }
     }
 
     return (
         <div>
             {
-                !loading ?
+                redirectToCurrentBookings ? <Redirect to='/bookings/current' /> : !loading ?
                     <Formik
                         initialValues={initialValues}
                         onSubmit={proposeOptionChosen ? onSubmitPropose : onSubmit}>
