@@ -10,6 +10,7 @@ import BookTutorView from './views/BookTutorView';
 import BookingAddSuccessView from './views/BookingAddSuccessView';
 import PastBookingsView from './views/PastBookingsView';
 import PendingBookingsView from './views/PendingBookingsView';
+import BookingAcceptedSuccessView from './views/BookingAcceptedSuccessView';
 
 //import Navbar from './components/Navbar.js' <Navbar /> 
 
@@ -27,6 +28,7 @@ function App() {
             <Route path='/tutors/:subjectId/:tutorId' exact component={BookTutorView} />
             <Route path='/bookings/current' component={CurrentBookingsView} />
             <Route path='/bookings/success' component={BookingAddSuccessView} />
+            <Route path='/bookings/successAccepted' component={BookingAcceptedSuccessView} />
             <Route path='/bookings/past' component={PastBookingsView} />
             <Route path='/bookings/pending' component={PendingBookingsView} />
             <Route path='*' component={MainView} />

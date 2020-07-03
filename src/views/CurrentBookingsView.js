@@ -3,11 +3,13 @@ import UserService from '../services/UserService'
 import axios from 'axios';
 import CurrentBookingOwn from '../components/CurrentBookingOwn';
 import CurrentBookingAccepted from '../components/CurrentBookingAccepted';
+import CurrentBookingNotPaid from '../components/CurrentBookingNotPaid';
 import styles from './bookingsStyles.module.css';
 
 function CurrentBookingsView(props) {
     const [bookings, setBookings] = useState([]);
     const [acceptedInvitations, setAcceptedInvitations] = useState([]);
+    const [bookingsNotPaid, setBookingsNotPaid] = useState([]);
     const [loading, setLoading] = useState(true);
     const [token, setToken] = useState(window.localStorage.getItem('jwtToken'));
     useEffect(() => {
@@ -32,9 +34,9 @@ function CurrentBookingsView(props) {
     }, [token]);
 
     useEffect(() => {
+        setLoading(true);
         setToken(window.localStorage.getItem('jwtToken'));
         if (window.localStorage.getItem('jwtToken') !== null) {
-            console.log(token)
             axios
                 .get('http://localhost:5000/bookings/current/accepted', {
                     headers: {
@@ -52,13 +54,34 @@ function CurrentBookingsView(props) {
         }
     }, [token]);
 
+    useEffect(() => {
+        setLoading(true);
+        setToken(window.localStorage.getItem('jwtToken'));
+        if (window.localStorage.getItem('jwtToken') !== null) {
+            axios
+                .get('http://localhost:5000/bookings/current/notAccepted', {
+                    headers: {
+                        Authorization: `Bearer ${token.slice(10, -2)}`
+                    }
+                })
+                .then(res => {
+                    console.log(res.data);
+                    setBookingsNotPaid(res.data);
+                    setLoading(false);
+                })
+                .catch(err => {
+                    console.log(err);
+                })
+        }
+    }, [token]);
+
     const redirect = () => {
         props.history.push('/')
     }
     //make sure that bookings are properly populated with the tutor/subject objects before accessing their properties
     if (UserService.isAuthenticated()) {
         if (!loading) {
-            if (bookings.length > 0 || acceptedInvitations.length > 0) {
+            if (bookings.length > 0 || acceptedInvitations.length > 0 || bookingsNotPaid.length > 0) {
                 return (
                     <div>
                         <h3 className={styles.heading}>You have {bookings.length + acceptedInvitations.length} scheduled lessons.</h3>
@@ -67,6 +90,9 @@ function CurrentBookingsView(props) {
                         </div>
                         <div className={styles.container}>
                             {acceptedInvitations.sort((invitationA, invitationB) => invitationB.createdAt.localeCompare(invitationA.createdAt)).map((invitation) => (<div key={invitation._id} className={styles.booking}><CurrentBookingAccepted invitation={invitation} /></div>))}
+                        </div>
+                        <div className={styles.container}>
+                            {bookingsNotPaid.sort((bookingA, bookingB) => bookingB.createdAt.localeCompare(bookingA.createdAt)).map((booking) => (<div key={booking._id} className={styles.booking}><CurrentBookingNotPaid booking={booking} token={token} /></div>))}
                         </div>
                     </div>
                 )
