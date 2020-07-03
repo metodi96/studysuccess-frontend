@@ -13,6 +13,7 @@ function CurrentBookingsView(props) {
     const [loading, setLoading] = useState(true);
     const [token, setToken] = useState(window.localStorage.getItem('jwtToken'));
     useEffect(() => {
+        let isMounted = true; // note this flag denote mount status
         setToken(window.localStorage.getItem('jwtToken'));
         if (window.localStorage.getItem('jwtToken') !== null) {
             console.log(token)
@@ -23,17 +24,21 @@ function CurrentBookingsView(props) {
                     }
                 })
                 .then(res => {
-                    console.log(res.data);
-                    setBookings(res.data);
-                    setLoading(false);
+                    if (isMounted) {
+                        console.log(res.data);
+                        setBookings(res.data);
+                        setLoading(false);
+                    }
                 })
                 .catch(err => {
                     console.log(err);
                 })
         }
+        return () => { isMounted = false } // use effect cleanup to set flag false, if unmounted
     }, [token]);
 
     useEffect(() => {
+        let isMounted = true; // note this flag denote mount status
         setLoading(true);
         setToken(window.localStorage.getItem('jwtToken'));
         if (window.localStorage.getItem('jwtToken') !== null) {
@@ -44,17 +49,29 @@ function CurrentBookingsView(props) {
                     }
                 })
                 .then(res => {
-                    console.log(res.data);
-                    setAcceptedInvitations(res.data);
-                    setLoading(false);
+                    if (isMounted) {
+                        console.log(res.data);
+                        let acceptedInvitationsAll = res.data;
+                        let acceptedInvitationsWithoutBookingsNull = [];
+                        acceptedInvitationsAll.forEach(element => {
+                            if (element.booking !== null) {
+                                acceptedInvitationsWithoutBookingsNull.push(element);
+                            }
+                        });
+                        console.log(acceptedInvitationsWithoutBookingsNull);
+                        setAcceptedInvitations(acceptedInvitationsWithoutBookingsNull);
+                        setLoading(false);
+                    }
                 })
                 .catch(err => {
                     console.log(err);
                 })
         }
+        return () => { isMounted = false } // use effect cleanup to set flag false, if unmounted
     }, [token]);
 
     useEffect(() => {
+        let isMounted = true; // note this flag denote mount status
         setLoading(true);
         setToken(window.localStorage.getItem('jwtToken'));
         if (window.localStorage.getItem('jwtToken') !== null) {
@@ -65,14 +82,17 @@ function CurrentBookingsView(props) {
                     }
                 })
                 .then(res => {
-                    console.log(res.data);
-                    setBookingsNotPaid(res.data);
-                    setLoading(false);
+                    if (isMounted) {
+                        console.log(res.data);
+                        setBookingsNotPaid(res.data);
+                        setLoading(false);
+                    }
                 })
                 .catch(err => {
                     console.log(err);
                 })
         }
+        return () => { isMounted = false } // use effect cleanup to set flag false, if unmounted
     }, [token]);
 
     const redirect = () => {
