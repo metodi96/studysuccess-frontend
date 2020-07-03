@@ -24,6 +24,7 @@ function InviteFriend({ booking, classesAvatar, openInvitationAlert, setOpenInvi
     })
 
     useEffect(() => {
+        let isMounted = true; // note this flag denote mount status
         setToken(window.localStorage.getItem('jwtToken'));
         if (window.localStorage.getItem('jwtToken') !== null) {
             axios
@@ -34,20 +35,24 @@ function InviteFriend({ booking, classesAvatar, openInvitationAlert, setOpenInvi
                         }
                     })
                 .then(res => {
-                    setInvitations(res.data);
-                    setLoading(false);
+                    if (isMounted) {
+                        setInvitations(res.data);
+                        setLoading(false);
+                    }
                 })
                 .catch(err => {
                     console.log(err);
                 })
         }
+        return () => { isMounted = false } // use effect cleanup to set flag false, if unmounted
     }, [token, booking._id]);
 
     const inviteFriend = values => {
         setToken(window.localStorage.getItem('jwtToken'));
+        let friendAlreadyInvited = invitations.some(invitation => invitation.toUser.email === values.email);
         if (window.localStorage.getItem('jwtToken') !== null) {
             console.log(`Inviting friend with email ${values.email} ${booking._id} now...`);
-            if (booking._id !== undefined) {
+            if (booking._id !== undefined && !friendAlreadyInvited) {
                 axios.post(`http://localhost:5000/bookings/current/invite/`,
                     {
                         friendEmail: values.email,
@@ -68,7 +73,8 @@ function InviteFriend({ booking, classesAvatar, openInvitationAlert, setOpenInvi
                         //use this to precisely tell what the response from the server is
                         console.log('response: ', err.response.data);
                     })
-            }
+            } handleCloseInvitationAlert();
+            window.location.reload(true);
         }
     }
 
