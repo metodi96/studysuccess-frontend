@@ -36,14 +36,18 @@ function Search() {
     const classes = useStyles();
 
     useEffect(() => {
+        let isMounted = true; // note this flag denote mount status
         axios
             .get("http://localhost:5000/subjects")
             .then(res => {
-                setSubjects(res.data);
+                if (isMounted) {
+                    setSubjects(res.data);
+                }
             })
             .catch(err => {
                 console.log(err);
             });
+        return () => { isMounted = false } // use effect cleanup to set flag false, if unmounted
     }, []);
 
     const handleSearchInput = event => {
