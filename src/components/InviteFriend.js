@@ -24,7 +24,8 @@ const useStylesEmail = makeStyles(() => ({
             border: '1px solid black',
             backgroundColor: 'white !important',
             padding: '5px 5px 5px 5px',
-            borderRadius: '0px'
+            borderRadius: '4px',
+            height: '30px'
         },
         '& input:hover': {
             border: '1px solid black',
