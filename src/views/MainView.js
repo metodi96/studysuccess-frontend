@@ -20,7 +20,7 @@ function MainView(props) {
     const logout = () => {
         console.log('Attempting logout...')
         UserService.logout();
-        if(props.location.pathname !== '/') {
+        if (props.location.pathname !== '/') {
             props.history.push('/');
         }
         else {
@@ -48,7 +48,11 @@ function MainView(props) {
                 }
             </div>
             <Search></Search>
-            <SignUp></SignUp>
+            {
+                !UserService.isAuthenticated() ?
+                    <SignUp></SignUp>
+                    : null
+            }
         </div>
     )
 }
