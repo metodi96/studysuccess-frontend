@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { Formik, Form, Field, ErrorMessage } from 'formik';
+import { Formik, Form, Field } from 'formik';
 import * as Yup from 'yup'
 import { Button } from '@material-ui/core';
 import Dialog from '@material-ui/core/Dialog';
@@ -9,11 +9,55 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import axios from 'axios';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import Invitation from './Invitation';
+import MuiAlert from '@material-ui/lab/Alert';
+import Snackbar from '@material-ui/core/Snackbar';
+import { TextField } from 'formik-material-ui';
+import { makeStyles } from '@material-ui/core/styles';
+
+function Alert(props) {
+    return <MuiAlert elevation={6} variant="filled" {...props} />;
+}
+
+const useStylesEmail = makeStyles(() => ({
+    root: {
+        '& input': {
+            border: '1px solid black',
+            backgroundColor: 'white !important',
+            padding: '5px 5px 5px 5px',
+            borderRadius: '0px'
+        },
+        '& input:hover': {
+            border: '1px solid black',
+            backgroundColor: 'white !important',
+        },
+        marginBottom: '20px',
+        marginRight: '50px',
+    }
+}));
+
+const useStylesButton = makeStyles(() => ({
+    root: {
+        float: 'left',
+        marginRight: '10px'
+    }
+}));
+
+const useStylesDialog = makeStyles(() => ({
+    root: {
+        minWidth: '600px'
+    }
+}));
 
 function InviteFriend({ booking, classesAvatar, openInvitationAlert, setOpenInvitationAlert }) {
     const [token, setToken] = useState(window.localStorage.getItem('jwtToken'));
     const [invitations, setInvitations] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [openSnackbar, setOpenSnackbar] = useState(false);
+    const [severity, setSeverity] = useState('');
+    const classesEmail = useStylesEmail();
+    const classesButton = useStylesButton();
+    const classesDialog = useStylesDialog();
+
     const initialValues = {
         email: '',
     }
@@ -64,22 +108,36 @@ function InviteFriend({ booking, classesAvatar, openInvitationAlert, setOpenInvi
                         }
                     })
                     .then(() => {
-                        handleCloseInvitationAlert();
-                        window.location.reload(true);
+                        setSeverity('success');
                     })
                     .catch(err => {
-                        handleCloseInvitationAlert();
-                        window.location.reload(true);
+                        setSeverity('error');
                         //use this to precisely tell what the response from the server is
                         console.log('response: ', err.response.data);
                     })
-            } handleCloseInvitationAlert();
-            window.location.reload(true);
+            } else if (friendAlreadyInvited) {
+                setSeverity('warning');
+            }
         }
     }
 
     const handleCloseInvitationAlert = () => {
         setOpenInvitationAlert(false);
+    };
+
+    const handleOpenSnackbar = () => {
+        setOpenSnackbar(true);
+    };
+
+    const handleCloseSnackbar = (event, reason) => {
+        if (reason === 'clickaway') {
+            return;
+        }
+
+        setOpenSnackbar(false);
+        setSeverity('');
+        handleCloseInvitationAlert();
+        window.location.reload(true);
     };
 
     useEffect(() => {
@@ -101,6 +159,31 @@ function InviteFriend({ booking, classesAvatar, openInvitationAlert, setOpenInvi
         }
     }, [token, booking._id]);
 
+    const renderSwitchForSnackbar = (severity) => {
+        switch (severity) {
+            case 'success':
+                return <Snackbar open={openSnackbar} autoHideDuration={2500} onClose={handleCloseSnackbar}>
+                    <Alert onClose={handleCloseSnackbar} severity='success'>
+                        Friend invited successfully!
+                </Alert>
+                </Snackbar>
+            case 'error':
+                return <Snackbar open={openSnackbar} autoHideDuration={2500} onClose={handleCloseSnackbar}>
+                    <Alert onClose={handleCloseSnackbar} severity='error'>
+                        There is no such user with the given email!
+                        </Alert>
+                </Snackbar>
+            case 'warning':
+                return <Snackbar open={openSnackbar} autoHideDuration={2500} onClose={handleCloseSnackbar}>
+                    <Alert onClose={handleCloseSnackbar} severity='warning'>
+                        You have already invited this user!
+                    </Alert>
+                </Snackbar>
+            default:
+                return null
+        }
+    };
+
 
     return (
         <div>
@@ -108,7 +191,8 @@ function InviteFriend({ booking, classesAvatar, openInvitationAlert, setOpenInvi
                 open={openInvitationAlert}
                 onClose={handleCloseInvitationAlert}
                 aria-labelledby="alert-dialog-title"
-                aria-describedby="alert-dialog-description">
+                aria-describedby="alert-dialog-description"
+                classes={classesDialog}>
                 <DialogTitle id="alert-dialog-title">{"Would you like to invite some friends to this tutorial?"}</DialogTitle>
                 <DialogContent>
                     <DialogContentText id="alert-dialog-description">
@@ -122,9 +206,6 @@ function InviteFriend({ booking, classesAvatar, openInvitationAlert, setOpenInvi
                     }
                 </DialogContent>
                 <DialogActions>
-                    <Button onClick={handleCloseInvitationAlert} color="primary" autoFocus>
-                        No
-                            </Button>
                     <Formik
                         initialValues={initialValues}
                         validateOnBlur={false}
@@ -132,25 +213,29 @@ function InviteFriend({ booking, classesAvatar, openInvitationAlert, setOpenInvi
                         validationSchema={validationSchema}
                         onSubmit={inviteFriend}>
                         <Form>
-                            <div className='form-control'>
-                                <label htmlFor='email'></label>
+                            <div>
                                 <Field
+                                    component={TextField}
+                                    classes={classesEmail}
                                     type='email'
                                     id='email'
                                     name='email'
-                                    placeholder='Email'
+                                    placeholder='Email of the friend'
                                 />
-                                <ErrorMessage name='email'>
-                                    {errorMsg => <div className='error'>{errorMsg}</div>}
-                                </ErrorMessage>
                             </div>
-                            <Button type="submit" color="primary">
+                            <Button classes={classesButton} onClick={handleCloseInvitationAlert} color="primary" autoFocus>
+                                No
+                            </Button>
+                            <Button classes={classesButton} type="submit" color="primary" onClick={handleOpenSnackbar}>
                                 Yes
                             </Button>
                         </Form>
                     </Formik>
                 </DialogActions>
             </Dialog>
+            {
+                renderSwitchForSnackbar(severity)
+            }
         </div>
     )
 }
