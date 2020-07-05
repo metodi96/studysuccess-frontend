@@ -1,0 +1,12 @@
+.rating {
+    display: flex;
+}
+
+.container {
+    display: flex;
+    margin-top: 50px;
+}
+
+.availability {
+    margin-left: 200px;
+}
