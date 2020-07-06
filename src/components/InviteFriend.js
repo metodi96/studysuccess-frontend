@@ -9,14 +9,10 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import axios from 'axios';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import Invitation from './Invitation';
-import MuiAlert from '@material-ui/lab/Alert';
 import Snackbar from '@material-ui/core/Snackbar';
 import { TextField } from 'formik-material-ui';
 import { makeStyles } from '@material-ui/core/styles';
-
-function Alert(props) {
-    return <MuiAlert elevation={6} variant="filled" {...props} />;
-}
+import Alert from './Alert';
 
 const useStylesEmail = makeStyles(() => ({
     root: {
@@ -65,7 +61,7 @@ function InviteFriend({ booking, classesAvatar, openInvitationAlert, setOpenInvi
 
     // define the validation object schema
     const validationSchema = Yup.object({
-        email: Yup.string().email('Invalid email format'),
+        email: Yup.string().email('Invalid email format').required('Please enter a email address'),
     })
 
     useEffect(() => {
@@ -209,28 +205,28 @@ function InviteFriend({ booking, classesAvatar, openInvitationAlert, setOpenInvi
                 <DialogActions>
                     <Formik
                         initialValues={initialValues}
-                        validateOnBlur={false}
-                        validateOnChange={false}
                         validationSchema={validationSchema}
                         onSubmit={inviteFriend}>
-                        <Form>
-                            <div>
-                                <Field
-                                    component={TextField}
-                                    classes={classesEmail}
-                                    type='email'
-                                    id='email'
-                                    name='email'
-                                    placeholder='Email of the friend'
-                                />
-                            </div>
-                            <Button classes={classesButton} onClick={handleCloseInvitationAlert} color="primary" autoFocus>
-                                No
+                        {(formik) => (
+                            <Form>
+                                <div>
+                                    <Field
+                                        component={TextField}
+                                        classes={classesEmail}
+                                        type='email'
+                                        id='email'
+                                        name='email'
+                                        placeholder='Email of the friend'
+                                    />
+                                </div>
+                                <Button classes={classesButton} onClick={handleCloseInvitationAlert} color="primary" autoFocus>
+                                    No
+                                </Button>
+                                <Button classes={classesButton} disabled={!(formik.isValid && formik.dirty)} type="submit" color="primary" onClick={handleOpenSnackbar}>
+                                    Yes
                             </Button>
-                            <Button classes={classesButton} type="submit" color="primary" onClick={handleOpenSnackbar}>
-                                Yes
-                            </Button>
-                        </Form>
+                            </Form>
+                        )}
                     </Formik>
                 </DialogActions>
             </Dialog>
