@@ -192,8 +192,8 @@ function InviteFriend({ booking, classesAvatar, openInvitationAlert, setOpenInvi
                 classes={classesDialog}>
                 <DialogTitle id="alert-dialog-title">{"Would you like to invite some friends to this tutorial?"}</DialogTitle>
                 <DialogContent>
-                    <DialogContentText id="alert-dialog-description">
-                        Your tutor might decide to charge you more for each friend you invite.
+                    <DialogContentText id="alert-dialog-description" style={{textAlign: 'center'}}>
+                        Enter the email of an already registered user,<br/>who you'd like to invite to this tutorial, in the text field below.
                             </DialogContentText>
                     {
                         !loading ?
