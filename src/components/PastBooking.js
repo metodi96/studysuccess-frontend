@@ -21,6 +21,9 @@ import moment from 'moment'
 import { Formik, Form, Field, ErrorMessage } from 'formik'
 import * as Yup from 'yup'
 import TextError from './TextError'
+import Rating from '@material-ui/lab/Rating';
+import styles from '../views/bookTutor.module.css';
+import Typography from '@material-ui/core/Typography';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -50,6 +53,7 @@ function PastBooking({ booking }) {
     const classesButton = useStylesButton();
     const [token, setToken] = useState(window.localStorage.getItem('jwtToken'));
     const [openAlert, setOpenAlert] = useState(false);
+    const [rating, setRating] = React.useState(5);
 
     const handleClickOpenAlert = () => {
         setOpenAlert(true);
@@ -60,23 +64,23 @@ function PastBooking({ booking }) {
     };
 
     const initialValues = {
-        feedback: ''
+        comment: ''
     }
     
     // define the validation object schema
     const validationSchema = Yup.object({
-        feedback: Yup.string().required('This field is obligatory')
+        comment: Yup.string().required('This field is obligatory')
     })
-    
-    const onSubmit = feedback => {
-        console.log(feedback)
+
+    const onSubmit = comment => {
+        console.log(comment)
         setToken(window.localStorage.getItem('jwtToken'));
         if (window.localStorage.getItem('jwtToken') !== null) {
             console.log(token);
             console.log(booking._id);
             axios
                 .post(`http://localhost:5000/bookings/past/${booking._id}/feedback/add`, 
-                feedback,
+                {rating: rating, comment: comment.comment, tutorId: booking.tutor._id},
                 {
                     headers: {
                         Authorization: `Bearer ${token.slice(10, -2)}`
@@ -84,7 +88,7 @@ function PastBooking({ booking }) {
                 })
                 .then(res => {
                     console.log(res.data);
-                    window.location.reload(true);
+                    //window.location.reload(true);
                 })
                 .catch(err => {
                     console.log(err);
@@ -162,17 +166,26 @@ function PastBooking({ booking }) {
                                 onSubmit={onSubmit}>
                                 <Form>
                                     <div className='form-control'>
-                                        <label htmlFor='feedback'></label>
+                                        <label htmlFor='comment'></label>
                                         <Field
                                             type='text'
-                                            id='feedback'
-                                            name='feedback'
-                                            placeholder='Enter feedback here'
-                                            style = {{height: 150}}
+                                            id='comment'
+                                            name='comment'
+                                            placeholder={`Enter comment here`}
+                                            as="textarea"
                                         />
-                                        <ErrorMessage name='feedback' component={TextError} />
+                                        <ErrorMessage name='comment' component={TextError} />
                                     </div>
-
+                                    <div className={styles.rating}>
+                                        <Rating 
+                                            name="session-rating" 
+                                            value={rating}
+                                            onChange={(event, newValue) => {
+                                                setRating(newValue);
+                                            }}
+                                        />
+                                        <Typography component="legend">{rating}</Typography>
+                                    </div>
                                     <Button type='submit' color="primary" bottom = {10}>Submit</Button>
                                 </Form>
                             </Formik>                            

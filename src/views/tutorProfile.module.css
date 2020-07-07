@@ -1,0 +1,21 @@
+.container {
+    background-color: rgba(152, 158, 157, 0.438);
+    padding: 1em;
+}
+
+.content {
+    background-color: white;
+    padding: 0.5em;
+}
+
+.grid {
+    flex-grow: 1;
+}
+
+.rating {
+    display: flex;
+}
+
+.test {
+    font-weight: bold;
+}
