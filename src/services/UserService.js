@@ -9,6 +9,7 @@ export class UserService {
         return {
             userId: JSON.parse(window.atob(base64)).userId,
             email: JSON.parse(window.atob(base64)).email,
+            userImage: JSON.parse(window.atob(base64)).userImage,
             expiration: JSON.parse(window.atob(base64)).exp
         };
     }

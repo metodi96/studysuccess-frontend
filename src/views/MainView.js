@@ -1,6 +1,5 @@
 import React from 'react';
 import Search from '../components/Search';
-import SignUp from '../components/SignUp';
 import { makeStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import { Link } from 'react-router-dom';
@@ -48,7 +47,6 @@ function MainView(props) {
                 }
             </div>
             <Search></Search>
-            <SignUp></SignUp>
         </div>
     )
 }
