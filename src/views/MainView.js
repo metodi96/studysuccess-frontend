@@ -4,6 +4,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import { Link } from 'react-router-dom';
 import UserService from '../services/UserService';
+import SignUp from '../components/SignUp';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -19,7 +20,7 @@ function MainView(props) {
     const logout = () => {
         console.log('Attempting logout...')
         UserService.logout();
-        if(props.location.pathname !== '/') {
+        if (props.location.pathname !== '/') {
             props.history.push('/');
         }
         else {
@@ -47,6 +48,11 @@ function MainView(props) {
                 }
             </div>
             <Search></Search>
+            {
+                !UserService.isAuthenticated() ?
+                    <SignUp></SignUp>
+                    : null
+            }
         </div>
     )
 }

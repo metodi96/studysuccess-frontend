@@ -34,6 +34,7 @@ function BookTutorView(props) {
     const classesCard = useStylesCard();
 
     useEffect(() => {
+        let isMounted = true; // note this flag denote mount status
         setTutorId('5edcb20be565ab3ed0219746');
         setSubjectId('5ed74fdba2d395112c5f6353')
         setToken(window.localStorage.getItem('jwtToken'));
@@ -46,14 +47,17 @@ function BookTutorView(props) {
                     }
                 })
                 .then(res => {
-                    console.log(res.data);
-                    setTutor(res.data);
-                    setLoading(false);
+                    if (isMounted) {
+                        console.log(res.data);
+                        setTutor(res.data);
+                        setLoading(false);
+                    }
                 })
                 .catch(err => {
                     console.log(err);
                 })
         }
+        return () => { isMounted = false } // use effect cleanup to set flag false, if unmounted
     }, [token, tutorId, subjectId]);
 
     const redirect = () => {
@@ -73,7 +77,7 @@ function BookTutorView(props) {
                                 </div>
                             }
                         />
-                        <div style={{justifyContent: 'center', display: 'flex'}}>
+                        <div style={{ justifyContent: 'center', display: 'flex' }}>
                             <img width='250px' height='250px' src={`http://localhost:5000/${tutor.userImage}`} alt={`${tutor.firstname} ${tutor.lastname}`} title={`${tutor.firstname} ${tutor.lastname}`} />
                         </div>
                         <CardContent>

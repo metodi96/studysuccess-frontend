@@ -13,6 +13,8 @@ import RadioGroup from '@material-ui/core/RadioGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import FormControl from '@material-ui/core/FormControl';
 import FormLabel from '@material-ui/core/FormLabel';
+import TextField from '@material-ui/core/TextField';
+import { Redirect } from 'react-router-dom';
 
 const useStylesBox = makeStyles(() => ({
     root: {
@@ -45,6 +47,14 @@ const useStylesButton = makeStyles(() => ({
     }
 }));
 
+const useStylesTimepicker = makeStyles((theme) => ({
+    textField: {
+        marginLeft: theme.spacing(1),
+        marginRight: theme.spacing(1),
+        width: 200,
+    },
+}));
+
 
 
 function BookTutor({ tutor, subjectId }) {
@@ -58,22 +68,26 @@ function BookTutor({ tutor, subjectId }) {
     const [loading, setLoading] = useState(true);
     const [week, setWeek] = useState(moment().week());
     const [timePreferenceId, setTimePreferenceId] = useState('');
+    const [proposedTimeslotFrom, setProposedTimeslotFrom] = useState('');
+    const [proposedTimeslotTo, setProposedTimeslotTo] = useState('');
+    const [displayProposedTimeslots, setDisplayProposedTimeslots] = useState(false);
+    const [proposeOptionChosen, setProposeOptionChosen] = useState(false);
+    const [redirectToCurrentBookings, setRedirectToCurrentBookings] = useState(false);
     const classesBox = useStylesBox();
     const classesDatePicker = useStylesDatePicker();
     const classesButton = useStylesButton();
+    const classesTimePicker = useStylesTimepicker();
 
     const initialValues = {
-        timeslotStart: '',
-        timeslotEnd: '',
-        participantNumber: 1,
-        tutor: tutor._id,
-        subject: subjectId
+        timeFrom: proposedTimeslotFrom,
+        timeTo: proposedTimeslotTo
     }
 
     useEffect(() => {
+        let isMounted = true; // note this flag denote mount status
         axios.get(`http://localhost:5000/tutors/${tutor._id}/timePreferences`)
             .then(res => {
-                if (res.status === 200) {
+                if (res.status === 200 && isMounted) {
                     setTimePreferences(res.data);
                     setLoading(false);
                 }
@@ -81,16 +95,71 @@ function BookTutor({ tutor, subjectId }) {
             .catch(err => {
                 console.log(`Something went wrong with getting time preferences ${err}`);
             })
+        return () => { isMounted = false } // use effect cleanup to set flag false, if unmounted
     }, [tutor._id])
 
+    const onChangeFrom = (event) => {
+        setProposedTimeslotFrom(event.target.value);
+        setProposedTimeslotTo(proposedTimeslotTo);
+        setDisabled(false);
+        //check if there is an empty value and if yes disable sumbit button
+        if (event.target.value.substring(0, 2) === '' || event.target.value.substring(3, 5) === ''
+            ||
+            proposedTimeslotTo.substring(0, 2) === '' || proposedTimeslotTo.substring(3, 5) === ''
+        ) {
+            setDisabled(true);
+        }
+        setTimeslotStart(new Date(selectedDate.year(), selectedDate.month(), selectedDate.date(), event.target.value.substring(0, 2), event.target.value.substring(3, 5)))
+        if (proposedTimeslotTo.substring(0, 2) < event.target.value.substring(0, 2)
+            || (proposedTimeslotTo.substring(0, 2) === event.target.value.substring(0, 2)
+                &&
+                proposedTimeslotTo.substring(3, 5) < event.target.value.substring(3, 5)
+            )) {
+            setDisabled(true);
+        }
+        console.log(event.target.value);
+    };
+
+    const onChangeTo = (event) => {
+        setProposedTimeslotTo(event.target.value);
+        setProposedTimeslotFrom(proposedTimeslotFrom);
+        if (proposedTimeslotFrom.substring(0, 2) === '' || proposedTimeslotFrom.substring(3, 5) === ''
+            ||
+            event.target.value.substring(0, 2) === '' || event.target.value.substring(3, 5) === ''
+        ) {
+            setDisabled(true);
+        }
+        setTimeslotEnd(new Date(selectedDate.year(), selectedDate.month(), selectedDate.date(), event.target.value.substring(0, 2), event.target.value.substring(3, 5)));
+        setDisabled(false);
+        if (event.target.value.substring(0, 2) < proposedTimeslotFrom.substring(0, 2)
+            || (event.target.value.substring(0, 2) === proposedTimeslotFrom.substring(0, 2)
+                &&
+                event.target.value.substring(3, 5) < proposedTimeslotFrom.substring(3, 5)
+            )) {
+            setDisabled(true);
+        }
+        console.log(event.target.value);
+    };
+
     const handleTimeslotChange = (event) => {
+        setProposeOptionChosen(false);
         setDisabled(false);
         setSelectedTimeslot(event.target.value);
-        if (event.target.value !== undefined && event.target.name !== undefined) {
+        setDisplayProposedTimeslots(false);
+        if (event.target.value !== undefined && event.target.name !== undefined && event.target.name !== 'proposeTime') {
             setTimePreferenceId(event.target.name);
             setTimeslotStart(new Date(selectedDate.year(), selectedDate.month(), selectedDate.date(), event.target.value.substring(0, 2), event.target.value.substring(3, 5)))
             setTimeslotEnd(new Date(selectedDate.year(), selectedDate.month(), selectedDate.date(), event.target.value.substring(6, 8), event.target.value.substring(9, 11)))
+        } else if (event.target.name === 'proposeTime') {
+            setProposeOptionChosen(true);
+            setTimeslotStart('');
+            setTimeslotEnd('');
+            setProposedTimeslotFrom('');
+            setProposedTimeslotTo('');
+            setDisabled(true);
+            setDisplayProposedTimeslots(true);
         }
+
     };
 
     const handleDateChange = (date) => {
@@ -101,7 +170,42 @@ function BookTutor({ tutor, subjectId }) {
         }
     };
 
-    const onSubmit = values => {
+    const onSubmitPropose = () => {
+        console.log('Propose submit')
+        setToken(window.localStorage.getItem('jwtToken'));
+        if (window.localStorage.getItem('jwtToken') !== null) {
+            const headers = {
+                Authorization: `Bearer ${token.slice(10, -2)}`
+            }
+            console.log(headers)
+            axios.post('http://localhost:5000/bookings/add',
+                {
+                    firstname: tutor.firstname,
+                    lastname: tutor.lastname,
+                    price: tutor.pricePerHour,
+                    timeslotStart: timeslotStart,
+                    timeslotEnd: timeslotEnd,
+                    participantNumber: 1,
+                    tutor: tutor._id,
+                    subject: subjectId,
+                },
+                {
+                    headers: headers
+                })
+                .then(res => {
+                    if (res.status === 200) {
+                        console.log(res.data);
+                        setRedirectToCurrentBookings(true);
+                    }
+                })
+                .catch(err => {
+                    console.log(`Something went wrong with payment ${err}`);
+                })
+        }
+    }
+
+    const onSubmit = () => {
+        console.log('Normal submit')
         setDisabled(true);
         setToken(window.localStorage.getItem('jwtToken'));
         if (window.localStorage.getItem('jwtToken') !== null) {
@@ -116,7 +220,7 @@ function BookTutor({ tutor, subjectId }) {
                     price: tutor.pricePerHour,
                     timeslotStart: timeslotStart,
                     timeslotEnd: timeslotEnd,
-                    participantNumber: values.participantNumber,
+                    participantNumber: 1,
                     tutor: tutor._id,
                     subject: subjectId,
                     week: week,
@@ -141,12 +245,10 @@ function BookTutor({ tutor, subjectId }) {
     return (
         <div>
             {
-                !loading ?
+                redirectToCurrentBookings ? <Redirect to='/bookings/current' /> : !loading ?
                     <Formik
                         initialValues={initialValues}
-                        validateOnBlur={false}
-                        validateOnChange={false}
-                        onSubmit={onSubmit}>
+                        onSubmit={proposeOptionChosen ? onSubmitPropose : onSubmit}>
                         <Form>
                             <Box classes={classesBox}>
                                 <div style={{ padding: 20 }}>
@@ -194,12 +296,59 @@ function BookTutor({ tutor, subjectId }) {
                                                         return null;
                                                     })
                                                 }
+                                                <FormControlLabel
+                                                    name="proposeTime"
+                                                    value='Another timeslot'
+                                                    control={<Radio />}
+                                                    label='Suggest another timeslot'
+                                                />
                                             </RadioGroup>
                                         </FormControl>
                                     </div>
-
                                 </div>
                             </Box>
+                            {
+                                displayProposedTimeslots ?
+                                    <Box classes={classesBox}>
+                                        <div className={classesButton.root}>
+                                            <TextField
+                                                id="timeFrom"
+                                                name="timeFrom"
+                                                label="From"
+                                                type="time"
+                                                className={classesTimePicker.textField}
+                                                onChange={onChangeFrom}
+                                                value={proposedTimeslotFrom}
+                                                InputLabelProps={{
+                                                    shrink: true,
+                                                }}
+                                                inputProps={{
+                                                    step: 300, // 5 min
+                                                    min: "08:00"
+                                                }}
+                                            />
+
+                                            <TextField
+                                                id="timeTo"
+                                                name="timeTo"
+                                                label="To"
+                                                type="time"
+                                                className={classesTimePicker.textField}
+                                                value={proposedTimeslotTo}
+                                                onChange={onChangeTo}
+                                                InputLabelProps={{
+                                                    shrink: true,
+                                                }}
+                                                inputProps={{
+                                                    step: 300, // 5 min
+                                                    min: { proposedTimeslotFrom }
+                                                }}
+                                            />
+                                        </div>
+                                    </Box>
+                                    :
+                                    <div></div>
+                            }
                             <Box classes={classesBox}>
                                 <div className={classesButton.root}>
                                     <Button
