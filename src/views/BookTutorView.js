@@ -11,8 +11,20 @@ import FavoriteIcon from '@material-ui/icons/Favorite';
 import ShareIcon from '@material-ui/icons/Share';
 import { makeStyles } from '@material-ui/core/styles';
 import Rating from '@material-ui/lab/Rating';
-import styles from './bookTutor.module.css';
 import BookTutor from '../components/BookTutor';
+
+const useStylesTutor = makeStyles(() => ({
+    rating: {
+        display: 'flex'
+    },
+    container: {
+        display: 'flex',
+        marginTop: '50px'
+    },
+    availability: {
+        marginLeft: '200px'
+    }
+}));
 
 const useStylesCard = makeStyles((theme) => ({
     root: {
@@ -32,6 +44,7 @@ function BookTutorView(props) {
     //dummy value - to be replaced with real one when the tutor has rating
     const avgRating = 4.7;
     const classesCard = useStylesCard();
+    const classesTutor = useStylesTutor();
 
     useEffect(() => {
         let isMounted = true; // note this flag denote mount status
@@ -66,12 +79,12 @@ function BookTutorView(props) {
     if (UserService.isAuthenticated()) {
         if (!loading) {
             return (
-                <div className={styles.container}>
+                <div className={classesTutor.container}>
                     <Card className={classesCard.root}>
                         <CardHeader
                             title={`${tutor.firstname} ${tutor.lastname}`}
                             subheader={
-                                <div className={styles.rating}>
+                                <div className={classesTutor.rating}>
                                     <Rating name="read-only" value={avgRating} precision={0.5} readOnly />
                                     <Typography component="legend">{avgRating}</Typography>
                                 </div>
@@ -98,7 +111,7 @@ function BookTutorView(props) {
                             </IconButton>
                         </CardActions>
                     </Card>
-                    <div className={styles.availability}>
+                    <div className={classesTutor.availability}>
                         <h2>Book an online lesson</h2>
                         <BookTutor tutor={tutor} subjectId={subjectId} />
                     </div>

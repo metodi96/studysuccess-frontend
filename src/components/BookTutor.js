@@ -103,10 +103,7 @@ function BookTutor({ tutor, subjectId }) {
         setProposedTimeslotTo(proposedTimeslotTo);
         setDisabled(false);
         //check if there is an empty value and if yes disable sumbit button
-        if (event.target.value.substring(0, 2) === '' || event.target.value.substring(3, 5) === ''
-            ||
-            proposedTimeslotTo.substring(0, 2) === '' || proposedTimeslotTo.substring(3, 5) === ''
-        ) {
+        if (event.target.value.substring(0, 2) === '' || event.target.value.substring(3, 5) === '') {
             setDisabled(true);
         }
         let newTimeslotStart = new Date(selectedDate.year(), selectedDate.month(), selectedDate.date(), event.target.value.substring(0, 2), event.target.value.substring(3, 5));
@@ -330,8 +327,7 @@ function BookTutor({ tutor, subjectId }) {
                                                     shrink: true,
                                                 }}
                                                 inputProps={{
-                                                    step: 300, // 5 min
-                                                    min: "08:00"
+                                                    step: 300 // 5 min
                                                 }}
                                             />
 
