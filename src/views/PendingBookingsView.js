@@ -65,7 +65,7 @@ function PendingBookingsView(props) {
                     <div>
                         <h3 className={classesBooking.heading}>You have {invitations.length} invitations.</h3>
                         <div className={classesBooking.container}>
-                        { invitations.sort((invitationA, invitationB) => invitationB.createdAt.localeCompare(invitationA.createdAt)).map((invitation) => (<div key={invitation._id} className={classesBooking.booking}><PendingBooking invitation={invitation} /></div>)) }
+                        { invitations.sort((invitationA, invitationB) => invitationB.createdAt.localeCompare(invitationA.createdAt)).map((invitation) => (<div key={invitation._id} className={classesBooking.booking}><PendingBooking history={props.history} invitation={invitation} /></div>)) }
                         </div>
                     </div>
                 )

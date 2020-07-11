@@ -50,7 +50,7 @@ const useStylesInvitation = makeStyles(() => ({
     }
 }));
 
-function PendingBooking({ invitation }) {
+function PendingBooking({ history, invitation }) {
     const classesList = useStylesList();
     const classesAvatar = useStylesAvatar();
     const classesButton = useStylesButton();
@@ -71,7 +71,7 @@ function PendingBooking({ invitation }) {
                 })
                 .then(() => {
                     console.log('Success!')
-                    window.location.reload(true);
+                    redirectToCurrent();
                 })
                 .catch(err => {
                     window.location.reload(true);
@@ -98,6 +98,10 @@ function PendingBooking({ invitation }) {
                     console.log('response: ', err.response.data);
                 })
         }
+    }
+
+    const redirectToCurrent = () => {
+        history.push('/bookings/current');
     }
 
     return (

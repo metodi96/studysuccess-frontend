@@ -12,6 +12,7 @@ import Invitation from './Invitation';
 import Snackbar from '@material-ui/core/Snackbar';
 import { TextField } from 'formik-material-ui';
 import { makeStyles } from '@material-ui/core/styles';
+import UserService from '../services/UserService';
 import Alert from './Alert';
 
 const useStylesEmail = makeStyles(() => ({
@@ -91,9 +92,10 @@ function InviteFriend({ booking, classesAvatar, openInvitationAlert, setOpenInvi
     const inviteFriend = values => {
         setToken(window.localStorage.getItem('jwtToken'));
         let friendAlreadyInvited = invitations.some(invitation => invitation.toUser.email === values.email);
+        let friendIsMe = UserService.getCurrentUser().email === values.email;
         if (window.localStorage.getItem('jwtToken') !== null) {
             console.log(`Inviting friend with email ${values.email} ${booking._id} now...`);
-            if (booking._id !== undefined && !friendAlreadyInvited) {
+            if (booking._id !== undefined && !friendAlreadyInvited && !friendIsMe) {
                 axios.post(`http://localhost:5000/bookings/current/invite/`,
                     {
                         friendEmail: values.email,
@@ -114,6 +116,8 @@ function InviteFriend({ booking, classesAvatar, openInvitationAlert, setOpenInvi
                     })
             } else if (friendAlreadyInvited) {
                 setSeverity('warning');
+            } else if (friendIsMe) {
+                setSeverity('warningMe');
             }
         }
     }
@@ -176,6 +180,12 @@ function InviteFriend({ booking, classesAvatar, openInvitationAlert, setOpenInvi
                         You have already invited this user!
                     </Alert>
                 </Snackbar>
+            case 'warningMe':
+                    return <Snackbar open={openSnackbar} autoHideDuration={2500} onClose={handleCloseSnackbar}>
+                        <Alert onClose={handleCloseSnackbar} severity='warning'>
+                            You can't invite yourself!
+                        </Alert>
+                    </Snackbar>
             default:
                 return null
         }

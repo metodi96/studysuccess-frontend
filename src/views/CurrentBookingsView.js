@@ -14,9 +14,13 @@ const useStylesBooking = makeStyles(() => ({
         minWidth: '1100px',
         marginBottom: '30px',
     },
-    heading:  {
+    heading: {
         marginLeft: '200px',
-        marginTop: '60px',
+        marginTop: '50px',
+    },
+    headingSecondary: {
+        marginLeft: '200px',
+        marginTop: '10px',
     },
     booking: {
         marginLeft: '100px',
@@ -25,7 +29,7 @@ const useStylesBooking = makeStyles(() => ({
         marginBottom: '50px',
         marginTop: '20px',
         minWidth: '400px',
-    } 
+    }
 }));
 
 function CurrentBookingsView(props) {
@@ -128,13 +132,15 @@ function CurrentBookingsView(props) {
                 return (
                     <div>
                         <h3 className={classesBooking.heading}>You have {bookings.length + acceptedInvitations.length} scheduled lessons in total.</h3>
+                <h4 className={classesBooking.headingSecondary}>Out of these {bookings.length} {bookings.length === 1 ? 'is' : 'are' } your own. You are free to either invite friends to a booking or cancel it entirely.</h4>
                         <div className={classesBooking.container}>
                             {bookings.sort((bookingA, bookingB) => bookingB.createdAt.localeCompare(bookingA.createdAt)).map((booking) => (<div key={booking._id} className={classesBooking.booking}><CurrentBookingOwn booking={booking} /></div>))}
                         </div>
+                        <h4 className={classesBooking.headingSecondary}>You have {acceptedInvitations.length} accepted invitation{acceptedInvitations.length === 1 ? '' : 's' } to bookings created by friends. You cannot invite friends or cancel the lesson.</h4>
                         <div className={classesBooking.container}>
                             {acceptedInvitations.sort((invitationA, invitationB) => invitationB.createdAt.localeCompare(invitationA.createdAt)).map((invitation) => (<div key={invitation._id} className={classesBooking.booking}><CurrentBookingAccepted invitation={invitation} /></div>))}
                         </div>
-                        <h3 className={classesBooking.heading}>You have {bookingsNotPaid.length} booking(s) which have not yet been paid or await approval from your tutor.</h3>
+                        <h4 className={classesBooking.headingSecondary}>You have {bookingsNotPaid.length} booking(s) which have not yet been paid or await approval from your tutor.</h4>
                         <div className={classesBooking.container}>
                             {bookingsNotPaid.sort((bookingA, bookingB) => bookingB.createdAt.localeCompare(bookingA.createdAt)).map((booking) => (<div key={booking._id} className={classesBooking.booking}><CurrentBookingNotPaid booking={booking} token={token} /></div>))}
                         </div>

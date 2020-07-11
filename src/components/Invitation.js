@@ -7,6 +7,7 @@ import PersonOutlineSharpIcon from '@material-ui/icons/PersonOutlineSharp';
 import CheckCircleOutlineOutlinedIcon from '@material-ui/icons/CheckCircleOutlineOutlined';
 import Alert from './Alert';
 import Snackbar from '@material-ui/core/Snackbar';
+import Tooltip from '@material-ui/core/Tooltip';
 
 function Invitation({ bookingId, invitation, classesAvatar }) {
     const [token, setToken] = useState(window.localStorage.getItem('jwtToken'));
@@ -75,9 +76,16 @@ function Invitation({ bookingId, invitation, classesAvatar }) {
                         position: 'relative'
                     }}>
                         <Avatar style={{ margin: 'auto' }} alt={`${invitation.toUser.firstname} ${invitation.toUser.lastname}`} src={`http://localhost:5000/${invitation.toUser.userImage}`} />
-                        <IconButton onClick={removeInvitation} disabled={disabled} size='small' style={{ right: '0', bottom: '50%', position: 'absolute' }} aria-label="delete">
-                            <HighlightOffIcon color="secondary" />
-                        </IconButton>
+                        {
+                            invitation.accepted ?
+                                <Tooltip title="Invitation accepted" aria-label="invitation-accepted"><CheckCircleOutlineOutlinedIcon size='small' style={{ color: 'green', right: '0', bottom: '50%', position: 'absolute' }} /></Tooltip>
+                                :
+                                <Tooltip title="Remove invitation" aria-label="remove-invitation">
+                                    <IconButton onClick={removeInvitation} disabled={disabled} size='small' style={{ right: '0', bottom: '50%', position: 'absolute' }} aria-label="delete">
+                                        <HighlightOffIcon color="secondary" />
+                                    </IconButton>
+                                </Tooltip>
+                        }
                     </div>
                     <p style={{ display: 'block', textAlign: 'center' }}>{`${invitation.toUser.firstname} ${invitation.toUser.lastname}`}</p>
                 </div>
@@ -90,24 +98,25 @@ function Invitation({ bookingId, invitation, classesAvatar }) {
                             <PersonOutlineSharpIcon color='primary' />
                         </Avatar>
                         {
-                            invitation.accepted ? 
-                            <CheckCircleOutlineOutlinedIcon size='small' style={{ color: 'green', right: '0', bottom: '50%', position: 'absolute' }} />
-                            :
-                            <IconButton onClick={removeInvitation} disabled={disabled} size='small' style={{ right: '0', bottom: '50%', position: 'absolute' }} aria-label="delete">
-                                <HighlightOffIcon color="secondary" />
-                            </IconButton>
+                            invitation.accepted ?
+                                <Tooltip title="Invitation accepted" aria-label="invitation-accepted"><CheckCircleOutlineOutlinedIcon size='small' style={{ color: 'green', right: '0', bottom: '50%', position: 'absolute' }} /></Tooltip>
+                                :
+                                <Tooltip title="Remove invitation" aria-label="remove-invitation">
+                                    <IconButton onClick={removeInvitation} disabled={disabled} size='small' style={{ right: '0', bottom: '50%', position: 'absolute' }} aria-label="delete">
+                                        <HighlightOffIcon color="secondary" />
+                                    </IconButton>
+                                </Tooltip>
                         }
-                        
                     </div>
                     <p style={{ display: 'block', textAlign: 'center' }}>{`${invitation.toUser.firstname} ${invitation.toUser.lastname}`}</p>
                 </div>
             }
             <div>
-            {
-                renderSwitchForSnackbar(severity)
-            }
+                {
+                    renderSwitchForSnackbar(severity)
+                }
             </div>
-            
+
         </div>
     )
 }
