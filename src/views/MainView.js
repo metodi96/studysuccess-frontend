@@ -5,7 +5,6 @@ import {Button, Avatar} from '@material-ui/core/';
 import { Link } from 'react-router-dom';
 import UserService from '../services/UserService';
 import SignUp from '../components/SignUp';
-import Navbar from '../components/Navbar';
 import logo from '../images/logo.png';
 /*
 const useStyles = makeStyles((theme) => ({
@@ -40,7 +39,6 @@ function MainView(props) {
             <div>
                 {UserService.isAuthenticated() ?
                     <div>
-                        <Navbar />
                         <p>Welcome {UserService.getCurrentUser().email}!</p>
                     </div> :
                     null

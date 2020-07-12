@@ -13,7 +13,6 @@ import { makeStyles } from '@material-ui/core/styles';
 import Rating from '@material-ui/lab/Rating';
 import styles from './bookTutor.module.css';
 import BookTutor from '../components/BookTutor';
-import Navbar from '../components/Navbar';
 
 const useStylesCard = makeStyles((theme) => ({
     root: {
@@ -68,7 +67,6 @@ function BookTutorView(props) {
         if (!loading) {
             return (
                 <div>
-                    <Navbar />
                     <div className={styles.container}>
                         <Card className={classesCard.root}>
                             <CardHeader

@@ -5,7 +5,6 @@ import CurrentBookingOwn from '../components/CurrentBookingOwn';
 import CurrentBookingAccepted from '../components/CurrentBookingAccepted';
 import CurrentBookingNotPaid from '../components/CurrentBookingNotPaid';
 import styles from './bookingsStyles.module.css';
-import Navbar from '../components/Navbar';
 
 function CurrentBookingsView(props) {
     const [bookings, setBookings] = useState([]);
@@ -105,7 +104,6 @@ function CurrentBookingsView(props) {
             if (bookings.length > 0 || acceptedInvitations.length > 0 || bookingsNotPaid.length > 0) {
                 return (
                     <div>
-                        <Navbar />
                         <h3 className={styles.heading}>You have {bookings.length + acceptedInvitations.length} scheduled lessons in total.</h3>
                         <div className={styles.container}>
                             {bookings.sort((bookingA, bookingB) => bookingB.createdAt.localeCompare(bookingA.createdAt)).map((booking) => (<div key={booking._id} className={styles.booking}><CurrentBookingOwn booking={booking} /></div>))}
@@ -122,7 +120,6 @@ function CurrentBookingsView(props) {
             } else {
                 return (
                     <div>
-                        <Navbar />
                         <p>You currently don't have any bookings.</p>
                     </div>
                 )
@@ -130,7 +127,6 @@ function CurrentBookingsView(props) {
         } else {
             return (
                 <div>
-                    <Navbar />
                     <p>Loading bookings...</p>
                 </div>
             )

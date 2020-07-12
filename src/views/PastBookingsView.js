@@ -3,7 +3,6 @@ import UserService from '../services/UserService';
 import axios from 'axios';
 import PastBooking from '../components/PastBooking';
 import styles from './bookingsStyles.module.css';
-import Navbar from '../components/Navbar';
 
 function PastBookingsView(props) {
     const [bookings, setBookings] = useState(undefined);
@@ -47,7 +46,6 @@ function PastBookingsView(props) {
             } else {
                 return (
                     <div>
-                        <Navbar />
                         <p>You currently don't have any bookings.</p>
                     </div>
                 )
@@ -55,7 +53,6 @@ function PastBookingsView(props) {
         } else {
             return (
                 <div>
-                    <Navbar />
                     <p>Loading bookings...</p>
                 </div>
             )

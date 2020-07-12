@@ -6,22 +6,22 @@ import TutorsView from './views/TutorsView';
 import SignUpView from './views/SignUpView';
 import LogInView from './views/LogInView';
 import CurrentBookingsView from './views/CurrentBookingsView';
-import Navbar from './components/Navbar'
+import NavBar from './components/NavBar'
 import BookTutorView from './views/BookTutorView';
 import BookingAddSuccessView from './views/BookingAddSuccessView';
 import PastBookingsView from './views/PastBookingsView';
 import PendingBookingsView from './views/PendingBookingsView';
 import BookingAcceptedSuccessView from './views/BookingAcceptedSuccessView';
-import UserService from './services/UserService';
 import ManageProfileView from './views/ManageProfileView';
+import UserService from './services/UserService';
 
 function App() {
 
   return (
     <Router>
-      <Navbar />
+      <NavBar />
       <div className='container'>
-        <div className={UserService.isAuthenticated() ? 'routerContainer' : ''}>
+        <div className={UserService.isAuthenticated() !== false ? 'routerContainer' : ''}>
           <br />
           <Switch>
             <Route path='/' exact component={MainView} />

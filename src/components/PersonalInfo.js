@@ -53,8 +53,8 @@ function PersonalInfo({ profile, openProfileAlert, setOpenProfileAlert }) {
     const [openSnackbar, setOpenSnackbar] = useState(false);
     const [severity, setSeverity] = useState('');
     //doesn't work super correctly
-    const [hasCertificateOfEnrolment, setHasCertificateOfEnrolment] = useState(false);
-    const [hasGradeExcerpt, setHasGradeExcerpt] = useState(false);
+    const [hasCertificateOfEnrolment, setHasCertificateOfEnrolment] = useState(profile.hasCertificateOfEnrolment);
+    const [hasGradeExcerpt, setHasGradeExcerpt] = useState(profile.hasGradeExcerpt);
 
     const initialValues = {
         firstname: profile.firstname,
@@ -77,7 +77,7 @@ function PersonalInfo({ profile, openProfileAlert, setOpenProfileAlert }) {
 
     const fileSelectedHandler = (event) => {
         console.log(event.target.files[0]);
-        // Allowing file type 
+        // Allowed file type 
         const allowedExtensions = /(\.jpg|\.jpeg|\.png)$/i;
 
         if (allowedExtensions.exec(event.target.files[0].name)) {
@@ -90,7 +90,7 @@ function PersonalInfo({ profile, openProfileAlert, setOpenProfileAlert }) {
 
     const fileSelectedHandlerCertificate = (event) => {
         console.log(event.target.files[0]);
-        // Allowing file type 
+        // Allowed file type 
         const allowedExtensions = /(\.pdf)$/i;
 
         if (allowedExtensions.exec(event.target.files[0].name)) {
@@ -104,7 +104,7 @@ function PersonalInfo({ profile, openProfileAlert, setOpenProfileAlert }) {
 
     const fileSelectedHandlerGrade = (event) => {
         console.log(event.target.files[0]);
-        // Allowing file type 
+        // Allowed file type 
         const allowedExtensions = /(\.pdf)$/i;
 
         if (allowedExtensions.exec(event.target.files[0].name)) {
@@ -131,12 +131,8 @@ function PersonalInfo({ profile, openProfileAlert, setOpenProfileAlert }) {
         if (selectedFile !== null) {
             formData.append('userImage', selectedFile, selectedFile.name);
         }
-        if (!profile.hasCertificateOfEnrolment || !profile.hasGradeExcerpt) {
-            console.log(profile.hasGradeExcerpt);
-            console.log(profile.hasCertificateOfEnrolment);
-            formData.append('hasCertificateOfEnrolment', hasCertificateOfEnrolment);
-            formData.append('hasGradeExcerpt', hasGradeExcerpt);
-        }
+        formData.append('hasCertificateOfEnrolment', hasCertificateOfEnrolment);
+        formData.append('hasGradeExcerpt', hasGradeExcerpt);
         console.log(...formData);
 
         if (window.localStorage.getItem('jwtToken') !== null) {
