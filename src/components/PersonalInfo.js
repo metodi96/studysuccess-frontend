@@ -3,7 +3,7 @@ import * as Yup from 'yup';
 import { TextField } from 'formik-material-ui';
 import { Formik, Form, Field } from 'formik';
 import { makeStyles } from '@material-ui/core/styles';
-import { Button } from '@material-ui/core';
+import { Button, Avatar, Tooltip } from '@material-ui/core';
 import axios from 'axios';
 import styles from '../views/bookingsStyles.module.css';
 import EditIcon from '@material-ui/icons/Edit';
@@ -46,6 +46,7 @@ function PersonalInfo({ profile, openProfileAlert, setOpenProfileAlert }) {
     const classesField = useStylesField();
     const [disabled, setDisabled] = useState(false);
     const [typeImageRight, setTypeImageRight] = useState(true);
+    const [thumbnail, setThumbnail] = useState(null);
     const [typePdfCertificateRight, setTypePdfCertificateRight] = useState(true);
     const [typePdfGradeRight, setTypePdfGradeRight] = useState(true);
     const [token, setToken] = useState(window.localStorage.getItem('jwtToken'));
@@ -83,6 +84,13 @@ function PersonalInfo({ profile, openProfileAlert, setOpenProfileAlert }) {
         if (allowedExtensions.exec(event.target.files[0].name)) {
             setTypeImageRight(true);
             setSelectedFile(event.target.files[0]);
+            let reader = new FileReader();
+
+            reader.onloadend = () => {
+                setThumbnail(reader.result);
+            };
+            //otherwise it doesnt get displayed
+            reader.readAsDataURL(event.target.files[0]);
         } else if (!allowedExtensions.exec(event.target.files[0].name)) {
             setTypeImageRight(false);
         }
@@ -148,7 +156,7 @@ function PersonalInfo({ profile, openProfileAlert, setOpenProfileAlert }) {
                 .then(res => {
                     setDisabled(false);
                     resetForm({ values: values });
-                    //window.location.reload();
+                    window.location.reload();
                     console.log(res.data)
                 })
                 .catch(err => {
@@ -233,7 +241,7 @@ function PersonalInfo({ profile, openProfileAlert, setOpenProfileAlert }) {
                                 </div>
                             </div>
                             <div>
-                                <Field
+                                <Tooltip title="You cannot edit this field" aria-label="cannot-edit"><Field
                                     component={TextField}
                                     classes={classesField}
                                     type='text'
@@ -241,8 +249,7 @@ function PersonalInfo({ profile, openProfileAlert, setOpenProfileAlert }) {
                                     name='email'
                                     disabled
                                     value={initialValues.email}
-
-                                />
+                                /></Tooltip>
                             </div>
                             <div style={{ position: 'relative' }}>
                                 <Field
@@ -317,6 +324,7 @@ function PersonalInfo({ profile, openProfileAlert, setOpenProfileAlert }) {
                             </div>
                             <div>
                                 <input id="userImage" type="file" onChange={fileSelectedHandler} />
+                                {thumbnail !== null ? <Avatar src={thumbnail} /> : null}
                                 {!typeImageRight ? <p style={{ color: 'red' }}>Wrong file type</p> : null}
                             </div>
 
