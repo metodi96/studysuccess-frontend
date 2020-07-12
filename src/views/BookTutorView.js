@@ -13,6 +13,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import Rating from '@material-ui/lab/Rating';
 import styles from './bookTutor.module.css';
 import BookTutor from '../components/BookTutor';
+import Navbar from '../components/Navbar';
 
 const useStylesCard = makeStyles((theme) => ({
     root: {
@@ -66,41 +67,44 @@ function BookTutorView(props) {
     if (UserService.isAuthenticated()) {
         if (!loading) {
             return (
-                <div className={styles.container}>
-                    <Card className={classesCard.root}>
-                        <CardHeader
-                            title={`${tutor.firstname} ${tutor.lastname}`}
-                            subheader={
-                                <div className={styles.rating}>
-                                    <Rating name="read-only" value={avgRating} precision={0.5} readOnly />
-                                    <Typography component="legend">{avgRating}</Typography>
-                                </div>
-                            }
-                        />
-                        <div style={{ justifyContent: 'center', display: 'flex' }}>
-                            <img width='250px' height='250px' src={`http://localhost:5000/${tutor.userImage}`} alt={`${tutor.firstname} ${tutor.lastname}`} title={`${tutor.firstname} ${tutor.lastname}`} />
-                        </div>
-                        <CardContent>
-                            <Typography variant="body2" color="textSecondary" component="p">
-                                Tutor for {
-                                    Object.values(tutor.subjectsToTeach).map((value, i) => (
-                                        <span key={i}>{tutor.subjectsToTeach.length - 1 === i ? <b>{`${value.name}.`}</b> : <b>{`${value.name}, `}</b>}</span>
-                                    ))
+                <div>
+                    <Navbar />
+                    <div className={styles.container}>
+                        <Card className={classesCard.root}>
+                            <CardHeader
+                                title={`${tutor.firstname} ${tutor.lastname}`}
+                                subheader={
+                                    <div className={styles.rating}>
+                                        <Rating name="read-only" value={avgRating} precision={0.5} readOnly />
+                                        <Typography component="legend">{avgRating}</Typography>
+                                    </div>
                                 }
-                            </Typography>
-                        </CardContent>
-                        <CardActions disableSpacing>
-                            <IconButton disabled aria-label="add to favorites">
-                                <FavoriteIcon />
-                            </IconButton>
-                            <IconButton disabled aria-label="share">
-                                <ShareIcon />
-                            </IconButton>
-                        </CardActions>
-                    </Card>
-                    <div className={styles.availability}>
-                        <h2>Book an online lesson</h2>
-                        <BookTutor tutor={tutor} subjectId={subjectId} />
+                            />
+                            <div style={{ justifyContent: 'center', display: 'flex' }}>
+                                <img width='250px' height='250px' src={`http://localhost:5000/${tutor.userImage}`} alt={`${tutor.firstname} ${tutor.lastname}`} title={`${tutor.firstname} ${tutor.lastname}`} />
+                            </div>
+                            <CardContent>
+                                <Typography variant="body2" color="textSecondary" component="p">
+                                    Tutor for {
+                                        Object.values(tutor.subjectsToTeach).map((value, i) => (
+                                            <span key={i}>{tutor.subjectsToTeach.length - 1 === i ? <b>{`${value.name}.`}</b> : <b>{`${value.name}, `}</b>}</span>
+                                        ))
+                                    }
+                                </Typography>
+                            </CardContent>
+                            <CardActions disableSpacing>
+                                <IconButton disabled aria-label="add to favorites">
+                                    <FavoriteIcon />
+                                </IconButton>
+                                <IconButton disabled aria-label="share">
+                                    <ShareIcon />
+                                </IconButton>
+                            </CardActions>
+                        </Card>
+                        <div className={styles.availability}>
+                            <h2>Book an online lesson</h2>
+                            <BookTutor tutor={tutor} subjectId={subjectId} />
+                        </div>
                     </div>
                 </div>
             )

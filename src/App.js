@@ -6,24 +6,28 @@ import TutorsView from './views/TutorsView';
 import SignUpView from './views/SignUpView';
 import LogInView from './views/LogInView';
 import CurrentBookingsView from './views/CurrentBookingsView';
-import NavBar from './components/NavBar'
+import Navbar from './components/Navbar'
 import BookTutorView from './views/BookTutorView';
 import BookingAddSuccessView from './views/BookingAddSuccessView';
 import PastBookingsView from './views/PastBookingsView';
 import PendingBookingsView from './views/PendingBookingsView';
 import BookingAcceptedSuccessView from './views/BookingAcceptedSuccessView';
+import UserService from './services/UserService';
+import ManageProfileView from './views/ManageProfileView';
 
 function App() {
-    return (
-      <div className='container'>            
-        <div className='routerContainer'>
-        <Router>    
-          <NavBar />              
-          <br/>
+
+  return (
+    <Router>
+      <Navbar />
+      <div className='container'>
+        <div className={UserService.isAuthenticated() ? 'routerContainer' : ''}>
+          <br />
           <Switch>
-            <Route path='/'exact component={MainView} />
+            <Route path='/' exact component={MainView} />
             <Route path='/auth/login' component={LogInView} />
             <Route path='/signup' component={SignUpView} />
+            <Route path='/profile' component={ManageProfileView} />
             <Route path='/tutors/:subjectId' exact component={TutorsView} />
             <Route path='/tutors/:subjectId/:tutorId' exact component={BookTutorView} />
             <Route path='/bookings/current' component={CurrentBookingsView} />
@@ -32,11 +36,11 @@ function App() {
             <Route path='/bookings/past' component={PastBookingsView} />
             <Route path='/bookings/pending' component={PendingBookingsView} />
             <Route path='*' component={MainView} />
-          </Switch>          
-        </Router>
+          </Switch>
         </div>
       </div>
-    );
+    </Router>
+  );
 }
 
 export default App;

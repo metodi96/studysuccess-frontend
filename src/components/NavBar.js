@@ -1,23 +1,84 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { Link } from 'react-router-dom';
-import { Button, AppBar, Toolbar, IconButton, Menu, MenuItem, Avatar, Divider, List, Typography, Box } from "@material-ui/core";
+import { Button, AppBar, Toolbar, IconButton, Menu, MenuItem, Avatar, Box } from "@material-ui/core";
 import logo from '../images/logo.png';
+import axios from 'axios';
+import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
 import UserService from '../services/UserService';
+import { useLocation, useHistory } from 'react-router-dom';
 
-const useStylesNavBar = makeStyles((theme) => ({
-    avatar: {
-        display: "block",
-        margin: "0.5rem auto",
-        width: theme.spacing(13),
-        height: theme.spacing(13)
-    },
-}));
+const useStylesNavBarButtons = makeStyles(() => ({
+    root: {
+        color: 'black',
+        fontSize: 'smaller',
+        fontFamily: 'Verdana, Courier, serif'
+    }
+}))
 
-function NavBar() {
-    const classes = useStylesNavBar();
+const useStylesAvatar = makeStyles(() => ({
+    root: {
+        marginLeft: '7px'
+    }
+}))
+
+const useStylesAvatarNoPic = makeStyles(() => ({
+    root: {
+        marginLeft: '15px'
+    }
+}))
+
+function Navbar() {
+    const classesNavBarButtons = useStylesNavBarButtons();
+    const classesAvatar = useStylesAvatar();
+    const classesAvatarNoPic = useStylesAvatarNoPic();
     const [anchorEl, setAnchorEl] = useState(null);
+    const [anchorElBookings, setAnchorElBookings] = useState(null);
+    const [profile, setProfile] = useState(undefined);
+    const [token, setToken] = useState(window.localStorage.getItem('jwtToken'));
+    const [loading, setLoading] = useState(true);
+    const location = useLocation();
+    const history = useHistory();
     const open = Boolean(anchorEl);
+    const openBookings = Boolean(anchorElBookings);
+
+    const logout = () => {
+        console.log('Attempting logout...')
+        console.log(location.pathname)
+        UserService.logout();
+        if (location.pathname !== '/') {
+            history.push('/');
+            window.location.reload();
+        }
+        else {
+            window.location.reload();
+        }
+        UserService.isAuthenticated() ? console.log('User is still authenticated') : console.log('User logged out successfully');
+    }
+
+    useEffect(() => {
+        let isMounted = true; // note this flag denote mount status
+        setToken(window.localStorage.getItem('jwtToken'));
+        if (window.localStorage.getItem('jwtToken') !== null) {
+            console.log(token)
+            axios
+                .get('http://localhost:5000/profile', {
+                    headers: {
+                        Authorization: `Bearer ${token.slice(10, -2)}`
+                    }
+                })
+                .then(res => {
+                    if (isMounted) {
+                        setProfile(res.data);
+                        setLoading(false);
+                    }
+                })
+                .catch(err => {
+                    console.log(err);
+                })
+        }
+        return () => { isMounted = false } // use effect cleanup to set flag false, if unmounted
+    }, [token]);
 
     const handleMenu = (event) => {
         setAnchorEl(event.currentTarget);
@@ -26,25 +87,57 @@ function NavBar() {
     const handleClose = () => {
         setAnchorEl(null);
     };
-    // avatar is not showing the pic
-    return (        
+    const handleMenuBookings = (event) => {
+        setAnchorElBookings(event.currentTarget);
+    };
+
+    const handleCloseBookings = () => {
+        setAnchorElBookings(null);
+    };
+    
+    return (
+        !loading ?
         <div>
             <Box component="nav" style={{ maxHeight: '50px', position: 'relative' }}>
                 <AppBar position="fixed" style={{ background: "#E3E9ED" }}>
                     <Avatar src={logo} alt="StudySuccess" style={{ position: 'absolute', marginTop: '10px', marginLeft: '10px' }} />
                     <Toolbar style={{ marginLeft: '25px' }}>
-                        <Button>
-                            <Link to="/" className="nav-link">Homepage</Link>
-                        </Button>
-                        <Button>
-                            <Link to="/bookings/current" className="nav-link">My Bookings</Link>
-                        </Button>
-                        <Button >
+                        <Button className={classesNavBarButtons.root} component={Link} to="/">Homepage</Button>
+                        <div>
+                            <Button
+                                className={classesNavBarButtons.root}
+                                onClick={handleMenuBookings}
+                            >                                
+                                My Bookings                                
+                            </Button>
+                            <Menu
+                                id="menu-appbar"
+                                anchorEl={anchorElBookings}
+                                anchorOrigin={{
+                                    vertical: 'top',
+                                    horizontal: 'right',
+                                }}
+                                keepMounted
+                                transformOrigin={{
+                                    vertical: 'top',
+                                    horizontal: 'right',
+                                }}
+                                open={openBookings}
+                                onClose={handleCloseBookings}
+                            >
+                                <MenuItem onClick={handleCloseBookings} component={Link} to="/bookings/current">Scheduled Bookings</MenuItem>
+                                <MenuItem onClick={handleCloseBookings} component={Link} to="/bookings/past">Completed Bookings</MenuItem>
+                                <MenuItem onClick={handleCloseBookings} component={Link} to="/bookings/pending">Pending Bookings</MenuItem>
+                            </Menu>
+                        </div>
+
+                        
+                        <Button className={classesNavBarButtons.root} >
                             Booking Requests
                 </Button>
 
 
-                        <div>
+                        <div style={{ position: 'absolute', right: '2%' }}>
                             <IconButton
                                 aria-label="account of current user"
                                 aria-controls="menu-appbar"
@@ -54,12 +147,17 @@ function NavBar() {
                             >
                                 <Box>
                                     {
-                                        console.log(UserService.getCurrentUser().userImage)
+                                        !loading && profile !== undefined && UserService.isAuthenticated() 
+                                        ?  <div style={{ display: 'flex' }}><span style={{
+                                            paddingTop: '10px',
+                                            color: 'black',
+                                            fontSize: 'initial',
+                                            fontFamily: 'Verdana, Courier, serif'
+                                        }}>{profile.firstname}</span><ArrowDropDownIcon style={{ color: 'black', paddingTop: '10px' }}></ArrowDropDownIcon>
+                                        <Avatar classes={profile.userImage ? classesAvatar : classesAvatarNoPic} src={`http://localhost:5000/${profile.userImage}`} alt="Avatar" />
+                                        </div> : null
                                     }
-                                    {
-                                        UserService.isAuthenticated() ? <img src={`http://localhost:5000/${UserService.getCurrentUser().userImage}`} alt="Avatar" /> : <Avatar src={logo} alt="Avatar" />
-                                    }
-                                
+
                                 </Box>
                             </IconButton>
                             <Menu
@@ -77,19 +175,43 @@ function NavBar() {
                                 open={open}
                                 onClose={handleClose}
                             >
-                                <MenuItem onClick={handleClose}>Manage my profile</MenuItem>
-                                <MenuItem onClick={handleClose}>Log Out</MenuItem>
+                                <MenuItem onClick={handleClose} component={Link} to="/profile">Manage my profile</MenuItem>
+                                <MenuItem onClick={logout}>Log Out</MenuItem>
                             </Menu>
                         </div>
 
                     </Toolbar>
                 </AppBar>
             </Box>
-
         </div>
+        : <div></div>
     )
 }
 
-export default NavBar
+export default Navbar
 
 //axios.get(`http://localhost:5000/${UserService.getCurrentUser().userImage}`)
+/*
+<div>
+                        <Button className={classesNavBarButtons.root}>My Bookings</Button>
+                        <Menu
+                                id="menu-appbar"
+                                anchorEl={anchorEl}
+                                anchorOrigin={{
+                                    vertical: 'top',
+                                    horizontal: 'right',
+                                }}
+                                keepMounted
+                                transformOrigin={{
+                                    vertical: 'top',
+                                    horizontal: 'right',
+                                }}
+                                open={open}
+                                onClose={handleClose}
+                            >
+                                <MenuItem onClick={handleClose} component={Link} to="/bookings/current">Scheduled Bookings</MenuItem>
+                                <MenuItem onClick={handleClose} component={Link} to="/bookings/past">Completed Bookings</MenuItem>
+                                <MenuItem onClick={handleClose} component={Link} to="/bookings/pending">Pending Bookings</MenuItem>
+                            </Menu>
+                        </div>
+*/

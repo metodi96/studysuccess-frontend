@@ -1,5 +1,5 @@
-import React, {useState, useEffect} from 'react'
-import axios from 'axios'
+import React, { useState, useEffect } from 'react'
+import axios from 'axios';
 
 function BookingAcceptedSuccessView(props) {
 
@@ -29,8 +29,8 @@ function BookingAcceptedSuccessView(props) {
         }
     }, [token, props.history, props.location.search]);
     return (
-        <div>   
-            {loading ? `Loading success page...`: `Successful payment for accepted booking. Redirecting to current bookings view.` }
+        <div>            
+            {loading ? `Loading success page...` : `Successful payment for accepted booking. Redirecting to current bookings view.`}
         </div>
     )
 }
