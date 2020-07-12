@@ -77,7 +77,8 @@ function SignUp() {
         axios.post('http://localhost:5000/signup', values)
             .then(res => console.log(res.data))
             .catch(err => {
-                console.log(`Something went wrong ${err}`);
+                //use this to precisely tell what the response from the server is
+                console.log('response: ', err.response.data);
             });
     }
     //console.log('Errors', formik.errors)  console.log('Visited fields', formik.touched)

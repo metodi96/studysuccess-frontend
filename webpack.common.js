@@ -7,7 +7,7 @@ const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 
 module.exports = {
     entry: {
-        'vendor': ['react','react-dom','react-router-dom', '@babel/polyfill', 'formik-material-ui'],
+        'vendor': ['react','react-dom','react-router-dom', '@babel/polyfill'],
         'main': path.resolve(__dirname,'src/index.js')
     },
     output: {
