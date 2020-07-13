@@ -5,16 +5,30 @@ import IconButton from '@material-ui/core/IconButton';
 import Typography from '@material-ui/core/Typography';
 import FavoriteIcon from '@material-ui/icons/Favorite';
 import Rating from '@material-ui/lab/Rating';
-import styles from './tutorProfile.module.css';
 import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
 import {Link} from "react-router-dom";
+import { makeStyles } from '@material-ui/styles';
+
+const useStylesTutor = makeStyles(() => ({
+    rating: {
+        display: 'flex'
+    },
+    container: {
+        display: 'flex',
+        marginTop: '50px'
+    },
+    availability: {
+        marginLeft: '200px'
+    }
+}));
 
 function TutorProfileView(props) {
     const [tutor, setTutor] = useState({});
     const [tutorId, setTutorId] = useState(props.match.params.tutorId);
     const [subjectId, setSubjectId] = useState(props.match.params.subjectId);
     const [loading, setLoading] = useState(true);
+    const classesTutor = useStylesTutor();
     const [token, setToken] = useState(window.localStorage.getItem('jwtToken'));
     //dummy value - to be replaced with real one when the tutor has rating
     const avgRating = 4.7;
@@ -78,9 +92,9 @@ function TutorProfileView(props) {
     if (UserService.isAuthenticated()) {
         if (!loading) {
             return (
-                <div className={styles.container}>
-                    <div className={styles.content}>
-                        <div className={styles.grid}>
+                <div className={classesTutor.container}>
+                    <div className={classesTutor.content}>
+                        <div className={classesTutor.grid}>
                             <Grid container spacing={3}>
                                 <Grid item xs={12}>
                                     <Grid container spacing={3}>
@@ -92,7 +106,7 @@ function TutorProfileView(props) {
                                                 <Typography variant="body2" color="textSecondary" component="p" id="tutorName">
                                                     {`${tutor.firstname} ${tutor.lastname}`}
                                                 </Typography>
-                                                <div className={styles.rating}>
+                                                <div className={classesTutor.rating}>
                                                     <Rating value={tutor.avgRating} precision={0.5} readOnly />
                                                     <Typography component="legend">{tutor.avgRating}</Typography>
                                                 </div>
@@ -133,18 +147,17 @@ function TutorProfileView(props) {
                                 
                             </Grid>
                         </div>
-                        {/* { bookings.map((booking) => (<div key={booking._id} className={styles.booking}><PastBooking booking={booking} /></div>)) } */}
-                        { tutor.feedback.map((feedback) => (
+                        { tutor.feedback !== undefined ? tutor.feedback.map((feedback) => (
                             <div key = {feedback._id}>
                                 <hr />
-                                <div className={styles.rating}>
+                                <div className={classesTutor.rating}>
                                     <Rating value={feedback.rating} readOnly />
                                     <Typography component="legend">{feedback.rating}</Typography>
                                 </div>
                                 <Typography variant="body2" color="textPrimary" component="p">For Subject: {feedback.forSubject?.name}</Typography>
                                 <Typography variant="body2" color="textSecondary" component="p">{feedback.comment}</Typography>
                             </div>
-                        )) }
+                        )) : null}
                     </div>
 
                 </div>

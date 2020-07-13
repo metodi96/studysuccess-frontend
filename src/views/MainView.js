@@ -14,12 +14,6 @@ import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
 import React, { useState, useEffect } from 'react';
 
-
-import styles from './tutorProfile.module.css';
-
-
-
-
 const useStyles = makeStyles((theme) => ({
     root: {
         '& > *': {
@@ -28,8 +22,29 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
+const useStylesTutor = makeStyles(() => ({
+    container: {
+        backgroundColor: 'rgba(152, 158, 157, 0.438)',
+        padding: '1em'
+    },
+    content: {
+        backgroundColor: 'white',
+        padding: '0.5em'
+    },
+    grid: {
+        flexGrow: '1'
+    },
+    rating: {
+        display: 'flex'
+    },
+    test: {
+        fontW: 'bold'
+    }
+}))
+
 function MainView(props) {
     const classes = useStyles();
+    const classesTutor = useStylesTutor();
 
     const logout = () => {
         console.log('Attempting logout...')
@@ -67,15 +82,11 @@ function MainView(props) {
                     <SignUp></SignUp>
                     : null
             }
-
             <div>
-                <h3 className={styles.heading}>Tutors with highest rating</h3>
+                <h3 className={classesTutor.heading}>Tutors with highest rating</h3>
             </div>
-            <TrendingTutors></TrendingTutors>
-            
+            <TrendingTutors classesTutor={classesTutor}></TrendingTutors>
         </div>
-
-        
     )
 }
 
