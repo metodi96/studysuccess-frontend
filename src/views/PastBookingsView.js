@@ -1,13 +1,35 @@
 import React, { useState, useEffect } from 'react';
 import UserService from '../services/UserService';
 import axios from 'axios';
-import PastBooking from '../components/PastBooking';
-import styles from './bookingsStyles.module.css';
+import PastBooking from '../components/PastBooking'
+import { makeStyles } from '@material-ui/core';
+const useStylesBooking = makeStyles(() => ({
+    container: {
+        backgroundColor: 'rgba(152, 158, 157, 0.438)',
+        marginLeft: '200px',
+        marginRight: '200px',
+        minWidth: '1100px',
+        marginBottom: '30px',
+    },
+    heading:  {
+        marginLeft: '200px',
+        marginTop: '60px',
+    },
+    booking: {
+        marginLeft: '100px',
+        marginRight: '50px',
+        display: 'inline-block',
+        marginBottom: '50px',
+        marginTop: '20px',
+        minWidth: '400px',
+    } 
+}));
 
 function PastBookingsView(props) {
     const [bookings, setBookings] = useState(undefined);
     const [loading, setLoading] = useState(true);
     const [token, setToken] = useState(window.localStorage.getItem('jwtToken'));
+    const classesBooking = useStylesBooking();
     useEffect(() => {
         setToken(window.localStorage.getItem('jwtToken'));
         if (window.localStorage.getItem('jwtToken') !== null) {
@@ -37,9 +59,9 @@ function PastBookingsView(props) {
             if (bookings.length > 0) {
                 return (
                     <div>
-                        <h3 className={styles.heading}>You have completed {bookings.length} lessons.</h3>
-                        <div className={styles.container}>
-                        { bookings.map((booking) => (<div key={booking._id} className={styles.booking}><PastBooking booking={booking} /></div>)) }
+                        <h3 className={classesBooking.heading}>You had {bookings.length} scheduled lessons.</h3>
+                        <div className={classesBooking.container}>
+                        { bookings.map((booking) => (<div key={booking._id} className={classesBooking.booking}><PastBooking booking={booking} /></div>)) }
                         </div>
                     </div>
                 )

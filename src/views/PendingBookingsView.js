@@ -2,12 +2,35 @@ import React, { useState, useEffect } from 'react'
 import UserService from '../services/UserService'
 import axios from 'axios';
 import PendingBooking from '../components/PendingBooking';
-import styles from './bookingsStyles.module.css';
+import { makeStyles } from '@material-ui/core';
+
+const useStylesBooking = makeStyles(() => ({
+    container: {
+        backgroundColor: 'rgba(152, 158, 157, 0.438)',
+        marginLeft: '200px',
+        marginRight: '200px',
+        minWidth: '1100px',
+        marginBottom: '30px',
+    },
+    heading:  {
+        marginLeft: '200px',
+        marginTop: '60px',
+    },
+    booking: {
+        marginLeft: '100px',
+        marginRight: '50px',
+        display: 'inline-block',
+        marginBottom: '50px',
+        marginTop: '20px',
+        minWidth: '400px',
+    } 
+}));
 
 function PendingBookingsView(props) {
     const [invitations, setInvitations] = useState([]);
     const [loading, setLoading] = useState(true);
     const [token, setToken] = useState(window.localStorage.getItem('jwtToken'));
+    const classesBooking = useStylesBooking();
 
     useEffect(() => {
         setToken(window.localStorage.getItem('jwtToken'));
@@ -40,9 +63,9 @@ function PendingBookingsView(props) {
             if (invitations.length > 0) {
                 return (
                     <div>
-                        <h3 className={styles.heading}>You have {invitations.length} invitations.</h3>
-                        <div className={styles.container}>
-                        { invitations.sort((invitationA, invitationB) => invitationB.createdAt.localeCompare(invitationA.createdAt)).map((invitation) => (<div key={invitation._id} className={styles.booking}><PendingBooking invitation={invitation} /></div>)) }
+                        <h3 className={classesBooking.heading}>You have {invitations.length} invitations.</h3>
+                        <div className={classesBooking.container}>
+                        { invitations.sort((invitationA, invitationB) => invitationB.createdAt.localeCompare(invitationA.createdAt)).map((invitation) => (<div key={invitation._id} className={classesBooking.booking}><PendingBooking history={props.history} invitation={invitation} /></div>)) }
                         </div>
                     </div>
                 )

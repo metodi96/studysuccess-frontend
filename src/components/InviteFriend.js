@@ -9,14 +9,11 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import axios from 'axios';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import Invitation from './Invitation';
-import MuiAlert from '@material-ui/lab/Alert';
 import Snackbar from '@material-ui/core/Snackbar';
 import { TextField } from 'formik-material-ui';
 import { makeStyles } from '@material-ui/core/styles';
-
-function Alert(props) {
-    return <MuiAlert elevation={6} variant="filled" {...props} />;
-}
+import UserService from '../services/UserService';
+import Alert from './Alert';
 
 const useStylesEmail = makeStyles(() => ({
     root: {
@@ -65,7 +62,7 @@ function InviteFriend({ booking, classesAvatar, openInvitationAlert, setOpenInvi
 
     // define the validation object schema
     const validationSchema = Yup.object({
-        email: Yup.string().email('Invalid email format'),
+        email: Yup.string().email('Invalid email format').required('Please enter a email address'),
     })
 
     useEffect(() => {
@@ -95,9 +92,10 @@ function InviteFriend({ booking, classesAvatar, openInvitationAlert, setOpenInvi
     const inviteFriend = values => {
         setToken(window.localStorage.getItem('jwtToken'));
         let friendAlreadyInvited = invitations.some(invitation => invitation.toUser.email === values.email);
+        let friendIsMe = UserService.getCurrentUser().email === values.email;
         if (window.localStorage.getItem('jwtToken') !== null) {
             console.log(`Inviting friend with email ${values.email} ${booking._id} now...`);
-            if (booking._id !== undefined && !friendAlreadyInvited) {
+            if (booking._id !== undefined && !friendAlreadyInvited && !friendIsMe) {
                 axios.post(`http://localhost:5000/bookings/current/invite/`,
                     {
                         friendEmail: values.email,
@@ -118,6 +116,8 @@ function InviteFriend({ booking, classesAvatar, openInvitationAlert, setOpenInvi
                     })
             } else if (friendAlreadyInvited) {
                 setSeverity('warning');
+            } else if (friendIsMe) {
+                setSeverity('warningMe');
             }
         }
     }
@@ -180,6 +180,12 @@ function InviteFriend({ booking, classesAvatar, openInvitationAlert, setOpenInvi
                         You have already invited this user!
                     </Alert>
                 </Snackbar>
+            case 'warningMe':
+                    return <Snackbar open={openSnackbar} autoHideDuration={2500} onClose={handleCloseSnackbar}>
+                        <Alert onClose={handleCloseSnackbar} severity='warning'>
+                            You can't invite yourself!
+                        </Alert>
+                    </Snackbar>
             default:
                 return null
         }
@@ -196,8 +202,8 @@ function InviteFriend({ booking, classesAvatar, openInvitationAlert, setOpenInvi
                 classes={classesDialog}>
                 <DialogTitle id="alert-dialog-title">{"Would you like to invite some friends to this tutorial?"}</DialogTitle>
                 <DialogContent>
-                    <DialogContentText id="alert-dialog-description">
-                        Your tutor might decide to charge you more for each friend you invite.
+                    <DialogContentText id="alert-dialog-description" style={{textAlign: 'center'}}>
+                        Enter the email of an already registered user,<br/>who you'd like to invite to this tutorial, in the text field below.
                             </DialogContentText>
                     {
                         !loading ?
@@ -209,28 +215,28 @@ function InviteFriend({ booking, classesAvatar, openInvitationAlert, setOpenInvi
                 <DialogActions>
                     <Formik
                         initialValues={initialValues}
-                        validateOnBlur={false}
-                        validateOnChange={false}
                         validationSchema={validationSchema}
                         onSubmit={inviteFriend}>
-                        <Form>
-                            <div>
-                                <Field
-                                    component={TextField}
-                                    classes={classesEmail}
-                                    type='email'
-                                    id='email'
-                                    name='email'
-                                    placeholder='Email of the friend'
-                                />
-                            </div>
-                            <Button classes={classesButton} onClick={handleCloseInvitationAlert} color="primary" autoFocus>
-                                No
+                        {(formik) => (
+                            <Form>
+                                <div>
+                                    <Field
+                                        component={TextField}
+                                        classes={classesEmail}
+                                        type='email'
+                                        id='email'
+                                        name='email'
+                                        placeholder='Email of the friend'
+                                    />
+                                </div>
+                                <Button classes={classesButton} onClick={handleCloseInvitationAlert} color="primary" autoFocus>
+                                    No
+                                </Button>
+                                <Button classes={classesButton} disabled={!(formik.isValid && formik.dirty)} type="submit" color="primary" onClick={handleOpenSnackbar}>
+                                    Yes
                             </Button>
-                            <Button classes={classesButton} type="submit" color="primary" onClick={handleOpenSnackbar}>
-                                Yes
-                            </Button>
-                        </Form>
+                            </Form>
+                        )}
                     </Formik>
                 </DialogActions>
             </Dialog>

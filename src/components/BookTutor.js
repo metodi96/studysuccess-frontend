@@ -103,23 +103,27 @@ function BookTutor({ tutor, subjectId }) {
         setProposedTimeslotTo(proposedTimeslotTo);
         setDisabled(false);
         //check if there is an empty value and if yes disable sumbit button
-        if (event.target.value.substring(0, 2) === '' || event.target.value.substring(3, 5) === ''
-            ||
-            proposedTimeslotTo.substring(0, 2) === '' || proposedTimeslotTo.substring(3, 5) === ''
-        ) {
+        if (event.target.value.substring(0, 2) === '' || event.target.value.substring(3, 5) === '') {
             setDisabled(true);
         }
-        setTimeslotStart(new Date(selectedDate.year(), selectedDate.month(), selectedDate.date(), event.target.value.substring(0, 2), event.target.value.substring(3, 5)))
-        if (proposedTimeslotTo.substring(0, 2) < event.target.value.substring(0, 2)
-            || (proposedTimeslotTo.substring(0, 2) === event.target.value.substring(0, 2)
-                &&
-                proposedTimeslotTo.substring(3, 5) < event.target.value.substring(3, 5)
-            )) {
-            setDisabled(true);
+        let newTimeslotStart = new Date(selectedDate.year(), selectedDate.month(), selectedDate.date(), event.target.value.substring(0, 2), event.target.value.substring(3, 5));
+        setTimeslotStart(newTimeslotStart);
+        let newTimeslotEnd = new moment(newTimeslotStart).add(1, 'h').toDate();
+        setTimeslotEnd(newTimeslotEnd);
+        //check if hours, minutes <= 9 and if yes - append 0 in front
+        if (newTimeslotEnd.getHours() <= 9 && newTimeslotEnd.getMinutes() > 9) {
+            setProposedTimeslotTo(`0${newTimeslotEnd.getHours()}:${newTimeslotEnd.getMinutes()}`);
+        } else if (newTimeslotEnd.getHours() > 9 && newTimeslotEnd.getMinutes() <= 9) {
+            setProposedTimeslotTo(`${newTimeslotEnd.getHours()}:0${newTimeslotEnd.getMinutes()}`);
+        } else if (newTimeslotEnd.getHours() <= 9 && newTimeslotEnd.getMinutes() <= 9) {
+            setProposedTimeslotTo(`0${newTimeslotEnd.getHours()}:0${newTimeslotEnd.getMinutes()}`);
+        } else {
+            setProposedTimeslotTo(`${newTimeslotEnd.getHours()}:${newTimeslotEnd.getMinutes()}`);
         }
+        console.log(`${newTimeslotEnd.getHours()}:${newTimeslotEnd.getMinutes()}`);
         console.log(event.target.value);
     };
-
+    /* not needed since we automatically calculate the proposed timeslot
     const onChangeTo = (event) => {
         setProposedTimeslotTo(event.target.value);
         setProposedTimeslotFrom(proposedTimeslotFrom);
@@ -139,7 +143,7 @@ function BookTutor({ tutor, subjectId }) {
             setDisabled(true);
         }
         console.log(event.target.value);
-    };
+    };*/
 
     const handleTimeslotChange = (event) => {
         setProposeOptionChosen(false);
@@ -323,8 +327,7 @@ function BookTutor({ tutor, subjectId }) {
                                                     shrink: true,
                                                 }}
                                                 inputProps={{
-                                                    step: 300, // 5 min
-                                                    min: "08:00"
+                                                    step: 300 // 5 min
                                                 }}
                                             />
 
@@ -334,8 +337,8 @@ function BookTutor({ tutor, subjectId }) {
                                                 label="To"
                                                 type="time"
                                                 className={classesTimePicker.textField}
+                                                disabled={true}
                                                 value={proposedTimeslotTo}
-                                                onChange={onChangeTo}
                                                 InputLabelProps={{
                                                     shrink: true,
                                                 }}
