@@ -1,0 +1,186 @@
+import React, {useState, useContext, useEffect}  from 'react'
+import { makeStyles } from '@material-ui/core/styles';
+import Box from '@material-ui/core/Box';
+import axios from 'axios';
+import List from '@material-ui/core/List';
+import ListItem from '@material-ui/core/ListItem';
+import ListItemAvatar from '@material-ui/core/ListItemAvatar';
+import ListItemText from '@material-ui/core/ListItemText';
+import Avatar from '@material-ui/core/Avatar';
+import {Link} from 'react-router-dom';
+import Typography from '@material-ui/core/Typography';
+import Button from '@material-ui/core/Button';
+import DoubleArrowOutlinedIcon from '@material-ui/icons/DoubleArrowOutlined';
+import InputLabel from '@material-ui/core/InputLabel';
+import Select from '@material-ui/core/Select';
+import Rating from '@material-ui/lab/Rating';
+import {TutorsContext} from './TutorsContext';
+import { MenuItem, FormControl } from '@material-ui/core';
+
+const useStyles = makeStyles((theme) => ({
+    root: {
+      width: '100%',
+      maxWidth: '36ch',
+      backgroundColor: theme.palette.background.paper,
+    },
+    inline: {
+      display: 'flex',
+    },
+    avatar: {
+        width: theme.spacing(7),
+        height: theme.spacing(7),
+        marginRight: theme.spacing(4),
+        marginTop: theme.spacing(1),
+        marginLeft: theme.spacing(1)
+    },
+    listItem: {
+        display: 'block',
+        width: theme.spacing(120),
+        backgroundColor: theme.palette.background.paper,
+        borderRadius: '20px'
+    },
+    tutorDescription: {
+        overflow: 'hidden',
+        whiteSpace: 'nowrap', 
+        textOverflow: 'ellipsis',
+        width: '60%',
+        fontFamily: 'Roboto, Helvetica, Arial, sans-serif',
+        fontSize: '1rem',
+        fontWeight: 400,
+        lineHeight: '1.5em',
+        letterSpacing: '0.00938em',
+        marginLeft: '10%',
+        marginRight: '8%'
+    },
+    pricePerHour: {
+        fontFamily: 'Roboto, Helvetica, Arial, sans-serif',
+        fontSize: 'normal',
+        fontWeight: 400,
+        lineHeight: '1.5em',
+        letterSpacing: '0.00938em',
+        marginRight: '14%',
+        marginTop: '1%',
+    },
+    tutorInfo: {
+        overflow: 'hidden',
+        whiteSpace: 'nowrap', 
+        textOverflow: 'ellipsis',
+        width: '90%',
+    }
+}));
+
+function TutorsList(props) {
+    const classes = useStyles();
+    const [token, setToken] = useState(window.localStorage.getItem('jwtToken'));
+    const [sortMethod, setSortMethod] = useState(1);
+    const {tutorsForSubject, setTutorsForSubject} = useContext(TutorsContext);
+    const handleChangeSortMethod = (event) => {
+        setSortMethod(event.target.value);
+        if(event.target.value == 1) {
+
+            setTutorsForSubject(tutorsForSubject.sort((a, b) => {return a.avgRating - b.avgRating}));
+        }
+        else if(event.target.value == 2) {
+            setTutorsForSubject(tutorsForSubject.sort((a, b) => {return a.pricePerHour - b.pricePerHour}));
+        }
+        else if(event.target.value == 3) {
+            setTutorsForSubject(tutorsForSubject.sort((a, b) => {return b.pricePerHour - a.pricePerHour}));
+        }
+    }
+
+    useEffect(() => {
+        setToken(window.localStorage.getItem('jwtToken'));
+        axios.post(`http://localhost:5000/tutors/${props.subjectId}/filtered`)
+            .then(res => {
+                console.log(res.data);
+                setTutorsForSubject(res.data);
+                //setTutorsForSubject(res.data.sort((a, b) => {return a.avgRating - b.avgRating} ));     
+            })
+            .catch(err => {
+                console.log(err);
+            })
+    }, [])
+    if(tutorsForSubject.length > 0) {
+        return (
+            <Box bgcolor="rgba(152, 158, 157, 0.438)" width="80%" py={2} pl={3}>
+                <Box pl={2} display='flex'>
+                    <Box mr="60%">{tutorsForSubject.length} tutor(s) match(es) your search</Box>
+                    <Box>
+                        <InputLabel id="sort-by-label">Sort by</InputLabel>
+                        <Select
+                        labelId="sort-by-label"
+                        id="sort-by"
+                        value={sortMethod}
+                        onChange={handleChangeSortMethod}
+                        className={classes.languages}
+                        >
+                            <MenuItem value={1}>{"Average rating"}</MenuItem>
+                            <MenuItem value={2}>{"Price (asc)"}</MenuItem>
+                            <MenuItem value={3}>{"Price (desc)"}</MenuItem>
+                        </Select>
+                    </Box>
+                </Box>
+                <List className={classes.wrapperBox}>
+                    {
+                        tutorsForSubject.map(tutor => { 
+                            return <ListItem key={tutor._id}>
+                                        <Box bgcolor="white" width="80%" className={classes.listItem}>
+                                            <Box className={classes.inline}>
+                                                <ListItemAvatar>
+                                                    <Avatar alt={tutor.firstname} src={'hui'} className={classes.avatar}/>
+                                                </ListItemAvatar>
+                                                <ListItemText
+                                                    primary={`${tutor.firstname} ${tutor.lastname}`}
+                                                    secondary={
+                                                    <React.Fragment>
+                                                        <Typography
+                                                        component="span"
+                                                        variant="caption"
+                                                        color="textPrimary"
+                                                        className={classes.tutorInfo}
+                                                        display="block"      
+                                                        >
+                                                            <span>Tutor for </span>
+                                                            {
+                                                                tutor.subjectsToTeach.map((subject, index) => {
+                                                                    if(index < tutor.subjectsToTeach.length - 1) {
+                                                                        return <span key={index}>{subject.name}, </span>
+                                                                    }
+                                                                    else {
+                                                                        return <span key={index}>{subject.name}</span>
+                                                                    }
+                                                                })
+                                                            }
+                                                        </Typography>
+                                                        <Rating name="read-only" value={tutor.avgRating} precision={0.5} readOnly />
+                                                    </React.Fragment>
+                                                    }
+                                                />
+                                                <div className={classes.pricePerHour}>{tutor.pricePerHour}€ / hour</div>
+                                            </Box>
+                                            <Box style={{display: "flex"}}> 
+                                                <div className={classes.tutorDescription}>
+                                                    Hi! I'm Eva and I am currently in the second semester of my Business Informatics
+                                                        Master studies at TUM. During my bachelor degree studies I discovered
+                                                </div>
+                                                <Button variant="outlined" style={{marginBottom: '2%'}} endIcon={<DoubleArrowOutlinedIcon/>} component={Link}
+                                    to={`/tutors/${props.subjectId}/profiles/${tutor._id}`}>See full profile</Button>
+                                            </Box>
+                                        </Box>
+                                    </ListItem>
+                        })
+                    }
+                </List>
+            </Box>
+        )
+    }
+    else {
+        return (
+            <Box bgcolor="rgba(152, 158, 157, 0.438)" width="80%" py={2} pl={3}>
+                0 tutors match your search
+            </Box>
+        )
+    }
+}
+
+export default TutorsList;

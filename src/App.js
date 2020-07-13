@@ -5,6 +5,8 @@ import MainView from './views/MainView';
 import TutorsView from './views/TutorsView';
 import SignUpView from './views/SignUpView';
 import LogInView from './views/LogInView';
+import MainView from './views/MainView'
+import TutorsView from './views/TutorsView'
 import CurrentBookingsView from './views/CurrentBookingsView';
 import NavBar from './components/NavBar'
 import BookTutorView from './views/BookTutorView';
@@ -14,6 +16,9 @@ import PendingBookingsView from './views/PendingBookingsView';
 import BookingAcceptedSuccessView from './views/BookingAcceptedSuccessView';
 import ManageProfileView from './views/ManageProfileView';
 import UserService from './services/UserService';
+import LogInView from './views/LogInView'
+
+//import Navbar from './components/Navbar.js' <Navbar /> 
 
 function App() {
 
@@ -36,7 +41,8 @@ function App() {
             <Route path='/bookings/past' component={PastBookingsView} />
             <Route path='/bookings/pending' component={PendingBookingsView} />
             <Route path='*' component={MainView} />
-          </Switch>
+            <Route path='/tutors/:subjectId' component={TutorsView} />
+          </Switch>          
         </div>
       </div>
     </Router>
