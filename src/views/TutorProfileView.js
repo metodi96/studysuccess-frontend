@@ -59,7 +59,7 @@ function TutorProfileView(props) {
             console.log(token);
             console.log(tutor._id);
             axios
-                .post(`http://localhost:5000/addToFavourites`, 
+                .put(`http://localhost:5000/profile/addToFavourites`, 
                 {tutorId: tutorId  },
                 {
                     headers: {
@@ -68,7 +68,7 @@ function TutorProfileView(props) {
                 })
                 .then(res => {
                     console.log(res.data);
-                    //window.location.reload(true);
+                    window.location.reload(true);
                 })
                 .catch(err => {
                     console.log(err);
