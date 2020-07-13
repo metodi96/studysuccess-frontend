@@ -1,37 +1,64 @@
-import React, { useState, useEffect } from 'react'
-import { makeStyles } from '@material-ui/core/styles';
-import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemText from '@material-ui/core/ListItemText';
-import ListItemAvatar from '@material-ui/core/ListItemAvatar';
-import Avatar from '@material-ui/core/Avatar';
-import SchoolSharpIcon from '@material-ui/icons/SchoolSharp';
-import EventBusySharpIcon from '@material-ui/icons/EventBusySharp';
-import PersonOutlineSharpIcon from '@material-ui/icons/PersonOutlineSharp';
-import GroupSharpIcon from '@material-ui/icons/GroupSharp';
-import EuroSharpIcon from '@material-ui/icons/EuroSharp';
-import Divider from '@material-ui/core/Divider';
-import { Button } from '@material-ui/core';
-import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogTitle from '@material-ui/core/DialogTitle';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import moment from 'moment'
-import { Formik, Form, Field, ErrorMessage } from 'formik'
-import * as Yup from 'yup'
-import TextError from './TextError'
-import Rating from '@material-ui/lab/Rating';
+
 import styles from '../views/bookTutor.module.css';
+
+import Card from '@material-ui/core/Card';
+import CardHeader from '@material-ui/core/CardHeader';
+import CardContent from '@material-ui/core/CardContent';
+import CardActions from '@material-ui/core/CardActions';
+
+import UserService from '../services/UserService';
+
+
+import IconButton from '@material-ui/core/IconButton';
 import Typography from '@material-ui/core/Typography';
+import FavoriteIcon from '@material-ui/icons/Favorite';
+import ShareIcon from '@material-ui/icons/Share';
+import { makeStyles } from '@material-ui/core/styles';
+import Rating from '@material-ui/lab/Rating';
 
-
+const useStylesCard = makeStyles((theme) => ({
+    root: {
+        maxWidth: 345,
+        minWidth: 345,
+        maxHeight: 500,
+        marginLeft: '50px'
+    }
+}));
 
 
 function TrendingTutors(props) {
     const [tutors, setTutors] = useState([]);
     const [token, setToken] = useState(window.localStorage.getItem('jwtToken'));
-    
+    const [tutorId, setTutorId] = useState('5edcb20be565ab3ed0219746');
+    const [subjectId, setSubjectId] = useState('5ed74fdba2d395112c5f6353');
+    const [loading, setLoading] = useState(true);
+    const classesCard = useStylesCard();
+
+    const addFavourite = () => {
+        console.log("add favourite")
+        setToken(window.localStorage.getItem('jwtToken'));
+        if (window.localStorage.getItem('jwtToken') !== null) {
+            console.log(token);
+            
+            axios
+                .put(`http://localhost:5000/profile/addToFavourites`, 
+                {tutorId: tutorId  },
+                {
+                    headers: {
+                        Authorization: `Bearer ${token.slice(10, -2)}`
+                    }
+                })
+                .then(res => {
+                    console.log(res.data);
+                    window.location.reload(true);
+                })
+                .catch(err => {
+                    console.log(err);
+                })
+        }
+    }
 
     useEffect(() => {
         setToken(window.localStorage.getItem('jwtToken'));
@@ -46,11 +73,32 @@ function TrendingTutors(props) {
             })
     }, [])
   return(
-      <List>
-        {
-             tutors.map(tutor =>  {return <ListItem>{tutor.firstname} {tutor.avgRating}</ListItem>} )
-        }
-      </List>)
+      
+            <div className={styles.container}>
+                <Card className={classesCard.root}>
+                    <CardHeader
+                    title={`${tutors[0]?.firstname} ${tutors[0]?.lastname}`} 
+                    subheader={
+                        <div className={styles.rating}>
+                            <Rating name="read-only" value={tutors[0]?.avgRating} precision={0.5} readOnly />
+                            <Typography component="legend">{tutors[0]?.avgRating}</Typography>
+                        </div>
+                    }
+                    />  
+                        <CardActions disableSpacing>
+                            <IconButton disabled aria-label="add to favorites">
+                                <FavoriteIcon />
+                            </IconButton>
+                            <IconButton disabled aria-label="share">
+                                <ShareIcon />
+                            </IconButton>
+                        </CardActions>                 
+                </Card> 
+            
+            
+    </div>
+       
+    )
 
 }
 

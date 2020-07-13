@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from 'react'
-import UserService from '../services/UserService'
+import React, { useState, useEffect } from 'react';
+import UserService from '../services/UserService';
 import axios from 'axios';
-import PastBooking from '../components/PastBooking'
-import styles from './bookingsStyles.module.css'
+import PastBooking from '../components/PastBooking';
+import styles from './bookingsStyles.module.css';
 
 function PastBookingsView(props) {
     const [bookings, setBookings] = useState(undefined);

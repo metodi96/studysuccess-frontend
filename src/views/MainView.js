@@ -1,7 +1,6 @@
 import Search from '../components/Search';
 import SignUp from '../components/SignUp';
 import TrendingTutors from '../components/TrendingTutors';
-
 import { makeStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import { Link } from 'react-router-dom';
@@ -10,7 +9,7 @@ import React, { useState, useEffect } from 'react';
 
 
 import styles from './tutorProfile.module.css';
-import Grid from '@material-ui/core/Grid';
+
 
 
 
@@ -63,7 +62,7 @@ function MainView(props) {
             }
 
             <div>
-                <h3 className={styles.heading}>Trending tutors at the moment</h3>
+                <h3 className={styles.heading}>Tutors with highest rating</h3>
             </div>
             <TrendingTutors></TrendingTutors>
             
