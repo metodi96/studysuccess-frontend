@@ -1,4 +1,4 @@
-import React, {useState, useContext, useEffect}  from 'react'
+import React, { useState, useContext, useEffect } from 'react'
 import { makeStyles } from '@material-ui/core/styles';
 import Box from '@material-ui/core/Box';
 import axios from 'axios';
@@ -7,24 +7,24 @@ import ListItem from '@material-ui/core/ListItem';
 import ListItemAvatar from '@material-ui/core/ListItemAvatar';
 import ListItemText from '@material-ui/core/ListItemText';
 import Avatar from '@material-ui/core/Avatar';
-import {Link} from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 import DoubleArrowOutlinedIcon from '@material-ui/icons/DoubleArrowOutlined';
 import InputLabel from '@material-ui/core/InputLabel';
 import Select from '@material-ui/core/Select';
 import Rating from '@material-ui/lab/Rating';
-import {TutorsContext} from './TutorsContext';
+import { TutorsContext } from './TutorsContext';
 import { MenuItem, FormControl } from '@material-ui/core';
 
 const useStyles = makeStyles((theme) => ({
     root: {
-      width: '100%',
-      maxWidth: '36ch',
-      backgroundColor: theme.palette.background.paper,
+        width: '100%',
+        maxWidth: '36ch',
+        backgroundColor: theme.palette.background.paper,
     },
     inline: {
-      display: 'flex',
+        display: 'flex',
     },
     avatar: {
         width: theme.spacing(7),
@@ -41,7 +41,7 @@ const useStyles = makeStyles((theme) => ({
     },
     tutorDescription: {
         overflow: 'hidden',
-        whiteSpace: 'nowrap', 
+        whiteSpace: 'nowrap',
         textOverflow: 'ellipsis',
         width: '60%',
         fontFamily: 'Roboto, Helvetica, Arial, sans-serif',
@@ -63,7 +63,7 @@ const useStyles = makeStyles((theme) => ({
     },
     tutorInfo: {
         overflow: 'hidden',
-        whiteSpace: 'nowrap', 
+        whiteSpace: 'nowrap',
         textOverflow: 'ellipsis',
         width: '90%',
     }
@@ -73,18 +73,18 @@ function TutorsList(props) {
     const classes = useStyles();
     const [token, setToken] = useState(window.localStorage.getItem('jwtToken'));
     const [sortMethod, setSortMethod] = useState(1);
-    const {tutorsForSubject, setTutorsForSubject} = useContext(TutorsContext);
+    const { tutorsForSubject, setTutorsForSubject } = useContext(TutorsContext);
     const handleChangeSortMethod = (event) => {
         setSortMethod(event.target.value);
-        if(event.target.value == 1) {
+        if (event.target.value == 1) {
 
-            setTutorsForSubject(tutorsForSubject.sort((a, b) => {return a.avgRating - b.avgRating}));
+            setTutorsForSubject(tutorsForSubject.sort((a, b) => { return a.avgRating - b.avgRating }));
         }
-        else if(event.target.value == 2) {
-            setTutorsForSubject(tutorsForSubject.sort((a, b) => {return a.pricePerHour - b.pricePerHour}));
+        else if (event.target.value == 2) {
+            setTutorsForSubject(tutorsForSubject.sort((a, b) => { return a.pricePerHour - b.pricePerHour }));
         }
-        else if(event.target.value == 3) {
-            setTutorsForSubject(tutorsForSubject.sort((a, b) => {return b.pricePerHour - a.pricePerHour}));
+        else if (event.target.value == 3) {
+            setTutorsForSubject(tutorsForSubject.sort((a, b) => { return b.pricePerHour - a.pricePerHour }));
         }
     }
 
@@ -100,7 +100,7 @@ function TutorsList(props) {
                 console.log(err);
             })
     }, [])
-    if(tutorsForSubject.length > 0) {
+    if (tutorsForSubject.length > 0) {
         return (
             <Box bgcolor="rgba(152, 158, 157, 0.438)" width="80%" py={2} pl={3}>
                 <Box pl={2} display='flex'>
@@ -108,66 +108,69 @@ function TutorsList(props) {
                     <Box>
                         <InputLabel id="sort-by-label">Sort by</InputLabel>
                         <Select
-                        labelId="sort-by-label"
-                        id="sort-by"
-                        value={sortMethod}
-                        onChange={handleChangeSortMethod}
-                        className={classes.languages}
+                            labelId="sort-by-label"
+                            id="sort-by"
+                            value={sortMethod}
+                            onChange={handleChangeSortMethod}
+                            className={classes.languages}
                         >
                             <MenuItem value={1}>{"Average rating"}</MenuItem>
-                            <MenuItem value={2}>{"Price (asc)"}</MenuItem>
-                            <MenuItem value={3}>{"Price (desc)"}</MenuItem>
+                            <MenuItem value={2}>{"Lowest price"}</MenuItem>
+                            <MenuItem value={3}>{"Highest price"}</MenuItem>
                         </Select>
                     </Box>
                 </Box>
                 <List className={classes.wrapperBox}>
                     {
-                        tutorsForSubject.map(tutor => { 
+                        tutorsForSubject.map(tutor => {
                             return <ListItem key={tutor._id}>
-                                        <Box bgcolor="white" width="80%" className={classes.listItem}>
-                                            <Box className={classes.inline}>
-                                                <ListItemAvatar>
-                                                    <Avatar alt={tutor.firstname} src={'hui'} className={classes.avatar}/>
-                                                </ListItemAvatar>
-                                                <ListItemText
-                                                    primary={`${tutor.firstname} ${tutor.lastname}`}
-                                                    secondary={
-                                                    <React.Fragment>
-                                                        <Typography
+                                <Box bgcolor="white" width="80%" className={classes.listItem}>
+                                    <Box className={classes.inline}>
+                                        <ListItemAvatar>
+                                            <Avatar alt={tutor.firstname} src={`http://localhost:5000/${tutor.userImage}`} className={classes.avatar} />
+                                        </ListItemAvatar>
+                                        <ListItemText
+                                            primary={`${tutor.firstname} ${tutor.lastname}`}
+                                            secondary={
+                                                <React.Fragment>
+                                                    <Typography
                                                         component="span"
                                                         variant="caption"
                                                         color="textPrimary"
                                                         className={classes.tutorInfo}
-                                                        display="block"      
-                                                        >
-                                                            <span>Tutor for </span>
-                                                            {
-                                                                tutor.subjectsToTeach.map((subject, index) => {
-                                                                    if(index < tutor.subjectsToTeach.length - 1) {
-                                                                        return <span key={index}>{subject.name}, </span>
-                                                                    }
-                                                                    else {
-                                                                        return <span key={index}>{subject.name}</span>
-                                                                    }
-                                                                })
-                                                            }
-                                                        </Typography>
+                                                        display="block"
+                                                    >
+                                                        <span>Tutor for </span>
+                                                        {
+                                                            tutor.subjectsToTeach.map((subject, index) => {
+                                                                if (index < tutor.subjectsToTeach.length - 1) {
+                                                                    return <span key={index}>{subject.name}, </span>
+                                                                }
+                                                                else {
+                                                                    return <span key={index}>{subject.name}</span>
+                                                                }
+                                                            })
+                                                        }
+                                                    </Typography>
+                                                    <div style={{display: 'flex'}}>
                                                         <Rating name="read-only" value={tutor.avgRating} precision={0.5} readOnly />
-                                                    </React.Fragment>
-                                                    }
-                                                />
-                                                <div className={classes.pricePerHour}>{tutor.pricePerHour}€ / hour</div>
-                                            </Box>
-                                            <Box style={{display: "flex"}}> 
-                                                <div className={classes.tutorDescription}>
-                                                    Hi! I'm Eva and I am currently in the second semester of my Business Informatics
-                                                        Master studies at TUM. During my bachelor degree studies I discovered
+                                                        <Typography>{tutor.avgRating}</Typography>
+                                                    </div>
+                                                </React.Fragment>
+                                            }
+                                        />
+                                        <div className={classes.pricePerHour}>{tutor.pricePerHour}€ / hour</div>
+                                    </Box>
+                                    <Box style={{ display: "flex" }}>
+                                        <div className={classes.tutorDescription}>
+                                            Hi! I'm Eva and I am currently in the second semester of my Business Informatics
+                                            Master studies at TUM. During my bachelor degree studies I discovered
                                                 </div>
-                                                <Button variant="outlined" style={{marginBottom: '2%'}} endIcon={<DoubleArrowOutlinedIcon/>} component={Link}
-                                    to={`/tutors/${props.subjectId}/profiles/${tutor._id}`}>See full profile</Button>
-                                            </Box>
-                                        </Box>
-                                    </ListItem>
+                                        <Button variant="outlined" style={{ marginBottom: '2%' }} endIcon={<DoubleArrowOutlinedIcon />} component={Link}
+                                            to={`/tutors/${props.subjectId}/profiles/${tutor._id}`}>See full profile</Button>
+                                    </Box>
+                                </Box>
+                            </ListItem>
                         })
                     }
                 </List>

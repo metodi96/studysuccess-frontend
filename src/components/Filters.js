@@ -170,7 +170,7 @@ function Filters(props) {
             </Box>
             <Box mb={5} ml={2}>
             <Typography id="price-slider" gutterBottom>
-              Max Price Per Hour
+              Price per hour:
             </Typography>
             <Grid  container spacing={7}>
               <Grid item xs={8}>
