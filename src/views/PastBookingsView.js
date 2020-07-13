@@ -37,7 +37,7 @@ function PastBookingsView(props) {
             if (bookings.length > 0) {
                 return (
                     <div>
-                        <h3 className={styles.heading}>You had {bookings.length} scheduled lessons.</h3>
+                        <h3 className={styles.heading}>You have completed {bookings.length} lessons.</h3>
                         <div className={styles.container}>
                         { bookings.map((booking) => (<div key={booking._id} className={styles.booking}><PastBooking booking={booking} /></div>)) }
                         </div>
@@ -46,14 +46,14 @@ function PastBookingsView(props) {
             } else {
                 return (
                     <div>
-                        <p>You currently don't have any bookings.</p>
+                        <p>You currently don't have any past bookings.</p>
                     </div>
                 )
             }
         } else {
             return (
                 <div>
-                    <p>Loading bookings...</p>
+                    <p>Loading past bookings...</p>
                 </div>
             )
         }
