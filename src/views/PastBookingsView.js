@@ -37,7 +37,7 @@ function PastBookingsView(props) {
             if (bookings.length > 0) {
                 return (
                     <div>
-                        <h3 className={styles.heading}>You had {bookings.length} scheduled lessons.</h3>
+                        <h3 className={styles.heading}>You have completed {bookings.length} lessons.</h3>
                         <div className={styles.container}>
                         { bookings.map((booking) => (<div key={booking._id} className={styles.booking}><PastBooking booking={booking} /></div>)) }
                         </div>

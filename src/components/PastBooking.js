@@ -80,7 +80,7 @@ function PastBooking({ booking }) {
             console.log(booking._id);
             axios
                 .post(`http://localhost:5000/bookings/past/${booking._id}/feedback/add`, 
-                {rating: rating, comment: comment.comment, tutorId: booking.tutor._id},
+                {rating: rating, comment: comment.comment, tutorId: booking.tutor._id, forSubject: booking.subject},
                 {
                     headers: {
                         Authorization: `Bearer ${token.slice(10, -2)}`
@@ -187,14 +187,12 @@ function PastBooking({ booking }) {
                                         <Typography component="legend">{rating}</Typography>
                                     </div>
                                     <Button type='submit' color="primary" bottom = {10}>Submit</Button>
+                                    <Button onClick={handleCloseAlert} color="primary" autoFocus>
+                                       Cancel
+                                    </Button>
                                 </Form>
                             </Formik>                            
                         </DialogContent>
-                        <DialogActions>
-                            <Button onClick={handleCloseAlert} color="primary" autoFocus>
-                                Cancel
-                            </Button>
-                        </DialogActions>
                     </Dialog>
                 </ListItem>
             </List>
