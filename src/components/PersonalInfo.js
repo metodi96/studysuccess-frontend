@@ -134,7 +134,9 @@ function PersonalInfo({ profile, openProfileAlert, setOpenProfileAlert }) {
         formData.append("email", values.email);
         formData.append("university", values.university);
         formData.append("semester", values.semester);
+        if (values.studyProgram !== '' && values.studyProgram !== undefined) {
         formData.append("studyProgram", values.studyProgram);
+    }
         formData.append("degree", values.degree);
         if (selectedFile !== null) {
             formData.append('userImage', selectedFile, selectedFile.name);
