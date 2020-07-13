@@ -1,12 +1,9 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import './App.css';
-import MainView from './views/MainView';
 import TutorsView from './views/TutorsView';
 import SignUpView from './views/SignUpView';
-import LogInView from './views/LogInView';
 import MainView from './views/MainView'
-import TutorsView from './views/TutorsView'
 import CurrentBookingsView from './views/CurrentBookingsView';
 import NavBar from './components/NavBar'
 import BookTutorView from './views/BookTutorView';
