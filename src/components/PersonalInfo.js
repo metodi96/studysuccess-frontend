@@ -5,7 +5,6 @@ import { Formik, Form, Field } from 'formik';
 import { makeStyles } from '@material-ui/core/styles';
 import { Button, Avatar, Tooltip } from '@material-ui/core';
 import axios from 'axios';
-import styles from '../views/bookingsStyles.module.css';
 import EditIcon from '@material-ui/icons/Edit';
 import Snackbar from '@material-ui/core/Snackbar';
 import MuiAlert from '@material-ui/lab/Alert';
@@ -41,9 +40,20 @@ const useStylesButton = makeStyles(() => ({
     }
 }));
 
+const useStylesBooking = makeStyles(() => ({
+    container: {
+        backgroundColor: 'rgba(152, 158, 157, 0.438)',
+        marginLeft: '200px',
+        marginRight: '200px',
+        minWidth: '1100px',
+        marginBottom: '30px',
+    }
+}));
+
 function PersonalInfo({ profile, openProfileAlert, setOpenProfileAlert }) {
     const classesButton = useStylesButton();
     const classesField = useStylesField();
+    const classesBooking = useStylesBooking();
     const [disabled, setDisabled] = useState(false);
     const [typeImageRight, setTypeImageRight] = useState(true);
     const [thumbnail, setThumbnail] = useState(null);
@@ -204,7 +214,7 @@ function PersonalInfo({ profile, openProfileAlert, setOpenProfileAlert }) {
     };
 
     return (
-        <div className={styles.container}>
+        <div className={classesBooking.container}>
 
             <Formik
                 initialValues={initialValues}

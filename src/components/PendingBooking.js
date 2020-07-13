@@ -113,7 +113,7 @@ function PendingBooking({ history, invitation }) {
                             <SchoolSharpIcon color='primary' />
                         </Avatar>
                     </ListItemAvatar>
-                    <ListItemText primary="Subject" secondary={invitation.booking.subject !== null ? invitation.booking.subject.name : '...'} />
+                    <ListItemText primary="Subject" secondary={invitation.booking.subject !== null && invitation.booking !== null ? invitation.booking.subject.name : '...'} />
                 </ListItem>
                 <Divider variant="inset" component="li" />
                 <ListItem>

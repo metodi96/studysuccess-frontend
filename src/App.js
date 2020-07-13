@@ -25,7 +25,7 @@ function App() {
   return (
     <Router>
       <NavBar />
-      <div className='container'>
+      <div>
         <div className={UserService.isAuthenticated() !== false ? 'routerContainer' : ''}>
           <br />
           <Switch>

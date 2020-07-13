@@ -13,7 +13,6 @@ import EuroSharpIcon from '@material-ui/icons/EuroSharp';
 import Divider from '@material-ui/core/Divider';
 import { Button } from '@material-ui/core';
 import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import axios from 'axios';
@@ -22,7 +21,6 @@ import { Formik, Form, Field, ErrorMessage } from 'formik'
 import * as Yup from 'yup'
 import TextError from './TextError'
 import Rating from '@material-ui/lab/Rating';
-import styles from '../views/bookTutor.module.css';
 import Typography from '@material-ui/core/Typography';
 
 const useStyles = makeStyles((theme) => ({
@@ -47,10 +45,24 @@ const useStylesButton = makeStyles(() => ({
     },
 }));
 
+const useStylesTutor = makeStyles(() => ({
+    rating: {
+        display: 'flex'
+    },
+    container: {
+        display: 'flex',
+        marginTop: '50px'
+    },
+    availability: {
+        marginLeft: '200px'
+    }
+}));
+
 function PastBooking({ booking }) {
     const classes = useStyles();
     const classesAvatar = useStylesAvatar();
     const classesButton = useStylesButton();
+    const classesTutor = useStylesTutor();
     const [token, setToken] = useState(window.localStorage.getItem('jwtToken'));
     const [openAlert, setOpenAlert] = useState(false);
     const [rating, setRating] = React.useState(5);
@@ -176,7 +188,7 @@ function PastBooking({ booking }) {
                                         />
                                         <ErrorMessage name='comment' component={TextError} />
                                     </div>
-                                    <div className={styles.rating}>
+                                    <div className={classesTutor.rating}>
                                         <Rating 
                                             name="session-rating" 
                                             value={rating}

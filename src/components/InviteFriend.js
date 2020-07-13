@@ -93,6 +93,7 @@ function InviteFriend({ booking, classesAvatar, openInvitationAlert, setOpenInvi
         setToken(window.localStorage.getItem('jwtToken'));
         let friendAlreadyInvited = invitations.some(invitation => invitation.toUser.email === values.email);
         let friendIsMe = UserService.getCurrentUser().email === values.email;
+        console.log('Booking ID')
         if (window.localStorage.getItem('jwtToken') !== null) {
             console.log(`Inviting friend with email ${values.email} ${booking._id} now...`);
             if (booking._id !== undefined && !friendAlreadyInvited && !friendIsMe) {
