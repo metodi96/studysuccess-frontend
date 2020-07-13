@@ -19,8 +19,10 @@
     "moment": "^2.26.0",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
+    "react-lines-ellipsis": "^0.14.1",
     "react-router-dom": "^5.2.0",
     "react-scripts": "3.4.1",
+    "react-truncate": "^2.4.0",
     "yup": "^0.29.1"
   },
   "scripts": {

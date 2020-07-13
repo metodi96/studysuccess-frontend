@@ -59,6 +59,7 @@ function LogIn(props) {
                 }))
                 if (props.location.pathname !== '/') {
                     props.history.push('/');
+                    window.location.reload();
                 }
                 else {
                     window.location.reload();

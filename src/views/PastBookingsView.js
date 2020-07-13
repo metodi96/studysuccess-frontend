@@ -1,9 +1,8 @@
-import React, { useState, useEffect } from 'react'
-import UserService from '../services/UserService'
+import React, { useState, useEffect } from 'react';
+import UserService from '../services/UserService';
 import axios from 'axios';
 import PastBooking from '../components/PastBooking'
 import { makeStyles } from '@material-ui/core';
-
 const useStylesBooking = makeStyles(() => ({
     container: {
         backgroundColor: 'rgba(152, 158, 157, 0.438)',
@@ -69,14 +68,14 @@ function PastBookingsView(props) {
             } else {
                 return (
                     <div>
-                        <p>You currently don't have any bookings.</p>
+                        <p>You currently don't have any past bookings.</p>
                     </div>
                 )
             }
         } else {
             return (
                 <div>
-                    <p>Loading bookings...</p>
+                    <p>Loading past bookings...</p>
                 </div>
             )
         }

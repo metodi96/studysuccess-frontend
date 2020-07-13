@@ -1,10 +1,24 @@
-import React from 'react';
 import Search from '../components/Search';
 import SignUp from '../components/SignUp';
+import TrendingTutors from '../components/TrendingTutors';
 import { makeStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import { Link } from 'react-router-dom';
 import UserService from '../services/UserService';
+import logo from '../images/logo.png';
+
+import InputLabel from '@material-ui/core/InputLabel';
+import MenuItem from '@material-ui/core/MenuItem';
+//import FormHelperText from '@material-ui/core/FormHelperText';
+import FormControl from '@material-ui/core/FormControl';
+import Select from '@material-ui/core/Select';
+import React, { useState, useEffect } from 'react';
+
+
+import styles from './tutorProfile.module.css';
+
+
+
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -53,8 +67,17 @@ function MainView(props) {
                     <SignUp></SignUp>
                     : null
             }
+
+            <div>
+                <h3 className={styles.heading}>Tutors with highest rating</h3>
+            </div>
+            <TrendingTutors></TrendingTutors>
+            
         </div>
+
+        
     )
 }
+
 
 export default MainView
