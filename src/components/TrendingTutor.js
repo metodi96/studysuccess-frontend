@@ -43,7 +43,7 @@ function TrendingTutor({ profile, tutor }) {
 
     useEffect(() => {
         if (profile !== undefined) {
-            setTutorIsInFavourites(profile.favouriteTutors?.some(tutor => tutor === tutorId))
+            setTutorIsInFavourites(profile.favouriteTutors?.some(element => element === tutor._id))
         }
     }, []);
 

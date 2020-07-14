@@ -37,6 +37,17 @@ const useStylesField = makeStyles(() => ({
     }
 }));
 
+const useStylesSelect = makeStyles(() => ({
+    root: {
+        '& .MuiSelect-select.MuiSelect-select': {
+            backgroundColor: 'white !important',
+        },
+        marginRight: '50px',
+        marginBottom: '10px',
+        minWidth: '430px'
+    }
+}));
+
 const useStylesForm = makeStyles(() => ({
     root: {
         justifyContent: 'center',
@@ -66,6 +77,7 @@ function SignUp({universities}) {
     const classesForm = useStylesForm();
     const classesButton = useStylesButton();
     const classesHeading = useStylesHeading();
+    const classesSelect = useStylesSelect();
     const [disabled, setDisabled] = useState(false);
 
     const onSubmit = values => {
@@ -150,7 +162,7 @@ function SignUp({universities}) {
                                 select
                                 variant="outlined"
                                 helperText="Please select one of the options"
-                                classes={classesField}
+                                classes={classesSelect}
                             >
                                 {universities.map(option => (
                                     <MenuItem key={option.value} value={option.value}>
