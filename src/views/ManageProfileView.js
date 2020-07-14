@@ -33,7 +33,7 @@ function ManageProfileView(props) {
 
     return (
         profile !== undefined ? 
-        <PersonalInfo profile={profile} universities={props.universities} /> : <div>Loading profile...</div>
+        <PersonalInfo profile={profile} studyPrograms={props.studyPrograms} universities={props.universities} /> : <div>Loading profile...</div>
     )
 }
 

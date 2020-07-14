@@ -5,13 +5,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import { Link } from 'react-router-dom';
 import UserService from '../services/UserService';
-import logo from '../images/logo.png';
-
-import InputLabel from '@material-ui/core/InputLabel';
-import MenuItem from '@material-ui/core/MenuItem';
-import FormControl from '@material-ui/core/FormControl';
-import Select from '@material-ui/core/Select';
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -61,14 +55,7 @@ function MainView(props) {
         <div>
             <div className={classes.root}>
                 {UserService.isAuthenticated() ?
-                    <div>
-                        <p>Welcome {UserService.getCurrentUser().email}!</p>
-                        <Button
-                            variant="outlined"
-                            component={Link}
-                            onClick={logout}
-                            to={'/logout'}>Logout</Button>
-                    </div> :
+                    '' :
                     <Button
                         variant="outlined"
                         component={Link}
