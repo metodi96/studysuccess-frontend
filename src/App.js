@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Switch, Redirect } from 'react-router-dom';
 import './App.css';
 import TutorsView from './views/TutorsView';
 import MainView from './views/MainView'
@@ -23,7 +23,26 @@ function App() {
   const universities = [
     {
       value: 'TUM',
-      label: 'TUM',
+      label: 'TUM'
+    }
+  ];
+
+  const studyPrograms = [
+    {
+      value: 'Informatics',
+      label: 'Informatics'
+    },
+    {
+      value: 'Information Systems',
+      label: 'Information Systems'
+    },
+    {
+      value: 'Data Engineering and Analytics',
+      label: 'Data Engineering and Analytics'
+    },
+    {
+      value: 'Bioinformatics',
+      label: 'Bioinformatics'
     }
   ];
 
@@ -61,10 +80,20 @@ function App() {
             <Route path='/' exact render={props => (
               <MainView {...props} universities={universities} profile={profile} />
             )} />
-            <Route path='/auth/login' component={LogInView} />
-            <Route path='/profile' render={props => (
-              <ManageProfileView {...props} universities={universities} />
-            )} />
+            <Route path='/auth/login' render={props => {
+              if (!UserService.isAuthenticated()) {
+                return <LogInView {...props} />
+              } else {
+                return <Redirect to={'/'} />
+              }
+            }} />
+            <Route path='/profile' render={props => {
+              if (UserService.isAuthenticated()) {
+              return <ManageProfileView {...props} studyPrograms={studyPrograms} universities={universities} />
+              } else {
+                return <Redirect to={'/auth/login'} />
+              }
+            }} />
             <Route path='/tutors/:subjectId' exact component={TutorsView} />
             <Route path='/tutors/:subjectId/booking/:tutorId' exact component={BookTutorView} />
             <Route path='/tutors/:subjectId/profiles/:tutorId' exact component={TutorProfileView} />
