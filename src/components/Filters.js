@@ -116,7 +116,7 @@ function Filters(props) {
     const classes = useStyles();
     if(tutorsForSubject.length > 0) {
     return (
-        <Box bgcolor= 'rgba(152, 158, 157, 0.438)' minWidth="30%" height="100%" py={2} pl={3} mr={3}>
+        <Box style={{borderRadius: '4px'}} bgcolor= 'rgba(152, 158, 157, 0.438)' minWidth="30%" height="100%" py={2} pl={3} mr={3}>
           <Box className={classes.wrapperBox} width = "90%" height = "80%" border={2} bgcolor="white">
             <Box fontSize="h5.fontSize" ml={2} fontWeight="fontWeightMedium">
               Filters

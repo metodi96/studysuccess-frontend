@@ -32,9 +32,9 @@ function ProfileSubjects({ classesProfile, classesSelect, profile, classesField,
                     const profileSubjects = profile.subjectsToTakeLessonsIn;
                     console.log(allSubjects);
                     console.log(profileSubjects);
-                    setSubjects(allSubjects.filter(subject => {
-                        profileSubjects.some(subjectProfile => {
-                           subject._id === subjectProfile._id
+                    setSubjects(allSubjects.filter(function (subject) {
+                        return !profileSubjects.find(function (subjectProfile) {
+                            return subject._id === subjectProfile._id
                         })
                     }));
                     setLoading(false);

@@ -335,7 +335,7 @@ function PersonalInfo({ profile, universities, studyPrograms, classesProfile, cl
 
                             <div>
                                 {
-                                    !profile.hasCertificateOfEnrolment ? <div style={{ marginTop: '10px', marginBottom: '10px', marginRight: '5px' }}>
+                                    !profile.hasCertificateOfEnrolment ? <div style={{ marginTop: '10px', marginRight: '5px' }}>
                                         <label htmlFor="certificate" style={{ display: 'block', textAlign: 'center' }}>
                                             <input style={{ display: "none" }} id="certificate" type="file" onChange={fileSelectedHandlerCertificate} />
                                             <Fab
@@ -359,7 +359,7 @@ function PersonalInfo({ profile, universities, studyPrograms, classesProfile, cl
 
                             <div>
                                 {
-                                    !profile.hasGradeExcerpt ? <div style={{ marginTop: '10px', marginBottom: '10px' }}>
+                                    !profile.hasGradeExcerpt ? <div style={{ marginBottom: '10px' }}>
                                         <label htmlFor="grade" style={{ display: 'block', textAlign: 'center', marginRight: '5px' }}>
                                             <input style={{ display: "none" }} id="grade" type="file" onChange={fileSelectedHandlerGrade} />
                                             <Fab
@@ -388,9 +388,6 @@ function PersonalInfo({ profile, universities, studyPrograms, classesProfile, cl
                         </Form>
                     )}
             </Formik>
-            {
-                profile.subjectsToTakeLessonsIn.map(subject => (<p key={subject._id}>{subject.name}</p>))
-            }
             {
                 renderSwitchForSnackbar(severity)
             }

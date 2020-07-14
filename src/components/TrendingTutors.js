@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import TrendingTutor from './TrendingTutor';
 
-function TrendingTutors({profile}) {
+function TrendingTutors() {
     const [tutors, setTutors] = useState([]);
     const [loading, setLoading] = useState(true);
 
@@ -23,7 +23,7 @@ function TrendingTutors({profile}) {
         return (
             <div style={{display: 'flex'}}>
                 {tutors.map(tutor => (
-                    <TrendingTutor profile={profile} key={tutor._id} tutor={tutor} />
+                    <TrendingTutor key={tutor._id} tutor={tutor} />
                 ))}
             </div>
     )

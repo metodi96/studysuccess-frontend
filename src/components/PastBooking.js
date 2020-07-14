@@ -157,12 +157,15 @@ function PastBooking({ booking }) {
                 </ListItem>
                 <Divider variant="inset" component="li" />
                 <ListItem classes={classesButton}>
-                    <Button
-                        variant="contained"
-                        color="secondary"
-                        onClick={handleClickOpenAlert}>
-                        Give Feedback
-                    </Button>
+                    {
+                        !booking.feedbackGiven ? <Button
+                            variant="contained"
+                            color="secondary"
+                            onClick={handleClickOpenAlert}>
+                            Give Feedback
+                        </Button> : <div>Feedback already given.</div>
+                    }
+                    
                     <Dialog
                         open={openAlert}
                         onClose={handleCloseAlert}
