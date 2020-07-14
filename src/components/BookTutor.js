@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import Box from '@material-ui/core/Box';
-import { Button, Typography } from '@material-ui/core';
+import { Button, Typography, Snackbar, Tooltip } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 import MomentUtils from '@date-io/moment';
@@ -16,6 +16,7 @@ import FormLabel from '@material-ui/core/FormLabel';
 import TextField from '@material-ui/core/TextField';
 import { Redirect } from 'react-router-dom';
 import tips from '../images/tips.png'
+import Alert from './Alert';
 
 const useStylesBox = makeStyles(() => ({
     root: {
@@ -92,6 +93,9 @@ function BookTutor({ tutor, subjectId }) {
     const [displayProposedTimeslots, setDisplayProposedTimeslots] = useState(false);
     const [proposeOptionChosen, setProposeOptionChosen] = useState(false);
     const [redirectToCurrentBookings, setRedirectToCurrentBookings] = useState(false);
+    const [openSnackbar, setOpenSnackbar] = useState(false);
+    const [severity, setSeverity] = useState('');
+    const [forwardLink, setForwardLink] = useState('');
     const classesBox = useStylesBox();
     const classesDatePicker = useStylesDatePicker();
     const classesButton = useStylesButton();
@@ -102,6 +106,27 @@ function BookTutor({ tutor, subjectId }) {
         timeFrom: proposedTimeslotFrom,
         timeTo: proposedTimeslotTo
     }
+
+    const handleCloseSnackbar = (event, reason) => {
+        if (reason === 'clickaway') {
+            return;
+        }
+
+        setOpenSnackbar(false);
+
+        if(severity === 'success') {
+            setRedirectToCurrentBookings(true);
+            setSeverity('');
+        } else if (severity === 'successPaypal' && forwardLink !== '') {
+            window.location = forwardLink;
+            setSeverity('');
+        } else if (severity === 'successPropose') {
+            setRedirectToCurrentBookings(true);
+            setSeverity('');
+        } else {
+            setSeverity('');
+        }
+    };
 
     useEffect(() => {
         let isMounted = true; // note this flag denote mount status
@@ -219,10 +244,13 @@ function BookTutor({ tutor, subjectId }) {
                 .then(res => {
                     if (res.status === 200) {
                         console.log(res.data);
-                        setRedirectToCurrentBookings(true);
+                        setSeverity('successPropose');
+                        setOpenSnackbar(true);
                     }
                 })
                 .catch(err => {
+                    setSeverity('error');
+                    setOpenSnackbar(true);
                     console.log(`Something went wrong with payment ${err}`);
                 })
         }
@@ -257,10 +285,14 @@ function BookTutor({ tutor, subjectId }) {
                 .then(res => {
                     if (res.status === 200) {
                         console.log(res.data);
-                        window.location = res.data.forwardLink;
+                        setSeverity('successPaypal');
+                        setOpenSnackbar(true);
+                        setForwardLink(res.data.forwardLink);
                     }
                 })
                 .catch(err => {
+                    setSeverity('error')
+                    setOpenSnackbar(true);
                     console.log(`Something went wrong with payment ${err}`);
                 })
         }
@@ -294,14 +326,48 @@ function BookTutor({ tutor, subjectId }) {
                 .then(res => {
                     if (res.status === 200) {
                         console.log(res.data);
-                        setRedirectToCurrentBookings(true);
+                        setSeverity('success');
+                        setOpenSnackbar(true);
                     }
                 })
                 .catch(err => {
+                    setSeverity('error')
+                    setOpenSnackbar(true);
                     console.log(`Something went wrong with payment ${err}`);
                 })
         }
     }
+
+    const renderSwitchForSnackbar = (severity) => {
+        switch (severity) {
+            case 'success':
+                return <Snackbar open={openSnackbar} autoHideDuration={2500} onClose={handleCloseSnackbar}>
+                    <Alert onClose={handleCloseSnackbar} severity='success'>
+                        Tutorial was booked successfully!
+                </Alert>
+                </Snackbar>
+            case 'successPaypal':
+                return <Snackbar open={openSnackbar} autoHideDuration={2500} onClose={handleCloseSnackbar}>
+                    <Alert onClose={handleCloseSnackbar} severity='success'>
+                        Redirecting to paypal to process payment...
+                </Alert>
+                </Snackbar>
+            case 'successPropose':
+                return <Snackbar open={openSnackbar} autoHideDuration={2500} onClose={handleCloseSnackbar}>
+                    <Alert onClose={handleCloseSnackbar} severity='success'>
+                        Timeslot proposed successfully!
+                </Alert>
+                </Snackbar>
+            case 'error':
+                return <Snackbar open={openSnackbar} autoHideDuration={2500} onClose={handleCloseSnackbar}>
+                    <Alert onClose={handleCloseSnackbar} severity='error'>
+                        Couldn't book tutorial!
+                        </Alert>
+                </Snackbar>
+            default:
+                return null
+        }
+    };
 
     return (
         <div>
@@ -358,7 +424,7 @@ function BookTutor({ tutor, subjectId }) {
                                                     })
                                                 }
                                                 <div className={timePreferences.length > 0 ? classesSuggest.root : classesSuggest.rootBackup}>
-                                                    <img style={{position: 'absolute', right: '-10%', top: '-40%'}} src={tips} width='50px' height='50px' />
+                                                    <Tooltip title='Tip' aria-label='tip'><img style={{ position: 'absolute', right: '-10%', top: '-40%' }} src={tips} width='50px' height='50px' /></Tooltip>
                                                     <div>
                                                         <Typography style={{ fontSize: 'smaller', textAlign: 'center' }}>Not happy with what you see? Feel free to suggest</Typography>
                                                         <Typography style={{ fontSize: 'smaller', textAlign: 'center' }}> another timeslot and the tutor will review it.</Typography>
@@ -434,6 +500,11 @@ function BookTutor({ tutor, subjectId }) {
                                     >Book (no paypal)</Button>
                                 </div>
                             </Box>
+                            <div>
+                                {
+                                    renderSwitchForSnackbar(severity)
+                                }
+                            </div>
                         </Form>
                     </Formik> :
                     <p>Loading form...</p>
