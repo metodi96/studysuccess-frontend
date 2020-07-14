@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import * as Yup from 'yup';
-import { TextField, SimpleFileUpload } from 'formik-material-ui';
+import { TextField } from 'formik-material-ui';
 import { Formik, Form, Field } from 'formik';
 import { makeStyles } from '@material-ui/core/styles';
 import { Button, Avatar, MenuItem, Fab } from '@material-ui/core';
@@ -11,54 +11,23 @@ import Add from '@material-ui/icons/Add';
 import Snackbar from '@material-ui/core/Snackbar';
 import Alert from './Alert';
 
-const useStylesField = makeStyles(() => ({
-    root: {
-        '& input': {
-            backgroundColor: 'white !important',
-        },
-        '& input:hover': {
-            backgroundColor: 'white !important',
-        },
-        marginBottom: '20px',
-        marginRight: '-20px',
-        minWidth: '250px',
-        maxWidth: '250px'
-    }
-}));
-
 const useStylesEmail = makeStyles(() => ({
     root: {
         '& input': {
             backgroundColor: 'white !important',
+            color: 'darkgrey !important'
         },
         marginBottom: '20px',
         marginRight: '-20px',
         minWidth: '250px',
-        maxWidth: '250px'
+        maxWidth: '250px',
+        marginLeft: '33px'
     }
 }));
 
-const useStylesButton = makeStyles(() => ({
-    root: {
-        float: 'left',
-        marginRight: '10px'
-    }
-}));
-
-const useStylesBooking = makeStyles(() => ({
-    container: {
-        backgroundColor: 'rgba(152, 158, 157, 0.438)',
-        marginLeft: '200px',
-        marginRight: '200px',
-        minWidth: '1100px',
-        marginBottom: '30px',
-    }
-}));
-
-function PersonalInfo({ profile, universities, studyPrograms, openProfileAlert, setOpenProfileAlert }) {
-    const classesButton = useStylesButton();
-    const classesField = useStylesField();
-    const classesBooking = useStylesBooking();
+function PersonalInfo({ profile, universities, studyPrograms, classesProfile, classesField, classesSelect, classesButton, openProfileAlert, setOpenProfileAlert }) {
+    
+    const classesEmail = useStylesEmail();
     const [disabled, setDisabled] = useState(false);
     const [typeImageRight, setTypeImageRight] = useState(true);
     const [thumbnail, setThumbnail] = useState(null);
@@ -229,7 +198,7 @@ function PersonalInfo({ profile, universities, studyPrograms, openProfileAlert, 
     };
 
     return (
-        <div className={classesBooking.container}>
+        <div className={classesProfile.container}>
             <Formik
                 initialValues={initialValues}
                 validationSchema={validationSchema}
@@ -247,7 +216,7 @@ function PersonalInfo({ profile, universities, studyPrograms, openProfileAlert, 
                                     variant="outlined"
                                     label='First name'
                                 />
-                                <div style={{ position: 'absolute', left: '20%', top: '12%' }} >
+                                <div style={{ position: 'absolute', left: '70%', top: '20%' }} >
                                     <EditIcon />
                                 </div>
                             </div>
@@ -261,14 +230,14 @@ function PersonalInfo({ profile, universities, studyPrograms, openProfileAlert, 
                                     variant="outlined"
                                     label='Last name'
                                 />
-                                <div style={{ position: 'absolute', left: '20%', top: '12%' }} >
+                                <div style={{ position: 'absolute', left: '70%', top: '20%' }} >
                                     <EditIcon />
                                 </div>
                             </div>
                             <div>
                                 <Field
                                     component={TextField}
-                                    classes={classesField}
+                                    classes={classesEmail}
                                     type='text'
                                     id='email'
                                     name='email'
@@ -285,7 +254,7 @@ function PersonalInfo({ profile, universities, studyPrograms, openProfileAlert, 
                                     select
                                     variant="outlined"
                                     helperText="Please select one of the options"
-                                    classes={classesField}
+                                    classes={classesSelect}
                                 >
                                     {universities.map(option => (
                                         <MenuItem key={option.value} value={option.value}>
@@ -293,7 +262,7 @@ function PersonalInfo({ profile, universities, studyPrograms, openProfileAlert, 
                                         </MenuItem>
                                     ))}
                                 </Field>
-                                <div style={{ position: 'absolute', left: '20%', top: '11%' }} >
+                                <div style={{ position: 'absolute', left: '67%', top: '17%' }} >
                                     <EditIcon />
                                 </div>
                             </div>
@@ -306,7 +275,7 @@ function PersonalInfo({ profile, universities, studyPrograms, openProfileAlert, 
                                     select
                                     variant="outlined"
                                     helperText="Please select one of the options"
-                                    classes={classesField}
+                                    classes={classesSelect}
                                 >
                                     {studyPrograms.map(option => (
                                         <MenuItem key={option.value} value={option.value}>
@@ -314,7 +283,7 @@ function PersonalInfo({ profile, universities, studyPrograms, openProfileAlert, 
                                         </MenuItem>
                                     ))}
                                 </Field>
-                                <div style={{ position: 'absolute', left: '20%', top: '11%' }} >
+                                <div style={{ position: 'absolute', left: '67%', top: '17%' }} >
                                     <EditIcon />
                                 </div>
                             </div>
@@ -328,7 +297,7 @@ function PersonalInfo({ profile, universities, studyPrograms, openProfileAlert, 
                                     variant="outlined"
                                     label='Semester'
                                 />
-                                <div style={{ position: 'absolute', left: '20%', top: '12%' }} >
+                                <div style={{ position: 'absolute', left: '70%', top: '20%' }} >
                                     <EditIcon />
                                 </div>
                             </div>
@@ -342,11 +311,11 @@ function PersonalInfo({ profile, universities, studyPrograms, openProfileAlert, 
                                     variant="outlined"
                                     label='Degree'
                                 />
-                                <div style={{ position: 'absolute', left: '20%', top: '12%' }} >
+                                <div style={{ position: 'absolute', left: '70%', top: '20%' }} >
                                     <EditIcon />
                                 </div>
                             </div>
-                            <div>
+                            <div style={{ marginLeft: '73px' }}>
                                 <label htmlFor="userImage">
                                     <input style={{ display: "none" }} id="userImage" type="file" onChange={fileSelectedHandler} />
                                     <Fab
@@ -366,8 +335,8 @@ function PersonalInfo({ profile, universities, studyPrograms, openProfileAlert, 
 
                             <div>
                                 {
-                                    !profile.hasCertificateOfEnrolment ? <div>
-                                        <label htmlFor="certificate">
+                                    !profile.hasCertificateOfEnrolment ? <div style={{ marginTop: '10px', marginBottom: '10px', marginRight: '5px' }}>
+                                        <label htmlFor="certificate" style={{ display: 'block', textAlign: 'center' }}>
                                             <input style={{ display: "none" }} id="certificate" type="file" onChange={fileSelectedHandlerCertificate} />
                                             <Fab
                                                 color="primary"
@@ -378,7 +347,9 @@ function PersonalInfo({ profile, universities, studyPrograms, openProfileAlert, 
                                             >
                                                 <Add /><span style={{ paddingLeft: '5px' }}>Upload certificate of enrolment</span>
                                             </Fab>
-                                            <span style={{paddingTop: '5px', paddingLeft: '5px'}}>{selectedFileCertificate !== null ? selectedFileCertificate.name : ''}</span>
+                                            <div>
+                                                <span style={{ paddingTop: '5px', paddingLeft: '5px' }}>{selectedFileCertificate !== null ? selectedFileCertificate.name : ''}</span>
+                                            </div>
                                         </label>
                                         {!typePdfCertificateRight ? <p style={{ color: 'red' }}>Wrong file type</p> : null}
                                     </div> : null
@@ -388,8 +359,8 @@ function PersonalInfo({ profile, universities, studyPrograms, openProfileAlert, 
 
                             <div>
                                 {
-                                    !profile.hasGradeExcerpt ? <div>
-                                        <label htmlFor="grade">
+                                    !profile.hasGradeExcerpt ? <div style={{ marginTop: '10px', marginBottom: '10px' }}>
+                                        <label htmlFor="grade" style={{ display: 'block', textAlign: 'center', marginRight: '5px' }}>
                                             <input style={{ display: "none" }} id="grade" type="file" onChange={fileSelectedHandlerGrade} />
                                             <Fab
                                                 color="primary"
@@ -400,15 +371,20 @@ function PersonalInfo({ profile, universities, studyPrograms, openProfileAlert, 
                                             >
                                                 <Add /><span style={{ paddingLeft: '5px' }}>Upload grade excerpt</span>
                                             </Fab>
-                                            <span style={{ paddingTop: '5px', paddingLeft: '5px' }}>{selectedFileGrade !== null ? selectedFileGrade.name: ''}</span>
+                                            <div>
+                                                <span style={{ paddingTop: '5px', paddingLeft: '5px' }}>{selectedFileGrade !== null ? selectedFileGrade.name : ''}</span>
+                                            </div>
                                         </label>
                                         {!typePdfGradeRight ? <p style={{ color: 'red' }}>Wrong file type</p> : null}
                                     </div> : null
                                 }
                             </div>
-                            <Button classes={classesButton} disabled={!formik.isValid || disabled || !typeImageRight || !typePdfCertificateRight || !typePdfGradeRight} type="submit" color="primary">
-                                Save changes
-                            </Button>
+                            <div style={{ marginLeft: '53px' }}>
+                                <Button classes={classesButton} disabled={!formik.isValid || disabled || !typeImageRight || !typePdfCertificateRight || !typePdfGradeRight}
+                                    type="submit" color="primary" variant='outlined'>
+                                    Save changes
+                                </Button>
+                            </div>
                         </Form>
                     )}
             </Formik>

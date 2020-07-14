@@ -165,8 +165,14 @@ function TutorProfileView(props) {
                                                     {`${tutor.firstname} ${tutor.lastname}`}
                                                 </Typography>
                                                 <div className={classesTutor.rating}>
-                                                    <Rating value={tutor.avgRating} precision={0.5} readOnly />
-                                                    <Typography component="legend">{tutor.avgRating}</Typography>
+                                                    {
+                                                        tutor.avgRating !== undefined ?
+                                                        <div>
+                                                            <Rating value={Number(tutor.avgRating)} precision={0.5} readOnly />
+                                                            <Typography component="legend">{Number(tutor.avgRating).toFixed(1)}</Typography>
+                                                        </div> : <div>No rating available</div>
+                                                    }
+
                                                 </div>
                                                 <Typography variant="body2" color="textSecondary" component="p">
                                                     Tutor for {
