@@ -2,9 +2,9 @@ import React, { useState } from 'react';
 import { Formik, Form, Field } from 'formik';
 import * as Yup from 'yup';
 import axios from 'axios';
-import { TextField } from 'formik-material-ui';
+import { TextField, Select } from 'formik-material-ui';
 import { makeStyles } from '@material-ui/core/styles';
-import { Button } from '@material-ui/core';
+import { Button, MenuItem } from '@material-ui/core';
 
 const initialValues = {
     firstname: '',
@@ -26,18 +26,14 @@ const validationSchema = Yup.object({
 const useStylesField = makeStyles(() => ({
     root: {
         '& input': {
-            border: '1px solid black',
             backgroundColor: 'white !important',
-            padding: '5px 5px 5px 5px',
-            borderRadius: '4px',
-            height: '30px'
         },
         '& input:hover': {
-            border: '1px solid black',
             backgroundColor: 'white !important',
         },
         marginRight: '50px',
-        marginBottom: '10px'
+        marginBottom: '10px',
+        minWidth: '430px'
     }
 }));
 
@@ -64,7 +60,7 @@ const useStylesButton = makeStyles(() => ({
     }
 }));
 
-function SignUp() {
+function SignUp({universities}) {
 
     const classesField = useStylesField();
     const classesForm = useStylesForm();
@@ -101,9 +97,10 @@ function SignUp() {
                                 component={TextField}
                                 classes={classesField}
                                 type='text'
+                                variant='outlined'
                                 id='firstname'
                                 name='firstname'
-                                placeholder='First name'
+                                label='First name'
                             />
                         </div>
 
@@ -112,9 +109,10 @@ function SignUp() {
                                 component={TextField}
                                 classes={classesField}
                                 type='text'
+                                variant='outlined'
                                 id='lastname'
                                 name='lastname'
-                                placeholder='Last name'
+                                label='Last name'
                             />
                         </div>
 
@@ -122,10 +120,11 @@ function SignUp() {
                             <Field
                                 component={TextField}
                                 classes={classesField}
+                                variant='outlined'
                                 type='email'
                                 id='email'
                                 name='email'
-                                placeholder='Email'
+                                label='Email'
                             />
                         </div>
 
@@ -133,26 +132,37 @@ function SignUp() {
                             <Field
                                 component={TextField}
                                 classes={classesField}
+                                variant='outlined'
                                 type='password'
                                 id='password'
                                 name='password'
-                                placeholder='Password'
+                                label='Password'
                             />
                         </div>
 
                         <div>
+
                             <Field
                                 component={TextField}
+                                type="text"
+                                name="university"
+                                label="University"
+                                select
+                                variant="outlined"
+                                helperText="Please select one of the options"
                                 classes={classesField}
-                                type='text'
-                                id='university'
-                                name='university'
-                                placeholder='University'
-                            />
+                            >
+                                {universities.map(option => (
+                                    <MenuItem key={option.value} value={option.value}>
+                                        {option.label}
+                                    </MenuItem>
+                                ))}
+                            </Field>
                         </div>
 
                         <div className={classesButton.root}>
                             <Button
+                                size="large"
                                 disabled={disabled}
                                 variant="outlined"
                                 type="submit"

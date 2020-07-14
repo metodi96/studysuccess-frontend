@@ -1,0 +1,140 @@
+import React, { useState, useEffect } from 'react'
+import { makeStyles } from '@material-ui/styles';
+import { Card, CardHeader, Typography, CardActions, Tooltip, IconButton, Avatar, CardContent } from '@material-ui/core';
+import Rating from '@material-ui/lab/Rating';
+import FavoriteIcon from '@material-ui/icons/Favorite';
+import axios from 'axios';
+
+const useStylesCard = makeStyles(() => ({
+    root: {
+        maxWidth: 270,
+        minWidth: 270,
+        maxHeight: 270,
+        marginLeft: '50px'
+    }
+}));
+
+const useStylesTutor = makeStyles(() => ({
+    rating: {
+        display: 'flex'
+    },
+    container: {
+        display: 'flex',
+        marginTop: '50px'
+    },
+    availability: {
+        marginLeft: '200px'
+    }
+}));
+
+const useStylesFavourites = makeStyles(() => ({
+    add: {
+        color: 'red',
+    }
+}));
+
+function TrendingTutor({ profile, tutor }) {
+
+    const [token, setToken] = useState(window.localStorage.getItem('jwtToken'));
+    const [tutorIsInFavourites, setTutorIsInFavourites] = useState(false);
+    const classesCard = useStylesCard();
+    const classesTutor = useStylesTutor();
+    const classesFavourites = useStylesFavourites();
+
+    useEffect(() => {
+        if (profile !== undefined) {
+            setTutorIsInFavourites(profile.favouriteTutors?.some(tutor => tutor === tutorId))
+        }
+    }, []);
+
+    const addRemoveFavourite = () => {
+        setToken(window.localStorage.getItem('jwtToken'));
+        console.log(`Tutor in favourites ${tutorIsInFavourites}`)
+        if (window.localStorage.getItem('jwtToken') !== null) {
+            console.log(token);
+            console.log(tutor._id);
+            if (!tutorIsInFavourites) {
+                console.log('Add tutor to favourites');
+                axios
+                    .put(`http://localhost:5000/profile/addToFavourites`,
+                        { tutorId: tutor._id },
+                        {
+                            headers: {
+                                Authorization: `Bearer ${token.slice(10, -2)}`
+                            }
+                        })
+                    .then(res => {
+                        console.log(res.data);
+                        setTutorIsInFavourites(true);
+                    })
+                    .catch(err => {
+                        console.log(err.response.data);
+                    })
+            } else {
+                console.log("Remove tutor from favourites");
+                axios
+                    .put(`http://localhost:5000/profile/removeFromFavourites`,
+                        { tutorId: tutor._id },
+                        {
+                            headers: {
+                                Authorization: `Bearer ${token.slice(10, -2)}`
+                            }
+                        })
+                    .then(res => {
+                        console.log(res.data);
+                        setTutorIsInFavourites(false);
+                    })
+                    .catch(err => {
+                        console.log(err.response.data);
+                    })
+            }
+        }
+    }
+
+
+    return (
+        <div className={classesTutor.container}>
+            <Card className={classesCard.root}>
+                <CardHeader
+                    avatar={
+                        <Avatar aria-label="tutor-image" src={`http://localhost:5000/${tutor.userImage}`}></Avatar>
+                    }
+                    title={`${tutor.firstname} ${tutor.lastname}`}
+                    subheader={
+                        <div className={classesTutor.rating}>
+                            {tutor.avgRating !== undefined ?
+                                <div style={{display: 'flex'}}>
+                                    <Rating name="read-only" value={tutor.avgRating} precision={0.5} readOnly />
+                                    <Typography component="legend">{tutor.avgRating.toFixed(1)}</Typography>
+                                </div> : <div>No reviews yet.</div>
+                            }
+                        </div>
+                    }
+                />
+                <CardContent>
+                    <Typography variant="body2" color="textSecondary" component="p" style={{minHeight: '100px'}}>
+                        Tutor for {
+                            tutor.subjectsToTeach !== undefined ?
+                                tutor.subjectsToTeach.map((value, i) => (
+                                    <span key={i}>{tutor.subjectsToTeach.length - 1 === i ? <b>{`${value.name}.`}</b> : <b>{`${value.name}, `}</b>}</span>
+                                )) : '0 subjects'
+                        }
+                    </Typography>
+                </CardContent>
+                {
+                    profile !== undefined ?
+                        <CardActions disableSpacing>
+                            <Tooltip title={tutorIsInFavourites ? 'Remove tutor from favourites' : 'Add tutor to favourites'} aria-label={tutorIsInFavourites ? 'remove-favourites' : 'add-favourites'}>
+                                <IconButton className={tutorIsInFavourites ? classesFavourites.add : ''} onClick={addRemoveFavourite} aria-label="add to favorites">
+                                    <FavoriteIcon />
+                                </IconButton>
+                            </Tooltip>
+                        </CardActions> : null
+                }
+
+            </Card>
+        </div>
+    )
+}
+
+export default TrendingTutor

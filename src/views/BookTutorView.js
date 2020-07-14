@@ -37,19 +37,15 @@ const useStylesCard = makeStyles((theme) => ({
 
 function BookTutorView(props) {
     const [tutor, setTutor] = useState({});
-    const [tutorId, setTutorId] = useState('5edcb20be565ab3ed0219746');
-    const [subjectId, setSubjectId] = useState('5ed74fdba2d395112c5f6353');
+    const tutorId = props.match.params.tutorId;
+    const subjectId = props.match.params.subjectId;
     const [loading, setLoading] = useState(true);
     const [token, setToken] = useState(window.localStorage.getItem('jwtToken'));
-    //dummy value - to be replaced with real one when the tutor has rating
-    const avgRating = 4.7;
     const classesCard = useStylesCard();
     const classesTutor = useStylesTutor();
 
     useEffect(() => {
         let isMounted = true; // note this flag denote mount status
-        setTutorId('5edcb20be565ab3ed0219746');
-        setSubjectId('5ed74fdba2d395112c5f6353')
         setToken(window.localStorage.getItem('jwtToken'));
         if (window.localStorage.getItem('jwtToken') !== null) {
             console.log(token)
@@ -85,8 +81,14 @@ function BookTutorView(props) {
                             title={`${tutor.firstname} ${tutor.lastname}`}
                             subheader={
                                 <div className={classesTutor.rating}>
-                                    <Rating name="read-only" value={avgRating} precision={0.5} readOnly />
-                                    <Typography component="legend">{avgRating}</Typography>
+                                    {
+                                        tutor.avgRating !== undefined ?
+                                        <div>
+                                            <Rating name="read-only" value={Number(tutor.avgRating)} precision={0.5} readOnly />
+                                            <Typography component="legend">{tutor.avgRating?.toFixed(1)}</Typography>
+                                        </div> : <div>Rating not available. No reviews.</div>
+                                    }
+
                                 </div>
                             }
                         />

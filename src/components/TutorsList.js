@@ -133,29 +133,13 @@ function TutorsList(props) {
                                             primary={`${tutor.firstname} ${tutor.lastname}`}
                                             secondary={
                                                 <React.Fragment>
-                                                    <Typography
-                                                        component="span"
-                                                        variant="caption"
-                                                        color="textPrimary"
-                                                        className={classes.tutorInfo}
-                                                        display="block"
-                                                    >
-                                                        <span>Tutor for </span>
-                                                        {
-                                                            tutor.subjectsToTeach.map((subject, index) => {
-                                                                if (index < tutor.subjectsToTeach.length - 1) {
-                                                                    return <span key={index}>{subject.name}, </span>
-                                                                }
-                                                                else {
-                                                                    return <span key={index}>{subject.name}</span>
-                                                                }
-                                                            })
-                                                        }
-                                                    </Typography>
-                                                    <div style={{display: 'flex'}}>
-                                                        <Rating name="read-only" value={tutor.avgRating} precision={0.5} readOnly />
-                                                        <Typography>{tutor.avgRating}</Typography>
-                                                    </div>
+                                                    {
+                                                        tutor.avgRating !== undefined ?
+                                                            <span style={{ display: 'flex' }}>
+                                                                <Rating component={'span'} name="read-only" value={Number(tutor.avgRating)} precision={0.5} readOnly />
+                                                                <Typography component={'span'}>{Number(tutor.avgRating?.toFixed(1))}</Typography>
+                                                            </span> : <span style={{ display: 'flex' }}>No reviews yet.</span>
+                                                    }
                                                 </React.Fragment>
                                             }
                                         />
@@ -163,9 +147,8 @@ function TutorsList(props) {
                                     </Box>
                                     <Box style={{ display: "flex" }}>
                                         <div className={classes.tutorDescription}>
-                                            Hi! I'm Eva and I am currently in the second semester of my Business Informatics
-                                            Master studies at TUM. During my bachelor degree studies I discovered
-                                                </div>
+                                            {tutor.personalStatement}
+                                        </div>
                                         <Button variant="outlined" style={{ marginBottom: '2%' }} endIcon={<DoubleArrowOutlinedIcon />} component={Link}
                                             to={`/tutors/${props.subjectId}/profiles/${tutor._id}`}>See full profile</Button>
                                     </Box>

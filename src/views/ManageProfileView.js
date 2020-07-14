@@ -3,7 +3,7 @@ import PersonalInfo from '../components/PersonalInfo';
 import axios from 'axios';
 
 
-function ManageProfileView() {
+function ManageProfileView(props) {
 
     const [profile, setProfile] = useState(undefined);
     const [token, setToken] = useState(window.localStorage.getItem('jwtToken'));
@@ -33,7 +33,7 @@ function ManageProfileView() {
 
     return (
         profile !== undefined ? 
-        <PersonalInfo profile={profile} /> : <div>Loading profile...</div>
+        <PersonalInfo profile={profile} universities={props.universities} /> : <div>Loading profile...</div>
     )
 }
 

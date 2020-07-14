@@ -9,7 +9,6 @@ import logo from '../images/logo.png';
 
 import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
-//import FormHelperText from '@material-ui/core/FormHelperText';
 import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
 import React, { useState, useEffect } from 'react';
@@ -79,13 +78,13 @@ function MainView(props) {
             <Search></Search>
             {
                 !UserService.isAuthenticated() ?
-                    <SignUp></SignUp>
+                    <SignUp universities={props.universities}></SignUp>
                     : null
             }
             <div>
                 <h3 className={classesTutor.heading}>Tutors with highest rating</h3>
+                <TrendingTutors profile={props.profile} classesTutor={classesTutor}></TrendingTutors>
             </div>
-            <TrendingTutors classesTutor={classesTutor}></TrendingTutors>
         </div>
     )
 }
