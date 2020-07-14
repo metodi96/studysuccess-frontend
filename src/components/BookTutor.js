@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import Box from '@material-ui/core/Box';
-import { Button } from '@material-ui/core';
+import { Button, Typography } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 import MomentUtils from '@date-io/moment';
@@ -15,6 +15,7 @@ import FormControl from '@material-ui/core/FormControl';
 import FormLabel from '@material-ui/core/FormLabel';
 import TextField from '@material-ui/core/TextField';
 import { Redirect } from 'react-router-dom';
+import tips from '../images/tips.png'
 
 const useStylesBox = makeStyles(() => ({
     root: {
@@ -25,7 +26,8 @@ const useStylesBox = makeStyles(() => ({
         justifyContent: 'center',
         paddingTop: '20px',
         paddingBottom: '20px',
-        marginBottom: '5px'
+        marginBottom: '5px',
+        display: 'flex'
     }
 }));
 
@@ -44,6 +46,7 @@ const useStylesButton = makeStyles(() => ({
         justifyContent: 'center',
         display: 'flex',
         maxHeight: '300px',
+        paddingRight: '10px'
     }
 }));
 
@@ -53,6 +56,22 @@ const useStylesTimepicker = makeStyles((theme) => ({
         marginRight: theme.spacing(1),
         width: 200,
     },
+}));
+
+const useStylesSuggest = makeStyles((theme) => ({
+    root: {
+        marginTop: '25px',
+        border: '1px solid darkgrey',
+        padding: '10px 10px 10px 10px',
+        position: 'relative',
+        borderRadius: '4px'
+    },
+    rootBackup: {
+        border: '1px solid darkgrey',
+        padding: '10px 10px 10px 10px',
+        position: 'relative',
+        borderRadius: '4px'
+    }
 }));
 
 
@@ -77,6 +96,7 @@ function BookTutor({ tutor, subjectId }) {
     const classesDatePicker = useStylesDatePicker();
     const classesButton = useStylesButton();
     const classesTimePicker = useStylesTimepicker();
+    const classesSuggest = useStylesSuggest();
 
     const initialValues = {
         timeFrom: proposedTimeslotFrom,
@@ -246,6 +266,43 @@ function BookTutor({ tutor, subjectId }) {
         }
     }
 
+    const onSubmitBackup = () => {
+        console.log('Backup submit')
+        setDisabled(true);
+        setToken(window.localStorage.getItem('jwtToken'));
+        if (window.localStorage.getItem('jwtToken') !== null) {
+            const headers = {
+                Authorization: `Bearer ${token.slice(10, -2)}`
+            }
+            console.log(headers)
+            axios.post('http://localhost:5000/bookings/payBackup',
+                {
+                    firstname: tutor.firstname,
+                    lastname: tutor.lastname,
+                    price: tutor.pricePerHour,
+                    timeslotStart: timeslotStart,
+                    timeslotEnd: timeslotEnd,
+                    participantNumber: 1,
+                    tutor: tutor._id,
+                    subject: subjectId,
+                    week: week,
+                    timePreferenceId: timePreferenceId,
+                },
+                {
+                    headers: headers
+                })
+                .then(res => {
+                    if (res.status === 200) {
+                        console.log(res.data);
+                        setRedirectToCurrentBookings(true);
+                    }
+                })
+                .catch(err => {
+                    console.log(`Something went wrong with payment ${err}`);
+                })
+        }
+    }
+
     return (
         <div>
             {
@@ -283,12 +340,12 @@ function BookTutor({ tutor, subjectId }) {
                                                 name="timePreferences"
                                                 value={selectedTimeslot}
                                                 onChange={handleTimeslotChange}
-                                                style={{ display: '-webkit-inline-box' }}
+                                                style={{ display: 'flex' }}
                                             >
                                                 {
                                                     timePreferences.map((timePreference, index) => {
                                                         if (timePreference.day === selectedDate.day() && !timePreference.bookedOnWeeks.includes(selectedDate.week())) {
-                                                            return <div key={index}>
+                                                            return <div key={index} style={{ margin: 'auto' }}>
                                                                 <FormControlLabel
                                                                     name={timePreference._id}
                                                                     value={`${timePreference.startTime.hours}:${timePreference.startTime.minutes}-${timePreference.endTime.hours}:${timePreference.endTime.minutes}`}
@@ -300,12 +357,21 @@ function BookTutor({ tutor, subjectId }) {
                                                         return null;
                                                     })
                                                 }
-                                                <FormControlLabel
-                                                    name="proposeTime"
-                                                    value='Another timeslot'
-                                                    control={<Radio />}
-                                                    label='Suggest another timeslot'
-                                                />
+                                                <div className={timePreferences.length > 0 ? classesSuggest.root : classesSuggest.rootBackup}>
+                                                    <img style={{position: 'absolute', right: '-10%', top: '-40%'}} src={tips} width='50px' height='50px' />
+                                                    <div>
+                                                        <Typography style={{ fontSize: 'smaller', textAlign: 'center' }}>Not happy with what you see? Feel free to suggest</Typography>
+                                                        <Typography style={{ fontSize: 'smaller', textAlign: 'center' }}> another timeslot and the tutor will review it.</Typography>
+                                                    </div>
+                                                    <div style={{ display: 'flex', justifyContent: 'center' }}>
+                                                        <FormControlLabel
+                                                            name="proposeTime"
+                                                            value='Another timeslot'
+                                                            control={<Radio />}
+                                                            label='Suggest another timeslot'
+                                                        />
+                                                    </div>
+                                                </div>
                                             </RadioGroup>
                                         </FormControl>
                                     </div>
@@ -358,7 +424,14 @@ function BookTutor({ tutor, subjectId }) {
                                         disabled={disabled}
                                         variant="outlined"
                                         type="submit"
-                                    >Book tutorial</Button>
+                                    >Book and pay tutorial</Button>
+                                </div>
+                                <div className={classesButton.root}>
+                                    <Button
+                                        disabled={disabled}
+                                        variant="outlined"
+                                        onClick={onSubmitBackup}
+                                    >Book (no paypal)</Button>
                                 </div>
                             </Box>
                         </Form>

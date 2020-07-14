@@ -44,7 +44,6 @@ const useStyles = makeStyles((theme) => ({
         whiteSpace: 'nowrap',
         textOverflow: 'ellipsis',
         width: '60%',
-        fontFamily: 'Roboto, Helvetica, Arial, sans-serif',
         fontSize: '1rem',
         fontWeight: 400,
         lineHeight: '1.5em',
@@ -53,7 +52,6 @@ const useStyles = makeStyles((theme) => ({
         marginRight: '8%'
     },
     pricePerHour: {
-        fontFamily: 'Roboto, Helvetica, Arial, sans-serif',
         fontSize: 'normal',
         fontWeight: 400,
         lineHeight: '1.5em',
@@ -71,7 +69,6 @@ const useStyles = makeStyles((theme) => ({
 
 function TutorsList(props) {
     const classes = useStyles();
-    const [token, setToken] = useState(window.localStorage.getItem('jwtToken'));
     const [sortMethod, setSortMethod] = useState(1);
     const { tutorsForSubject, setTutorsForSubject } = useContext(TutorsContext);
     const handleChangeSortMethod = (event) => {
@@ -89,7 +86,6 @@ function TutorsList(props) {
     }
 
     useEffect(() => {
-        setToken(window.localStorage.getItem('jwtToken'));
         axios.post(`http://localhost:5000/tutors/${props.subjectId}/filtered`)
             .then(res => {
                 console.log(res.data);
@@ -102,7 +98,7 @@ function TutorsList(props) {
     }, [])
     if (tutorsForSubject.length > 0) {
         return (
-            <Box bgcolor="rgba(152, 158, 157, 0.438)" width="80%" py={2} pl={3}>
+            <Box style={{borderRadius: '4px'}} bgcolor="rgba(152, 158, 157, 0.438)" width="80%" py={2} pl={3}>
                 <Box pl={2} display='flex'>
                     <Box mr="60%">{tutorsForSubject.length} tutor(s) match(es) your search</Box>
                     <Box>
@@ -124,7 +120,7 @@ function TutorsList(props) {
                     {
                         tutorsForSubject.map(tutor => {
                             return <ListItem key={tutor._id}>
-                                <Box bgcolor="white" width="80%" className={classes.listItem}>
+                                <Box style={{borderRadius: '4px'}} bgcolor="white" width="80%" className={classes.listItem}>
                                     <Box className={classes.inline}>
                                         <ListItemAvatar>
                                             <Avatar alt={tutor.firstname} src={`http://localhost:5000/${tutor.userImage}`} className={classes.avatar} />
@@ -147,7 +143,7 @@ function TutorsList(props) {
                                     </Box>
                                     <Box style={{ display: "flex" }}>
                                         <div className={classes.tutorDescription}>
-                                            {tutor.personalStatement}
+                                            {tutor.personalStatement !== undefined ? tutor.personalStatement : <i>No description</i>}
                                         </div>
                                         <Button variant="outlined" style={{ marginBottom: '2%' }} endIcon={<DoubleArrowOutlinedIcon />} component={Link}
                                             to={`/tutors/${props.subjectId}/profiles/${tutor._id}`}>See full profile</Button>

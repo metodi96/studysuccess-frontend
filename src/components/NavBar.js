@@ -12,8 +12,7 @@ import Badge from '@material-ui/core/Badge';
 const useStylesNavBarButtons = makeStyles(() => ({
     root: {
         color: 'black',
-        fontSize: 'smaller',
-        fontFamily: 'Verdana, Courier, serif'
+        fontFamily: '"Titillium Web", sans-serif'
     }
 }))
 
@@ -47,6 +46,7 @@ function Navbar() {
     const [token, setToken] = useState(window.localStorage.getItem('jwtToken'));
     const [loading, setLoading] = useState(true);
     const [pendingNumber, setPendingNumber] = useState(0);
+    const [pendingNumberTutor, setPendingNumberTutor] = useState(0);
     const location = useLocation();
     const history = useHistory();
     const open = Boolean(anchorEl);
@@ -96,6 +96,20 @@ function Navbar() {
                 .then(res => {
                     if (isMounted) {
                         setPendingNumber(res.data.length);
+                    }
+                })
+                .catch(err => {
+                    console.log(err);
+                })
+            axios
+                .get('http://localhost:5000/bookings/pendingTutor', {
+                    headers: {
+                        Authorization: `Bearer ${token.slice(10, -2)}`
+                    }
+                })
+                .then(res => {
+                    if (isMounted) {
+                        setPendingNumberTutor(res.data.length);
                     }
                 })
                 .catch(err => {
@@ -160,7 +174,7 @@ function Navbar() {
                             {
                                 profile !== undefined && profile.hasCertificateOfEnrolment && profile.hasGradeExcerpt ?
                                     <Button component={Link} to="/bookings/pendingTutor" className={classesNavBarButtons.root} >
-                                        Booking Requests
+                                        <Badge classes={classesBadge} color="secondary" badgeContent={pendingNumberTutor}>Booking Requests</Badge>
                                     </Button> : null
                             }
                             
@@ -181,7 +195,7 @@ function Navbar() {
                                                     paddingTop: '10px',
                                                     color: 'black',
                                                     fontSize: 'initial',
-                                                    fontFamily: 'Verdana, Courier, serif'
+                                                    fontFamily: '"Titillium Web", sans-serif'
                                                 }}>{profile.firstname}</span><ArrowDropDownIcon style={{ color: 'black', paddingTop: '10px' }}></ArrowDropDownIcon>
                                                     <Avatar classes={profile.userImage ? classesAvatar : classesAvatarNoPic} src={`http://localhost:5000/${profile.userImage}`} alt="Avatar" />
                                                 </div> : null

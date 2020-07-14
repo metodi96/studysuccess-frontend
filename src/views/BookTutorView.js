@@ -4,14 +4,11 @@ import axios from 'axios';
 import Card from '@material-ui/core/Card';
 import CardHeader from '@material-ui/core/CardHeader';
 import CardContent from '@material-ui/core/CardContent';
-import CardActions from '@material-ui/core/CardActions';
-import IconButton from '@material-ui/core/IconButton';
 import Typography from '@material-ui/core/Typography';
-import FavoriteIcon from '@material-ui/icons/Favorite';
-import ShareIcon from '@material-ui/icons/Share';
 import { makeStyles } from '@material-ui/core/styles';
 import Rating from '@material-ui/lab/Rating';
 import BookTutor from '../components/BookTutor';
+import person from '../images/person.png';
 
 const useStylesTutor = makeStyles(() => ({
     rating: {
@@ -19,19 +16,41 @@ const useStylesTutor = makeStyles(() => ({
     },
     container: {
         display: 'flex',
-        marginTop: '50px'
     },
-    availability: {
-        marginLeft: '200px'
+}));
+
+const useStylesBox = makeStyles(() => ({
+    container: {
+        backgroundColor: 'rgba(152, 158, 157, 0.438)',
+        marginLeft: '100px',
+        marginBottom: '30px',
+        marginTop: '25px',
+        padding: '25px 0px 25px 25px',
+        maxWidth: '375px',
+        minWidth: '375px',
+        borderRadius: '4px',
+        maxHeight: '500px'
     }
 }));
 
-const useStylesCard = makeStyles((theme) => ({
+const useStylesBoxTwo = makeStyles(() => ({
+    container: {
+        backgroundColor: 'rgba(152, 158, 157, 0.438)',
+        marginLeft: '100px',
+        marginBottom: '30px',
+        marginTop: '25px',
+        padding: '25px 25px 25px 25px',     
+        maxWidth: '600px',
+        minWidth: '600px',
+        borderRadius: '4px'
+    }
+}));
+
+const useStylesCard = makeStyles(() => ({
     root: {
         maxWidth: 345,
         minWidth: 345,
         maxHeight: 500,
-        marginLeft: '50px'
     }
 }));
 
@@ -40,9 +59,13 @@ function BookTutorView(props) {
     const tutorId = props.match.params.tutorId;
     const subjectId = props.match.params.subjectId;
     const [loading, setLoading] = useState(true);
+    const [tutorHasImage, setTutorHasImage] = useState(false);
     const [token, setToken] = useState(window.localStorage.getItem('jwtToken'));
     const classesCard = useStylesCard();
     const classesTutor = useStylesTutor();
+    const classesBox = useStylesBox();
+    const classesBoxRight = useStylesBoxTwo();
+
 
     useEffect(() => {
         let isMounted = true; // note this flag denote mount status
@@ -59,7 +82,21 @@ function BookTutorView(props) {
                     if (isMounted) {
                         console.log(res.data);
                         setTutor(res.data);
-                        setLoading(false);
+                        if(res.data.userImage !== undefined) {
+                        axios
+                            .get(`http://localhost:5000/${res.data.userImage}`)
+                            .then(() => {
+                                setTutorHasImage(true);
+                                setLoading(false);
+                            })
+                            .catch(() => {
+                                setTutorHasImage(false);
+                                setLoading(false);
+                            })
+                        } else {
+                            console.log('undefined')
+                            setLoading(false);
+                        }
                     }
                 })
                 .catch(err => {
@@ -75,47 +112,43 @@ function BookTutorView(props) {
     if (UserService.isAuthenticated()) {
         if (!loading) {
             return (
-                <div className={classesTutor.container}>
-                    <Card className={classesCard.root}>
-                        <CardHeader
-                            title={`${tutor.firstname} ${tutor.lastname}`}
-                            subheader={
-                                <div className={classesTutor.rating}>
-                                    {
-                                        tutor.avgRating !== undefined ?
-                                        <div>
-                                            <Rating name="read-only" value={Number(tutor.avgRating)} precision={0.5} readOnly />
-                                            <Typography component="legend">{tutor.avgRating?.toFixed(1)}</Typography>
-                                        </div> : <div>Rating not available. No reviews.</div>
-                                    }
+                <div className={classesBox.container}>
+                    <div className={classesTutor.container}>
+                        <Card className={classesCard.root}>
+                            <CardHeader
+                                title={`${tutor.firstname} ${tutor.lastname}`}
+                                subheader={
+                                    <div className={classesTutor.rating}>
+                                        {
+                                            tutor.avgRating !== undefined ?
+                                                <div style={{display: 'flex'}}>
+                                                    <Rating name="read-only" value={Number(tutor.avgRating)} precision={0.5} readOnly />
+                                                    <Typography component="legend">{tutor.avgRating?.toFixed(1)}</Typography>
+                                                </div> : <div>Rating not available. No reviews.</div>
+                                        }
 
-                                </div>
-                            }
-                        />
-                        <div style={{ justifyContent: 'center', display: 'flex' }}>
-                            <img width='250px' height='250px' src={`http://localhost:5000/${tutor.userImage}`} alt={`${tutor.firstname} ${tutor.lastname}`} title={`${tutor.firstname} ${tutor.lastname}`} />
-                        </div>
-                        <CardContent>
-                            <Typography variant="body2" color="textSecondary" component="p">
-                                Tutor for {
-                                    Object.values(tutor.subjectsToTeach).map((value, i) => (
-                                        <span key={i}>{tutor.subjectsToTeach.length - 1 === i ? <b>{`${value.name}.`}</b> : <b>{`${value.name}, `}</b>}</span>
-                                    ))
+                                    </div>
                                 }
-                            </Typography>
-                        </CardContent>
-                        <CardActions disableSpacing>
-                            <IconButton disabled aria-label="add to favorites">
-                                <FavoriteIcon />
-                            </IconButton>
-                            <IconButton disabled aria-label="share">
-                                <ShareIcon />
-                            </IconButton>
-                        </CardActions>
-                    </Card>
-                    <div className={classesTutor.availability}>
-                        <h2>Book an online lesson</h2>
-                        <BookTutor tutor={tutor} subjectId={subjectId} />
+                            />
+                            <div style={{ justifyContent: 'center', display: 'flex' }}>
+                                <img width='250px' height='250px' src={tutorHasImage ? `http://localhost:5000/${tutor.userImage}` : person} alt={`${tutor.firstname} ${tutor.lastname}`} title={`${tutor.firstname} ${tutor.lastname}`} />
+                            </div>
+                            <CardContent>
+                                <Typography variant="body2" color="textSecondary" component="p">
+                                    Tutor for {
+                                        Object.values(tutor.subjectsToTeach).map((value, i) => (
+                                            <span key={i}>{tutor.subjectsToTeach.length - 1 === i ? <b>{`${value.name}.`}</b> : <b>{`${value.name}, `}</b>}</span>
+                                        ))
+                                    }
+                                </Typography>
+                            </CardContent>
+                        </Card>
+                        <div className={classesTutor.availability}>
+                            <h2 style={{marginLeft: '100px'}}>Book an online lesson</h2>
+                            <div className={classesBoxRight.container}>
+                                <BookTutor tutor={tutor} subjectId={subjectId} />
+                            </div>
+                        </div>
                     </div>
                 </div>
             )
