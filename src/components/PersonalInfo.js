@@ -1,29 +1,35 @@
 import React, { useState } from 'react';
 import * as Yup from 'yup';
-import { TextField } from 'formik-material-ui';
+import { TextField, SimpleFileUpload } from 'formik-material-ui';
 import { Formik, Form, Field } from 'formik';
 import { makeStyles } from '@material-ui/core/styles';
-import { Button, Avatar, Tooltip } from '@material-ui/core';
+import { Button, Avatar, MenuItem, Fab } from '@material-ui/core';
 import axios from 'axios';
 import EditIcon from '@material-ui/icons/Edit';
+import AddIcon from '@material-ui/icons/AddAPhoto';
+import Add from '@material-ui/icons/Add';
 import Snackbar from '@material-ui/core/Snackbar';
 import MuiAlert from '@material-ui/lab/Alert';
-
-function Alert(props) {
-    return <MuiAlert elevation={6} variant="filled" {...props} />;
-}
+import Alert from './Alert';
 
 const useStylesField = makeStyles(() => ({
     root: {
         '& input': {
-            border: '1px solid black',
             backgroundColor: 'white !important',
-            padding: '5px 5px 5px 5px',
-            borderRadius: '4px',
-            height: '30px'
         },
         '& input:hover': {
-            border: '1px solid black',
+            backgroundColor: 'white !important',
+        },
+        marginBottom: '20px',
+        marginRight: '-20px',
+        minWidth: '250px',
+        maxWidth: '250px'
+    }
+}));
+
+const useStylesEmail = makeStyles(() => ({
+    root: {
+        '& input': {
             backgroundColor: 'white !important',
         },
         marginBottom: '20px',
@@ -50,7 +56,7 @@ const useStylesBooking = makeStyles(() => ({
     }
 }));
 
-function PersonalInfo({ profile, openProfileAlert, setOpenProfileAlert }) {
+function PersonalInfo({ profile, universities, openProfileAlert, setOpenProfileAlert }) {
     const classesButton = useStylesButton();
     const classesField = useStylesField();
     const classesBooking = useStylesBooking();
@@ -145,14 +151,20 @@ function PersonalInfo({ profile, openProfileAlert, setOpenProfileAlert }) {
         formData.append("university", values.university);
         formData.append("semester", values.semester);
         if (values.studyProgram !== '' && values.studyProgram !== undefined) {
-        formData.append("studyProgram", values.studyProgram);
-    }
-        formData.append("degree", values.degree);
+            formData.append("studyProgram", values.studyProgram);
+        }
+        if (values.degree !== undefined) {
+            formData.append("degree", values.degree);
+        }
         if (selectedFile !== null) {
             formData.append('userImage', selectedFile, selectedFile.name);
         }
-        formData.append('hasCertificateOfEnrolment', hasCertificateOfEnrolment);
-        formData.append('hasGradeExcerpt', hasGradeExcerpt);
+        if (values.hasCertificateOfEnrolment !== undefined) {
+            formData.append('hasCertificateOfEnrolment', hasCertificateOfEnrolment);
+        }
+        if (values.hasGradeExcerpt !== undefined) {
+            formData.append('hasGradeExcerpt', hasGradeExcerpt);
+        }
         console.log(...formData);
 
         if (window.localStorage.getItem('jwtToken') !== null) {
@@ -230,7 +242,8 @@ function PersonalInfo({ profile, openProfileAlert, setOpenProfileAlert }) {
                                     type='text'
                                     id='firstname'
                                     name='firstname'
-                                    placeholder='First name'
+                                    variant="outlined"
+                                    label='First name'
                                     value={initialValues.firstname}
 
                                 />
@@ -245,7 +258,8 @@ function PersonalInfo({ profile, openProfileAlert, setOpenProfileAlert }) {
                                     type='text'
                                     id='lastname'
                                     name='lastname'
-                                    placeholder='Last name'
+                                    variant="outlined"
+                                    label='Last name'
                                     value={initialValues.lastname}
                                 />
                                 <div style={{ position: 'absolute', left: '20%', top: '12%' }} >
@@ -253,26 +267,34 @@ function PersonalInfo({ profile, openProfileAlert, setOpenProfileAlert }) {
                                 </div>
                             </div>
                             <div>
-                                <Tooltip title="You cannot edit this field" aria-label="cannot-edit"><Field
+                                <Field
                                     component={TextField}
                                     classes={classesField}
                                     type='text'
                                     id='email'
                                     name='email'
+                                    variant="outlined"
                                     disabled
                                     value={initialValues.email}
-                                /></Tooltip>
+                                />
                             </div>
                             <div style={{ position: 'relative' }}>
                                 <Field
                                     component={TextField}
+                                    type="text"
+                                    name="university"
+                                    label="University"
+                                    select
+                                    variant="outlined"
+                                    helperText="Please select one of the options"
                                     classes={classesField}
-                                    type='text'
-                                    id='university'
-                                    name='university'
-                                    placeholder='University'
-                                    value={initialValues.university}
-                                />
+                                >
+                                    {universities.map(option => (
+                                        <MenuItem key={option.value} value={option.value}>
+                                            {option.label}
+                                        </MenuItem>
+                                    ))}
+                                </Field>
                                 <div style={{ position: 'absolute', left: '20%', top: '11%' }} >
                                     <EditIcon />
                                 </div>
@@ -299,8 +321,9 @@ function PersonalInfo({ profile, openProfileAlert, setOpenProfileAlert }) {
                                     type='text'
                                     id='studyProgram'
                                     name='studyProgram'
-                                    placeholder='Study Program'
-                                    value={initialValues.studyProgram}
+                                    label='Study Program'
+                                    variant="outlined"
+                                    value={initialValues.studyProgram || ''}
                                 />
                                 <div style={{ position: 'absolute', left: '20%', top: '12%' }} >
                                     <EditIcon />
@@ -313,8 +336,9 @@ function PersonalInfo({ profile, openProfileAlert, setOpenProfileAlert }) {
                                     type='text'
                                     id='semester'
                                     name='semester'
-                                    placeholder='Semester'
-                                    value={initialValues.semester}
+                                    variant="outlined"
+                                    label='Semester'
+                                    value={initialValues.semester || ''}
                                 />
                                 <div style={{ position: 'absolute', left: '20%', top: '12%' }} >
                                     <EditIcon />
@@ -327,7 +351,8 @@ function PersonalInfo({ profile, openProfileAlert, setOpenProfileAlert }) {
                                     type='text'
                                     id='degree'
                                     name='degree'
-                                    placeholder='Degree'
+                                    variant="outlined"
+                                    label='Degree'
                                     value={initialValues.degree}
                                 />
                                 <div style={{ position: 'absolute', left: '20%', top: '12%' }} >
@@ -335,7 +360,18 @@ function PersonalInfo({ profile, openProfileAlert, setOpenProfileAlert }) {
                                 </div>
                             </div>
                             <div>
-                                <input id="userImage" type="file" onChange={fileSelectedHandler} />
+                                <label htmlFor="userImage">
+                                    <input style={{ display: "none" }} id="userImage" type="file" onChange={fileSelectedHandler} />
+                                    <Fab
+                                        color="primary"
+                                        size="small"
+                                        component="span"
+                                        aria-label="add"
+                                        variant="extended"
+                                    >
+                                        <AddIcon /><span style={{ paddingLeft: '5px' }}>Upload avatar</span>
+                                    </Fab>
+                                </label>
                                 {thumbnail !== null ? <Avatar src={thumbnail} /> : null}
                                 {!typeImageRight ? <p style={{ color: 'red' }}>Wrong file type</p> : null}
                             </div>
@@ -343,7 +379,18 @@ function PersonalInfo({ profile, openProfileAlert, setOpenProfileAlert }) {
                             <div>
                                 {
                                     !profile.hasCertificateOfEnrolment ? <div>
-                                        <input id="certificate" type="file" onChange={fileSelectedHandlerCertificate} />
+                                        <label htmlFor="certificate">
+                                            <input style={{ display: "none" }} id="certificate" type="file" onChange={fileSelectedHandlerCertificate} />
+                                            <Fab
+                                                color="primary"
+                                                size="small"
+                                                component="span"
+                                                aria-label="add"
+                                                variant="extended"
+                                            >
+                                                <Add /><span style={{ paddingLeft: '5px' }}>Upload certificate of enrolment</span>
+                                            </Fab>
+                                        </label>
                                         {!typePdfCertificateRight ? <p style={{ color: 'red' }}>Wrong file type</p> : null}
                                     </div> : null
                                 }
@@ -353,7 +400,18 @@ function PersonalInfo({ profile, openProfileAlert, setOpenProfileAlert }) {
                             <div>
                                 {
                                     !profile.hasGradeExcerpt ? <div>
-                                        <input id="grade" type="file" onChange={fileSelectedHandlerGrade} />
+                                        <label htmlFor="grade">
+                                            <input style={{ display: "none" }} id="grade" type="file" onChange={fileSelectedHandlerGrade} />
+                                            <Fab
+                                                color="primary"
+                                                size="small"
+                                                component="span"
+                                                aria-label="add"
+                                                variant="extended"
+                                            >
+                                                <Add /><span style={{ paddingLeft: '5px' }}>Upload grade excerpt</span>
+                                            </Fab>
+                                        </label>
                                         {!typePdfGradeRight ? <p style={{ color: 'red' }}>Wrong file type</p> : null}
                                     </div> : null
                                 }

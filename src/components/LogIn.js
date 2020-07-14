@@ -14,7 +14,7 @@ const initialValues = {
 const validationSchema = Yup.object({
     email: Yup.string()
         .email()
-        .required("Required"),
+        .required("Email required"),
     password: Yup.string()
         .required("No password provided.")
 });
@@ -22,14 +22,9 @@ const validationSchema = Yup.object({
 const useStylesField = makeStyles(() => ({
     root: {
         '& input': {
-            border: '1px solid black',
             backgroundColor: 'white !important',
-            padding: '5px 5px 5px 5px',
-            borderRadius: '4px',
-            height: '30px'
         },
         '& input:hover': {
-            border: '1px solid black',
             backgroundColor: 'white !important',
         },
         marginRight: '50px',
@@ -40,7 +35,8 @@ const useStylesField = makeStyles(() => ({
 const useStylesButton = makeStyles(() => ({
     root: {
         maxHeight: '100px',
-        color: 'white'
+        color: 'white',
+        justifyContent: 'center'
     }
 }));
 
@@ -81,10 +77,11 @@ function LogIn(props) {
                     <Field
                         component={TextField}
                         classes={classesField}
+                        variant='outlined'
                         type='email'
                         id='email'
                         name='email'
-                        placeholder='Email'
+                        label='Email'
                     />
                 </div>
 
@@ -92,14 +89,16 @@ function LogIn(props) {
                     <Field
                         component={TextField}
                         classes={classesField}
+                        variant='outlined'
                         type='password'
                         id='password'
                         name='password'
-                        placeholder='Password'
+                        label='Password'
                     />
                 </div>
                 <div className={classesButton.root}>
                     <Button
+                        size='large'
                         variant="outlined"
                         type="submit"
                     >Login</Button>

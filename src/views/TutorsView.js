@@ -19,7 +19,7 @@ function TutorsView({match}) {
         return (
             <Box>
                 <Search></Search>
-                <Box style={{display: "flex"}} mt="1%">
+                <Box style={{display: "flex", minWidth: '1280px'}} mt="1%">
                     <TutorsContext.Provider value={{tutorsForSubject, setTutorsForSubject}}>
                         <Filters subjectId={match.params.subjectId}></Filters>
                         <TutorsList subjectId={match.params.subjectId}></TutorsList>
