@@ -152,7 +152,6 @@ function Navbar() {
                                 >
                                     <MenuItem onClick={handleCloseBookings} component={Link} to="/bookings/current">Scheduled Bookings</MenuItem>
                                     <MenuItem onClick={handleCloseBookings} component={Link} to="/bookings/past">Completed Bookings</MenuItem>
-                                    
                                     <MenuItem onClick={handleCloseBookings} component={Link} to="/bookings/pending"><Badge classes={classesBadge} color="secondary" badgeContent={pendingNumber}>Pending Bookings</Badge></MenuItem>
                                     
                                 </Menu>
@@ -160,7 +159,7 @@ function Navbar() {
 
                             {
                                 profile !== undefined && profile.hasCertificateOfEnrolment && profile.hasGradeExcerpt ?
-                                    <Button className={classesNavBarButtons.root} >
+                                    <Button component={Link} to="/bookings/pendingTutor" className={classesNavBarButtons.root} >
                                         Booking Requests
                                     </Button> : null
                             }

@@ -120,8 +120,8 @@ function BookTutor({ tutor, subjectId }) {
         } else {
             setProposedTimeslotTo(`${newTimeslotEnd.getHours()}:${newTimeslotEnd.getMinutes()}`);
         }
-        console.log(`${newTimeslotEnd.getHours()}:${newTimeslotEnd.getMinutes()}`);
         console.log(event.target.value);
+        console.log(`${newTimeslotEnd.getHours()}:${newTimeslotEnd.getMinutes()}`);
     };
     /* not needed since we automatically calculate the proposed timeslot
     const onChangeTo = (event) => {

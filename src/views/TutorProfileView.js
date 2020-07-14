@@ -189,7 +189,7 @@ function TutorProfileView(props) {
                                                     {tutor.pricePerHour} € / hour
                                                 </Typography>
                                                 <Typography variant="body2" color="textSecondary" component="p">
-                                                    Languages: {tutor.languages.join(", ")}
+                                                    Languages: {tutor.languages?.join(", ")}
                                                 </Typography>
                                             </div>
                                             <Grid item xs={12}>

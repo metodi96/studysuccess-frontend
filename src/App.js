@@ -14,12 +14,15 @@ import TutorProfileView from './views/TutorProfileView';
 import ManageProfileView from './views/ManageProfileView';
 import UserService from './services/UserService';
 import LogInView from './views/LogInView';
+import PendingBookingsTutorView from './views/PendingBookingsTutorView';
 import axios from 'axios';
 
 function App() {
 
   const [profile, setProfile] = useState(undefined);
   const [token, setToken] = useState(window.localStorage.getItem('jwtToken'));
+  const [loading, setLoading] = useState(true);
+
   const universities = [
     {
       value: 'TUM',
@@ -46,7 +49,6 @@ function App() {
     }
   ];
 
-
   useEffect(() => {
     let isMounted = true; // note this flag denote mount status
     setToken(window.localStorage.getItem('jwtToken'));
@@ -61,16 +63,20 @@ function App() {
         .then(res => {
           if (isMounted) {
             setProfile(res.data);
+            setLoading(false);
           }
         })
         .catch(err => {
           console.log(err);
         })
+    } else {
+      setLoading(false);
     }
     return () => { isMounted = false } // use effect cleanup to set flag false, if unmounted
   }, [token]);
 
   return (
+    !loading ? 
     <Router>
       <NavBar />
       <div>
@@ -78,7 +84,7 @@ function App() {
           <br />
           <Switch>
             <Route path='/' exact render={props => (
-              <MainView {...props} universities={universities} profile={profile} />
+              <MainView {...props} universities={universities} />
             )} />
             <Route path='/auth/login' render={props => {
               if (!UserService.isAuthenticated()) {
@@ -89,9 +95,18 @@ function App() {
             }} />
             <Route path='/profile' render={props => {
               if (UserService.isAuthenticated()) {
-              return <ManageProfileView {...props} studyPrograms={studyPrograms} universities={universities} />
+                return <ManageProfileView {...props} studyPrograms={studyPrograms} universities={universities} />
               } else {
                 return <Redirect to={'/auth/login'} />
+              }
+            }} />
+            <Route path='/bookings/pendingTutor' render={props => {
+              if (UserService.isAuthenticated() && profile.hasCertificateOfEnrolment && profile.hasGradeExcerpt) {
+                return <PendingBookingsTutorView {...props} />
+              } else if (!UserService.isAuthenticated()) {
+                return <Redirect to={'/auth/login'} />
+              } else if (!profile.hasCertificateOfEnrolment || !profile.hasGradeExcerpt) {
+                return <Redirect to={'/profile'} />
               }
             }} />
             <Route path='/tutors/:subjectId' exact component={TutorsView} />
@@ -107,7 +122,7 @@ function App() {
           </Switch>
         </div>
       </div>
-    </Router>
+    </Router> : <div>Loading page...</div>
   );
 }
 

@@ -33,8 +33,9 @@ const useStylesFavourites = makeStyles(() => ({
     }
 }));
 
-function TrendingTutor({ profile, tutor }) {
+function TrendingTutor({ tutor }) {
 
+    const [profile, setProfile] = useState(undefined);
     const [token, setToken] = useState(window.localStorage.getItem('jwtToken'));
     const [tutorIsInFavourites, setTutorIsInFavourites] = useState(false);
     const classesCard = useStylesCard();
@@ -42,10 +43,28 @@ function TrendingTutor({ profile, tutor }) {
     const classesFavourites = useStylesFavourites();
 
     useEffect(() => {
-        if (profile !== undefined) {
-            setTutorIsInFavourites(profile.favouriteTutors?.some(element => element === tutor._id))
+        let isMounted = true; // note this flag denote mount status
+        setToken(window.localStorage.getItem('jwtToken'));
+        if (window.localStorage.getItem('jwtToken') !== null) {
+            console.log(token)
+            axios
+                .get('http://localhost:5000/profile', {
+                    headers: {
+                        Authorization: `Bearer ${token.slice(10, -2)}`
+                    }
+                })
+                .then(res => {
+                    if (isMounted) {
+                        setProfile(res.data);
+                        setTutorIsInFavourites(res.data.favouriteTutors?.some(element => element === tutor._id))
+                    }
+                })
+                .catch(err => {
+                    console.log(err);
+                })
         }
-    }, []);
+        return () => { isMounted = false } // use effect cleanup to set flag false, if unmounted
+    }, [token]);
 
     const addRemoveFavourite = () => {
         setToken(window.localStorage.getItem('jwtToken'));

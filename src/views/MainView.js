@@ -39,18 +39,6 @@ function MainView(props) {
     const classes = useStyles();
     const classesTutor = useStylesTutor();
 
-    const logout = () => {
-        console.log('Attempting logout...')
-        UserService.logout();
-        if (props.location.pathname !== '/') {
-            props.history.push('/');
-        }
-        else {
-            window.location.reload();
-        }
-        UserService.isAuthenticated() ? console.log('User is still authenticated') : console.log('User logged out successfully');
-    }
-
     return (
         <div>
             <div className={classes.root}>
@@ -70,7 +58,7 @@ function MainView(props) {
             }
             <div>
                 <h3 className={classesTutor.heading}>Tutors with highest rating</h3>
-                <TrendingTutors profile={props.profile} classesTutor={classesTutor}></TrendingTutors>
+                <TrendingTutors classesTutor={classesTutor}></TrendingTutors>
             </div>
         </div>
     )
