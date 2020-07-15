@@ -80,7 +80,7 @@ const useStylesTerms = makeStyles((theme) => ({
         display: 'flex',
     },
     formControl: {
-        margin: theme.spacing(3),
+        margin: theme.spacing(1),
     },
 }));
 
@@ -232,7 +232,9 @@ function SignUp({ universities }) {
                                         </FormGroup>
                                     </FormControl>
                                 </div>
-
+                                <div style={{ textAlign: 'left', marginBottom: '20px' }}>
+                                    <i style={{ fontSize: '0.85rem'}}>Required fields are marked with *.</i>
+                                </div>                    
                                 <div className={classesButton.root}>
                                     <Button
                                         size="large"
