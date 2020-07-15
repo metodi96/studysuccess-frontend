@@ -27,6 +27,7 @@ const useStyles = makeStyles((theme) => ({
   buttons: {
     fontSize: 'small',
     display: 'inline-grid',
+    textAlign: '-webkit-center',
     paddingRight: 7,
     alignContent: 'center'
   },
@@ -40,6 +41,7 @@ const useStyles = makeStyles((theme) => ({
   markedButton: {
     fontSize: 'small',
     display: 'inline-grid',
+    textAlign: '-webkit-center',
     paddingRight: 7,
     backgroundColor: '#E9EB78'
   },
@@ -133,7 +135,7 @@ function Filters(props) {
             <Box fontSize='h5.fontSize' ml={2} fontWeight='fontWeightMedium' textAlign='center'>
               Filters
             </Box>
-            <Box border={1} width='90%' mt={2} mb={3} ml={2} textAlign='center'>
+            <Box border={1} width='90%' mt={2} mb={3} ml={2} textAlign='-webkit-center'>
               <Typography id="select-language-label" gutterBottom>
                   Your availability 
               </Typography>  
@@ -156,7 +158,7 @@ function Filters(props) {
                 </div>
               </IconButton>
               <IconButton onClick={() => {setDayTime(4)}}>
-                <div style={{textAlign: 'webkit-center'}} className={dayTime==4 ? classes.markedButton : classes.buttons}>
+                <div style={{textAlign: '-webkit-center'}} className={dayTime==4 ? classes.markedButton : classes.buttons}>
                   <WeekendOutlinedIcon ></WeekendOutlinedIcon>
                   Weekends
                 </div>
