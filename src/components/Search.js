@@ -11,7 +11,7 @@ const useStyles = makeStyles(() => ({
     inputRoot: {
         width: 500,
         height: 40,
-        borderRadius: 10,
+        borderRadius: 4,
         color: "black",
         backgroundColor: "#f2f2f2",
         "& .MuiOutlinedInput-notchedOutline": {
