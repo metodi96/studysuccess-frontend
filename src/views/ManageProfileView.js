@@ -3,7 +3,7 @@ import PersonalInfo from '../components/PersonalInfo';
 import ProfileSubjects from '../components/ProfileSubjects';
 import ProfileTutorSubjects from '../components/ProfileTutorSubjects';
 import axios from 'axios';
-import { makeStyles, CircularProgress } from '@material-ui/core';
+import { makeStyles } from '@material-ui/core';
 
 const useStylesProfile = makeStyles(() => ({
     container: {
