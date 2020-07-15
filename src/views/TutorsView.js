@@ -1,4 +1,4 @@
-import React, {useState} from 'react'
+import React, {useState, useEffect} from 'react'
 //import Filters from '../components/Filters'
 //import React  from 'react'
 //import { makeStyles } from '@material-ui/core/styles';
@@ -16,16 +16,17 @@ import Box from '@material-ui/core/Box';
 
 function TutorsView({match}) {
     const [tutorsForSubject, setTutorsForSubject] = useState([]);
-        return (
-            <Box>
-                <Search></Search>
-                <Box style={{display: "flex", minWidth: '1280px'}} mt="1%">
-                    <TutorsContext.Provider value={{tutorsForSubject, setTutorsForSubject}}>
-                        <Filters subjectId={match.params.subjectId}></Filters>
-                        <TutorsList subjectId={match.params.subjectId}></TutorsList>
-                    </TutorsContext.Provider>            
-                </Box>
+
+    return (
+        <Box>
+            <Search subjectId={match.params.subjectId}></Search>
+            <Box style={{display: "flex", minWidth: '1280px'}} mt="1%">
+                <TutorsContext.Provider value={{tutorsForSubject, setTutorsForSubject}}>
+                    <Filters subjectId={match.params.subjectId}></Filters>
+                    <TutorsList subjectId={match.params.subjectId}></TutorsList>
+                </TutorsContext.Provider>            
             </Box>
-        )
+        </Box>
+    )
 }
 export default TutorsView
