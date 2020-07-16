@@ -34,7 +34,7 @@ function Footer() {
             <BottomNavigation showLabels>
 
                 <BottomNavigationAction disabled icon={<CopyrightIcon style={{ marginTop: '2px', marginLeft: '8px' }}></CopyrightIcon>} />
-                <BottomNavigationAction disabled label={<span style={{ marginTop: '3px', marginLeft: '110px' }}>2020 StudySuccess. All rights reserved.</span>} />
+                <BottomNavigationAction disabled label={<span style={{ marginTop: '3px', marginLeft: '110px' }}>{new Date().getFullYear()} StudySuccess. All rights reserved.</span>} />
 
 
             </BottomNavigation>
