@@ -52,7 +52,7 @@ function App() {
   useEffect(() => {
     let isMounted = true; // note this flag denote mount status
     setToken(window.localStorage.getItem('jwtToken'));
-    if (window.localStorage.getItem('jwtToken') !== null && UserService.isAuthenticated()) {
+    if (window.localStorage.getItem('jwtToken') !== null) {
       console.log(token)
       axios
         .get('http://localhost:5000/profile', {

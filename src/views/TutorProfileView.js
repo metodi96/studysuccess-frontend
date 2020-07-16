@@ -143,8 +143,8 @@ function TutorProfileView(props) {
         }
     }
 
-    const redirectToLogin = () => {
-        props.history.push('/auth/login')
+    const redirect = () => {
+        props.history.push('/')
     }
 
     if (UserService.isAuthenticated()) {
@@ -167,10 +167,10 @@ function TutorProfileView(props) {
                                                 <div className={classesTutor.rating}>
                                                     {
                                                         tutor.avgRating !== undefined ?
-                                                            <div>
-                                                                <Rating value={Number(tutor.avgRating)} precision={0.5} readOnly />
-                                                                <Typography component="legend">{Number(tutor.avgRating).toFixed(1)}</Typography>
-                                                            </div> : <div>No rating available</div>
+                                                        <div>
+                                                            <Rating value={Number(tutor.avgRating)} precision={0.5} readOnly />
+                                                            <Typography component="legend">{Number(tutor.avgRating).toFixed(1)}</Typography>
+                                                        </div> : <div>No rating available</div>
                                                     }
 
                                                 </div>
@@ -208,9 +208,7 @@ function TutorProfileView(props) {
                                     </Grid>
                                 </Grid>
                                 <Grid item xs={12}>
-                                    <Typography variant="body2" color="textSecondary" component="p">
-                                        {tutor.personalStatement !== undefined ? tutor.personalStatement : <i>No description</i>}
-                                    </Typography>
+                                    <Typography variant="body2" color="textSecondary" component="p">Please add the description in the backend, read it and present it here.</Typography>
                                 </Grid>
 
                             </Grid>
@@ -243,7 +241,7 @@ function TutorProfileView(props) {
         return (
             <div>
                 {
-                    redirectToLogin()
+                    redirect()
                 }
             </div>
         )
