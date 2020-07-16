@@ -141,10 +141,10 @@ function FavouriteTutor({ tutor }) {
                                                     <div>
                                                         <div>
                                                             <Button variant="outlined" style={{ marginBottom: '2%' }} endIcon={<DoubleArrowOutlinedIcon />} component={Link}
-                                                                to={`/tutors/${tutor.subjectsToTeach[0]}/profiles/${tutor._id}`}>See full profile</Button>
+                                                                to={`/tutors/${tutor.subjectsToTeach[0]._id}/profiles/${tutor._id}`}>See full profile</Button>
                                                         </div>
                                                         <div>
-                                                            <Button variant="outlined" style={{ marginBottom: '2%' }} endIcon={<DoubleArrowOutlinedIcon />} component={Link} to={`/tutors/${tutor.subjectsToTeach[0]}/booking/${tutor._id}`}>
+                                                            <Button variant="outlined" style={{ marginBottom: '2%' }} endIcon={<DoubleArrowOutlinedIcon />} component={Link} to={`/tutors/${tutor.subjectsToTeach[0]._id}/booking/${tutor._id}`}>
                                                                 Show availability
                                                                 </Button>
                                                         </div>
