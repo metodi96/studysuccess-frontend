@@ -6,7 +6,7 @@ import CopyrightIcon from '@material-ui/icons/Copyright';
 const useStylesFooter = makeStyles(() => ({
     root: {
         maxHeight: '35px',
-        marginTop: 'calc(5% + 60px)',
+        marginTop: `calc(10% + 60px)`,
         fontFamily: '"Titillium Web", sans-serif',
         marginLeft: '-7px',
         "& .MuiBottomNavigation-root": {
