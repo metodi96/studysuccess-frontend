@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import UserService from '../services/UserService';
 import axios from 'axios';
 import PastBooking from '../components/PastBooking'
-import { makeStyles } from '@material-ui/core';
+import { makeStyles, Box, InputLabel, Select, MenuItem } from '@material-ui/core';
 import confused from '../images/confused-cat.png'
 import Search from '../components/Search';
 
@@ -17,7 +17,7 @@ const useStylesBooking = makeStyles(() => ({
     },
     heading: {
         marginLeft: '200px',
-        marginTop: '60px',
+        minWidth: '925px'
     },
     booking: {
         marginLeft: '100px',
@@ -34,6 +34,7 @@ function PastBookingsView(props) {
     const [loading, setLoading] = useState(true);
     const [token, setToken] = useState(window.localStorage.getItem('jwtToken'));
     const classesBooking = useStylesBooking();
+    const [sortMethodBookings, setSortMethodBookings] = useState(1);
     useEffect(() => {
         let isMounted = true; // note this flag denote mount status
         setToken(window.localStorage.getItem('jwtToken'));
@@ -48,7 +49,7 @@ function PastBookingsView(props) {
                 .then(res => {
                     if (isMounted) {
                         console.log(res.data);
-                        setBookings(res.data);
+                        setBookings(res.data.sort((bookingA, bookingB) => bookingB.createdAt.localeCompare(bookingA.createdAt)));
                         setLoading(false);
                     }
                 })
@@ -61,13 +62,48 @@ function PastBookingsView(props) {
     const redirect = () => {
         props.history.push('/')
     }
+
+    //createdAt desc, createdAt asc, timeslotEnd desc, timeslotEnd asc
+    const handleChangeSortBookings = (event) => {
+        setSortMethodBookings(event.target.value);
+        console.log(sortMethodBookings)
+        if (event.target.value == 1) {
+            setBookings(bookings.sort((bookingA, bookingB) => bookingB.createdAt.localeCompare(bookingA.createdAt)));
+        }
+        else if (event.target.value == 2) {
+            setBookings(bookings.sort((bookingA, bookingB) => bookingA.createdAt.localeCompare(bookingB.createdAt)));
+        }
+        else if (event.target.value == 3) {
+            setBookings(bookings.sort((bookingA, bookingB) => bookingB.timeslotEnd.localeCompare(bookingA.timeslotEnd)))
+        }
+        else if (event.target.value == 4) {
+            setBookings(bookings.sort((bookingA, bookingB) => bookingA.createdAt.localeCompare(bookingB.timeslotEnd)))
+        }
+    }
+    
     //make sure that bookings are properly populated with the tutor/subject objects before accessing their properties
     if (UserService.isAuthenticated()) {
         if (!loading) {
             if (bookings.length > 0) {
                 return (
-                    <div>
-                        <h3 className={classesBooking.heading}>You completed {bookings.length} lessons.</h3>
+                    <div>   
+                        <div style={{ display: 'flex', marginTop: '60px' }}>
+                            <h3 className={classesBooking.heading}>You completed {bookings.length} lessons.</h3>
+                            <Box>
+                                <InputLabel id="sort-by-label">Sort by</InputLabel>
+                                <Select
+                                    labelId="sort-by-label"
+                                    id="sort-by"
+                                    value={sortMethodBookings}
+                                    onChange={handleChangeSortBookings}
+                                >
+                                    <MenuItem value={1}>{"Latest created"}</MenuItem>
+                                    <MenuItem value={2}>{"Earliest created"}</MenuItem>
+                                    <MenuItem value={3}>{"Timeslot End (desc)"}</MenuItem>
+                                    <MenuItem value={4}>{"Timeslot End (asc)"}</MenuItem>
+                                </Select>
+                            </Box>
+                        </div>
                         <div className={classesBooking.container}>
                             {bookings.map((booking) => (<div key={booking._id} className={classesBooking.booking}><PastBooking booking={booking} /></div>))}
                         </div>
