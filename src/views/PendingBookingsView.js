@@ -3,7 +3,6 @@ import UserService from '../services/UserService'
 import axios from 'axios';
 import PendingBooking from '../components/PendingBooking';
 import { makeStyles } from '@material-ui/core';
-import Search from '../components/Search';
 import confused from '../images/confused-cat.png'
 
 const useStylesBooking = makeStyles(() => ({

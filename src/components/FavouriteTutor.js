@@ -94,7 +94,7 @@ function FavouriteTutor({ tutor }) {
                         <Grid item xs={12}>
                             <Grid container spacing={3}>
                                 <Grid item xs={3}>
-                                    <img width='250px' height='250px' src={`http://localhost:5000/${tutor.userImage}`} alt={`${tutor.firstname} ${tutor.lastname}`} title={`${tutor.firstname} ${tutor.lastname}`} />
+                                    <img width='190px' height='190px' src={`http://localhost:5000/${tutor.userImage}`} alt={`${tutor.firstname} ${tutor.lastname}`} title={`${tutor.firstname} ${tutor.lastname}`} />
                                 </Grid>
                                 <Grid item xs={3}>
                                     <div>
@@ -104,7 +104,7 @@ function FavouriteTutor({ tutor }) {
                                         <div className={classesTutor.rating}>
                                             {
                                                 tutor.avgRating !== undefined ?
-                                                    <div>
+                                                    <div style={{display: 'flex'}}>
                                                         <Rating value={Number(tutor.avgRating)} precision={0.5} readOnly />
                                                         <Typography component="legend">{Number(tutor.avgRating).toFixed(1)}</Typography>
                                                     </div> : <div>No rating available</div>
@@ -157,7 +157,7 @@ function FavouriteTutor({ tutor }) {
                         </Grid>
                         <Grid item xs={12}>
                             <Typography variant="body2" color="textSecondary" component="p">
-                                {tutor.personalStatement !== undefined ? tutor.personalStatement : <i>No description</i>}
+                                {tutor.personalStatement !== undefined ? <b>{tutor.personalStatement}</b> : <i>No description</i>}
                             </Typography>
                         </Grid>
 
