@@ -56,7 +56,7 @@ const useStyles = makeStyles((theme) => ({
         fontWeight: 400,
         lineHeight: '1.5em',
         letterSpacing: '0.00938em',
-        marginRight: '14%',
+        marginRight: '3%',
         marginTop: '1%',
     },
     tutorInfo: {
@@ -139,7 +139,14 @@ function TutorsList(props) {
                                                 </React.Fragment>
                                             }
                                         />
-                                        <div className={classes.pricePerHour}>{tutor.pricePerHour}€ / hour</div>
+                                        <div className={classes.pricePerHour} style={{ textAlign: 'right' }}>
+                                                <Typography variant="body2" component="p">
+                                                    {tutor.pricePerHour} € / hour
+                                                </Typography>
+                                                <Typography variant="body2" component="p">
+                                                    Languages: {tutor.languages?.join(", ")}
+                                                </Typography>
+                                            </div>
                                     </Box>
                                     <Box style={{ display: "flex" }}>
                                         <div className={classes.tutorDescription}>

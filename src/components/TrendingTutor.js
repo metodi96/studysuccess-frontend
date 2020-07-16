@@ -1,9 +1,12 @@
 import React, { useState, useEffect } from 'react'
 import { makeStyles } from '@material-ui/styles';
-import { Card, CardHeader, Typography, CardActions, Tooltip, IconButton, Avatar, CardContent } from '@material-ui/core';
+import { Card, CardHeader, Typography, CardActions, Tooltip, IconButton, Avatar, CardContent, Button } from '@material-ui/core';
 import Rating from '@material-ui/lab/Rating';
 import FavoriteIcon from '@material-ui/icons/Favorite';
 import axios from 'axios';
+import UserService from '../services/UserService';
+import DoubleArrowOutlinedIcon from '@material-ui/icons/DoubleArrowOutlined';
+import { Link } from 'react-router-dom';
 
 const useStylesCard = makeStyles(() => ({
     root: {
@@ -45,7 +48,7 @@ function TrendingTutor({ tutor }) {
     useEffect(() => {
         let isMounted = true; // note this flag denote mount status
         setToken(window.localStorage.getItem('jwtToken'));
-        if (window.localStorage.getItem('jwtToken') !== null) {
+        if (window.localStorage.getItem('jwtToken') !== null && UserService.isAuthenticated()) {
             console.log(token)
             axios
                 .get('http://localhost:5000/profile', {
@@ -122,7 +125,7 @@ function TrendingTutor({ tutor }) {
                     subheader={
                         <div className={classesTutor.rating}>
                             {tutor.avgRating !== undefined ?
-                                <div style={{display: 'flex'}}>
+                                <div style={{ display: 'flex' }}>
                                     <Rating name="read-only" value={tutor.avgRating} precision={0.5} readOnly />
                                     <Typography component="legend">{tutor.avgRating.toFixed(1)}</Typography>
                                 </div> : <div>No reviews yet.</div>
@@ -131,7 +134,7 @@ function TrendingTutor({ tutor }) {
                     }
                 />
                 <CardContent>
-                    <Typography variant="body2" color="textSecondary" component="p" style={{minHeight: '100px'}}>
+                    <Typography variant="body2" color="textSecondary" component="p" style={{ minHeight: '100px' }}>
                         Tutor for {
                             tutor.subjectsToTeach !== undefined ?
                                 tutor.subjectsToTeach.map((value, i) => (
@@ -148,6 +151,8 @@ function TrendingTutor({ tutor }) {
                                     <FavoriteIcon />
                                 </IconButton>
                             </Tooltip>
+                            <Button variant="outlined" style={{ marginBottom: '2%', left: '10%' }} endIcon={<DoubleArrowOutlinedIcon />} component={Link}
+                                to={`/tutors/${tutor.subjectsToTeach[0]._id}/profiles/${tutor._id}`}>See full profile</Button>
                         </CardActions> : null
                 }
 

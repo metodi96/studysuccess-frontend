@@ -1,4 +1,4 @@
-import React, {useState, useContext, useEffect}  from 'react'
+import React, {useState, useContext, useEffect, useRef}  from 'react'
 import { makeStyles } from '@material-ui/core/styles';
 import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
@@ -27,6 +27,7 @@ const useStyles = makeStyles((theme) => ({
   buttons: {
     fontSize: 'small',
     display: 'inline-grid',
+    textAlign: '-webkit-center',
     paddingRight: 7,
     alignContent: 'center'
   },
@@ -40,17 +41,25 @@ const useStyles = makeStyles((theme) => ({
   markedButton: {
     fontSize: 'small',
     display: 'inline-grid',
+    textAlign: '-webkit-center',
     paddingRight: 7,
-    backgroundColor: '#E9EB7F'
+    backgroundColor: '#E9EB78'
   },
   wrapperBox: {
+    backgroundColor: 'white'
     //width: '100%',
     //maxWidth: 360,
-    backgroundColor: theme.palette.background.paper,
-    borderRadius: '20px'
+    //backgroundColor: theme.palette.background.paper,
+    //borderRadius: '20px'
   },
   insideBox: {
 
+  }
+}));
+
+const useStylesIcon = makeStyles(() => ({
+  clickedIcon: {
+    color: 'gold',
   }
 }));
 //const boxProperties = 
@@ -65,6 +74,8 @@ function Filters(props) {
     const {tutorsForSubject, setTutorsForSubject} = useContext(TutorsContext);
     const [maxTutorPriceVisible, setMaxTutorPriceVisible] = useState(0);
     const [marks, setMarks] = useState([]);
+    const classesIcon = useStylesIcon();
+    const isInitialMount = useRef(true);
     useEffect(() => {
       if(maxTutorPriceVisible == 0 && tutorsForSubject.length > 0) {
         console.log("I am in isMounted");
@@ -72,11 +83,20 @@ function Filters(props) {
         setMaxTutorPriceVisible(maxPriceVisible);
         setMarks([{value: 0, label: '0 €'}, {value: maxPriceVisible, label: maxPriceVisible + ' €'}]);
         setLanguages( () => {
-          return tutorsForSubject.map(tutor => tutor.languages)[0];
+          return tutorsForSubject.map(tutor => tutor.languages).flat().filter((v, i, a) => a.indexOf(v) === i);
         });
         console.log(tutorsForSubject);
       }
     });
+    useEffect(() => {
+      console.log(props.subjectId);
+      if (isInitialMount.current) {
+        isInitialMount.current = false;
+      } 
+      else {
+        window.location.reload();
+      }
+    }, [props.subjectId]);
     const [maxTutorPrice, setMaxTutorPrice] = useState(0);
     const submit = () => {
       setToken(window.localStorage.getItem('jwtToken'));
@@ -100,6 +120,7 @@ function Filters(props) {
                 setLanguages( () => {
                   return result.data.map(tutor => tutor.languages)[0];
                 });
+                clearFilters();
                 console.log(result.data);
               })
           .catch(err => {
@@ -118,34 +139,34 @@ function Filters(props) {
     return (
         <Box style={{borderRadius: '4px'}} bgcolor= 'rgba(152, 158, 157, 0.438)' minWidth="30%" height="100%" py={2} pl={3} mr={3}>
           <Box className={classes.wrapperBox} width = "90%" height = "80%" border={2} bgcolor="white">
-            <Box fontSize="h5.fontSize" ml={2} fontWeight="fontWeightMedium">
+            <Box fontSize='h5.fontSize' ml={2} fontWeight='fontWeightMedium' textAlign='center'>
               Filters
             </Box>
-            <Box border={1} width='90%' mt={2} mb={3} ml={2} textAlign='center'>
+            <Box border={1} width='90%' mt={2} mb={3} ml={2} textAlign='-webkit-center'>
               <Typography id="select-language-label" gutterBottom>
                   Your availability 
               </Typography>  
               <IconButton onClick={() => {setDayTime(1)}}>
                 <div className={dayTime==1 ? classes.markedButton : classes.buttons}>
-                  <WbSunnyOutlinedIcon></WbSunnyOutlinedIcon>
+                  <WbSunnyOutlinedIcon className={dayTime==1 ? classesIcon.clickedIcon : ''}></WbSunnyOutlinedIcon>
                   8 AM - 2 PM
                 </div>
               </IconButton>
               <IconButton onClick={() => {setDayTime(2)}}>
                 <div className={dayTime==2 ? classes.markedButton : classes.buttons}>
-                  <WbCloudyOutlinedIcon></WbCloudyOutlinedIcon>
+                  <WbCloudyOutlinedIcon  className={dayTime==2 ? classesIcon.clickedIcon : ''}></WbCloudyOutlinedIcon>
                   2-8 PM
                 </div>
               </IconButton>
               <IconButton onClick={() => {setDayTime(3)}}>
                 <div className={dayTime==3 ? classes.markedButton : classes.buttons}>
-                  <NightsStayOutlinedIcon></NightsStayOutlinedIcon>
+                  <NightsStayOutlinedIcon  className={dayTime==3 ? classesIcon.clickedIcon : ''}></NightsStayOutlinedIcon>
                   8-11 PM
                 </div>
               </IconButton>
               <IconButton onClick={() => {setDayTime(4)}}>
                 <div className={dayTime==4 ? classes.markedButton : classes.buttons}>
-                  <WeekendOutlinedIcon></WeekendOutlinedIcon>
+                  <WeekendOutlinedIcon  className={dayTime==4 ? classesIcon.clickedIcon : ''}></WeekendOutlinedIcon>
                   Weekends
                 </div>
               </IconButton>
@@ -186,7 +207,7 @@ function Filters(props) {
               <Button variant="outlined" onClick={clearFilters}>Clear</Button>
             </Box>
             <Box>
-              <Button variant="outlined" onClick={submit}>Submit</Button>
+              <Button variant="outlined" onClick={submit}>Apply</Button>
             </Box>
             </Box>
           </Box>

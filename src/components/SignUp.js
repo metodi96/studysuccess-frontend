@@ -4,11 +4,13 @@ import * as Yup from 'yup';
 import axios from 'axios';
 import { TextField, Checkbox } from 'formik-material-ui';
 import { makeStyles } from '@material-ui/core/styles';
-import { Button, MenuItem, FormControl, FormGroup, FormControlLabel, FormHelperText } from '@material-ui/core';
+import { Button, MenuItem, FormControl, FormGroup, FormControlLabel, FormHelperText, Snackbar } from '@material-ui/core';
+import { Redirect } from 'react-router-dom';
+import Alert from './Alert';
 
 const useStylesContainer = makeStyles(() => ({
     container: {
-        backgroundColor: 'rgba(152, 158, 157, 0.438)',
+        backgroundColor: 'rgba(152, 158, 157, 0.238)',
         marginTop: '25px',
         paddingBottom: '25px'
     }
@@ -62,19 +64,6 @@ const useStylesButton = makeStyles(() => ({
     }
 }));
 
-const useStylesEmailNotExists = makeStyles(() => ({
-    root: {
-        display: 'none'
-    }
-}));
-
-const useStylesEmailExists = makeStyles(() => ({
-    root: {
-        color: 'red',
-        textAlign: 'center'
-    }
-}));
-
 const useStylesTerms = makeStyles((theme) => ({
     root: {
         display: 'flex',
@@ -95,9 +84,9 @@ function SignUp({ universities }) {
     const classesContainer = useStylesContainer();
     const classesTerms = useStylesTerms();
     const [disabled, setDisabled] = useState(false);
-    const [emailExists, setEmailExists] = useState(false);
-    const classesEmailNotExists = useStylesEmailNotExists();
-    const classesEmailExists = useStylesEmailExists();
+    const [redirectToLogin, setRedirectToLogin] = useState(false);
+    const [openSnackbar, setOpenSnackbar] = useState(false);
+    const [severity, setSeverity] = useState('');
 
     const initialValues = {
         firstname: '',
@@ -116,140 +105,194 @@ function SignUp({ universities }) {
         password: Yup.string().required('This field is obligatory'),
         university: Yup.string().required('This field is obligatory'),
         terms: Yup.boolean(true).required("You need to agree to the terms.").oneOf([true], "Error")
-    })
+    });
+
+    const handleCloseSnackbar = (event, reason) => {
+        if (reason === 'clickaway') {
+            return;
+        }
+
+        setOpenSnackbar(false);
+
+        if (severity === 'success') {
+            setRedirectToLogin(true);
+            setSeverity('');
+        } else {
+            setSeverity('');
+        }
+    };
 
     const onSubmit = (values, { resetForm }) => {
         setDisabled(true);
         axios.post('http://localhost:5000/signup', values)
             .then(res => {
-                console.log(res.data)
-                ;
+                console.log(res.data);
+                setDisabled(false);
+                setSeverity('success');
+                setOpenSnackbar(true);
             })
             .catch(err => {
                 //use this to precisely tell what the response from the server is
                 console.log('response: ', err.response.data);
                 resetForm({ values: values });
-                if (err.response.status === 409) {
-                    setEmailExists(true);
-                }
+                if (err.response.status === 409) {                    
+                    setDisabled(false);
+                    setSeverity('emailError');
+                    setOpenSnackbar(true);
+                } else {
+                    setSeverity('error');
+                    setOpenSnackbar(true);
+                } 
             });
     }
-    //console.log('Errors', formik.errors)  console.log('Visited fields', formik.touched)
+
+    const renderSwitchForSnackbar = (severity) => {
+        switch (severity) {
+            case 'success':
+                return <Snackbar open={openSnackbar} autoHideDuration={2500} onClose={handleCloseSnackbar}>
+                    <Alert onClose={handleCloseSnackbar} severity='success'>
+                        You have registered successfully!
+                </Alert>
+                </Snackbar>
+            case 'emailError':
+                return <Snackbar open={openSnackbar} autoHideDuration={2500} onClose={handleCloseSnackbar}>
+                    <Alert onClose={handleCloseSnackbar} severity='error'>
+                        This email address is already being used!
+                </Alert>
+                </Snackbar>
+            case 'error':
+                return <Snackbar open={openSnackbar} autoHideDuration={2500} onClose={handleCloseSnackbar}>
+                    <Alert onClose={handleCloseSnackbar} severity='error'>
+                        Registration failed. Try again!
+                        </Alert>
+                </Snackbar>
+            default:
+                return null
+        }
+    };
 
     return (
         <div className={classesContainer.container}>
-            <div className={classesHeading.root}>
-                <h3>Please fill in the form below to register.</h3>
-            </div>
-            <div className={classesForm.root}>
-                <Formik
-                    initialValues={initialValues}
-                    validationSchema={validationSchema}
-                    onSubmit={onSubmit}>
-                    {
-                        formik => (
-                            <Form>
-                                <div>
-                                    <Field
-                                        component={TextField}
-                                        classes={classesField}
-                                        type='text'
-                                        variant='outlined'
-                                        id='firstname'
-                                        name='firstname'
-                                        label='First name*'
-                                    />
-                                </div>
+            {
+                redirectToLogin ? <Redirect to='/auth/login' /> :
+                    <div>
+                        <div className={classesHeading.root}>
+                            <h3>Please fill in the form below to register.</h3>
+                        </div>
+                        <div className={classesForm.root}>
+                            <Formik
+                                initialValues={initialValues}
+                                validationSchema={validationSchema}
+                                onSubmit={onSubmit}>
+                                {
+                                    formik => (
+                                        <Form>
+                                            <div>
+                                                <Field
+                                                    component={TextField}
+                                                    classes={classesField}
+                                                    type='text'
+                                                    variant='outlined'
+                                                    id='firstname'
+                                                    name='firstname'
+                                                    label='First name*'
+                                                />
+                                            </div>
 
-                                <div>
-                                    <Field
-                                        component={TextField}
-                                        classes={classesField}
-                                        type='text'
-                                        variant='outlined'
-                                        id='lastname'
-                                        name='lastname'
-                                        label='Last name*'
-                                    />
-                                </div>
+                                            <div>
+                                                <Field
+                                                    component={TextField}
+                                                    classes={classesField}
+                                                    type='text'
+                                                    variant='outlined'
+                                                    id='lastname'
+                                                    name='lastname'
+                                                    label='Last name*'
+                                                />
+                                            </div>
 
-                                <div>
-                                    <Field
-                                        component={TextField}
-                                        classes={classesField}
-                                        variant='outlined'
-                                        type='email'
-                                        id='email'
-                                        name='email'
-                                        label='Email*'
-                                    />
-                                </div>
+                                            <div>
+                                                <Field
+                                                    component={TextField}
+                                                    classes={classesField}
+                                                    variant='outlined'
+                                                    type='email'
+                                                    id='email'
+                                                    name='email'
+                                                    label='Email*'
+                                                />
+                                            </div>
 
-                                <div>
-                                    <Field
-                                        component={TextField}
-                                        classes={classesField}
-                                        variant='outlined'
-                                        type='password'
-                                        id='password'
-                                        name='password'
-                                        label='Password*'
-                                    />
-                                </div>
+                                            <div>
+                                                <Field
+                                                    component={TextField}
+                                                    classes={classesField}
+                                                    variant='outlined'
+                                                    type='password'
+                                                    id='password'
+                                                    name='password'
+                                                    label='Password*'
+                                                />
+                                            </div>
 
-                                <div>
+                                            <div>
 
-                                    <Field
-                                        component={TextField}
-                                        type="text"
-                                        name="university"
-                                        label="University*"
-                                        select
-                                        variant="outlined"
-                                        classes={classesSelect}
-                                    >
-                                        {universities.map(option => (
-                                            <MenuItem key={option.value} value={option.value}>
-                                                {option.label}
-                                            </MenuItem>
-                                        ))}
-                                    </Field>
-                                </div>
+                                                <Field
+                                                    component={TextField}
+                                                    type="text"
+                                                    name="university"
+                                                    label="University*"
+                                                    select
+                                                    variant="outlined"
+                                                    classes={classesSelect}
+                                                >
+                                                    {universities.map(option => (
+                                                        <MenuItem key={option.value} value={option.value}>
+                                                            {option.label}
+                                                        </MenuItem>
+                                                    ))}
+                                                </Field>
+                                            </div>
 
-                                <div>
-                                    <FormControl required component="fieldset" className={classesTerms.formControl}>
-                                        <FormGroup>
-                                            <FormControlLabel
-                                                control={<Field
-                                                    id="terms"
-                                                    name="terms"
-                                                    type="checkbox"
-                                                    component={Checkbox}
-                                                />}
-                                                label="I agree to the terms and conditions.*"
-                                            />
-                                            {formik.getFieldMeta('terms').error ? <FormHelperText error style={{textAlign: 'center'}}>You need to agree to the terms and conditions.</FormHelperText> : null}
-                                        </FormGroup>
-                                    </FormControl>
-                                </div>
-                                <div style={{ textAlign: 'left', marginBottom: '20px' }}>
-                                    <i style={{ fontSize: '0.85rem'}}>Required fields are marked with *.</i>
-                                </div>                    
-                                <div className={classesButton.root}>
-                                    <Button
-                                        size="large"
-                                        disabled={disabled}
-                                        variant="outlined"
-                                        type="submit"
-                                    >Register</Button>
-                                </div>
-                                <p className={emailExists ? classesEmailExists.root : classesEmailNotExists.root}>The email address was already registered.</p>
-                            </Form>
-                        )
-                    }
-
-                </Formik>
-            </div>
+                                            <div>
+                                                <FormControl required component="fieldset" className={classesTerms.formControl}>
+                                                    <FormGroup>
+                                                        <FormControlLabel
+                                                            control={<Field
+                                                                id="terms"
+                                                                name="terms"
+                                                                type="checkbox"
+                                                                component={Checkbox}
+                                                            />}
+                                                            label="I agree to the terms and conditions.*"
+                                                        />
+                                                        {formik.getFieldMeta('terms').error ? <FormHelperText error style={{ textAlign: 'center' }}>You need to agree to the terms and conditions.</FormHelperText> : null}
+                                                    </FormGroup>
+                                                </FormControl>
+                                            </div>
+                                            <div style={{ textAlign: 'left', marginBottom: '20px' }}>
+                                                <i style={{ fontSize: '0.85rem' }}>Required fields are marked with *.</i>
+                                            </div>
+                                            <div className={classesButton.root}>
+                                                <Button
+                                                    size="large"
+                                                    disabled={disabled}
+                                                    variant="outlined"
+                                                    type="submit"
+                                                >Register</Button>
+                                            </div>
+                                            <div>
+                                                {
+                                                    renderSwitchForSnackbar(severity)
+                                                }
+                                            </div>
+                                        </Form>
+                                    )
+                                }
+                            </Formik>
+                        </div>
+                    </div>
+            }
         </div>
     )
 }
