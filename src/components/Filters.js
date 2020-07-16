@@ -165,8 +165,8 @@ function Filters(props) {
                 </div>
               </IconButton>
               <IconButton onClick={() => {setDayTime(4)}}>
-                <div className={dayTime==4 ? classes.markedButton : classes.buttons}>
-                  <WeekendOutlinedIcon  className={dayTime==4 ? classesIcon.clickedIcon : ''}></WeekendOutlinedIcon>
+                <div style={{textAlign: '-webkit-center'}} className={dayTime==4 ? classes.markedButton : classes.buttons}>
+                  <WeekendOutlinedIcon ></WeekendOutlinedIcon>
                   Weekends
                 </div>
               </IconButton>

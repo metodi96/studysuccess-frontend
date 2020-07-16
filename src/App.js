@@ -4,7 +4,8 @@ import './App.css';
 import TutorsView from './views/TutorsView';
 import MainView from './views/MainView'
 import CurrentBookingsView from './views/CurrentBookingsView';
-import NavBar from './components/NavBar'
+import NavBar from './components/NavBar';
+import Footer from './components/Footer';
 import BookTutorView from './views/BookTutorView';
 import BookingAddSuccessView from './views/BookingAddSuccessView';
 import PastBookingsView from './views/PastBookingsView';
@@ -79,7 +80,7 @@ function App() {
   return (
     !loading ?
       <Router>
-        <NavBar />
+        <NavBar/>        
         <div>
           <div className={UserService.isAuthenticated() !== false ? 'routerContainer' : ''}>
             <br />
@@ -131,6 +132,7 @@ function App() {
             </Switch>
           </div>
         </div>
+        <Footer/>
       </Router> : <div>Loading page...</div>
   );
 }

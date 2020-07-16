@@ -2,11 +2,15 @@ import React, { useState } from 'react';
 import { TextField, Tooltip, IconButton } from '@material-ui/core';
 import HighlightOffIcon from '@material-ui/icons/HighlightOff';
 import axios from 'axios';
+import Snackbar from '@material-ui/core/Snackbar';
+import Alert from './Alert';
 
 function SubjectToTakeLessonsIn({ subject, classesField }) {
 
     const [disabled, setDisabled] = useState(false);
     const [token, setToken] = useState(window.localStorage.getItem('jwtToken'));
+    const [openSnackbar, setOpenSnackbar] = useState(false);
+    const [severity, setSeverity] = useState('');
 
     const removeSubject = () => {
         setDisabled(true);
@@ -24,14 +28,52 @@ function SubjectToTakeLessonsIn({ subject, classesField }) {
                     })
                 .then(res => {
                     console.log('Subject removed successfully.');
-                    //window.location.reload();
+                    setOpenSnackbar(true);
+                    setSeverity('success');
                 })
                 .catch(err => {
                     console.log(err.response.data);
+                    setOpenSnackbar(true);
+                    setSeverity('error');
                 });
 
         }
     }
+
+    const handleCloseSnackbar = (event, reason) => {
+        if (reason === 'clickaway') {
+            return;
+        }
+
+        setOpenSnackbar(false);
+
+        if (severity === 'success') {
+            setSeverity('');
+            window.location.reload(true);
+        } else {
+            setSeverity('');
+            window.location.reload(true);
+        }
+    };
+
+    const renderSwitchForSnackbar = (severity) => {
+        switch (severity) {
+            case 'success':
+                return <Snackbar open={openSnackbar} autoHideDuration={1500} onClose={handleCloseSnackbar}>
+                    <Alert onClose={handleCloseSnackbar} severity='success'>
+                        Subject removed!
+                </Alert>
+                </Snackbar>
+            case 'error':
+                return <Snackbar open={openSnackbar} autoHideDuration={1500} onClose={handleCloseSnackbar}>
+                    <Alert onClose={handleCloseSnackbar} severity='error'>
+                        Couldn't remove the selected subject. Try again!
+                        </Alert>
+                </Snackbar>
+            default:
+                return null
+        }
+    };
 
     return (
         <div>
@@ -50,9 +92,9 @@ function SubjectToTakeLessonsIn({ subject, classesField }) {
                     </IconButton>
                 </Tooltip>
             </div>
-            <div>
-
-            </div>
+            {
+                renderSwitchForSnackbar(severity)
+            }
         </div>
     )
 }

@@ -5,6 +5,8 @@ import { TextField } from 'formik-material-ui';
 import axios from 'axios';
 import { Formik, Form, Field } from 'formik';
 import * as Yup from 'yup';
+import Snackbar from '@material-ui/core/Snackbar';
+import Alert from './Alert';
 
 function ProfileSubjects({ classesProfile, classesSelect, profile, classesField, classesButton }) {
 
@@ -12,6 +14,8 @@ function ProfileSubjects({ classesProfile, classesSelect, profile, classesField,
     const [loading, setLoading] = useState(true);
     const [disabled, setDisabled] = useState(false);
     const [token, setToken] = useState(window.localStorage.getItem('jwtToken'));
+    const [openSnackbar, setOpenSnackbar] = useState(false);
+    const [severity, setSeverity] = useState('');
 
     const initialValues = {
         subject: subjects[0] || ''
@@ -63,14 +67,54 @@ function ProfileSubjects({ classesProfile, classesSelect, profile, classesField,
                     })
                 .then(() => {
                     console.log('Subject added successfully.');
-                    //window.location.reload();
+                    setSeverity('success');
                 })
                 .catch(err => {
                     console.log(err.response.data);
+                    setSeverity('error');
                 });
 
         }
     }
+
+    const handleOpenSnackbar = () => {
+        setOpenSnackbar(true);
+    };
+
+    const handleCloseSnackbar = (event, reason) => {
+        if (reason === 'clickaway') {
+            return;
+        }
+
+        setOpenSnackbar(false);
+
+        if (severity === 'success') {
+            setSeverity('');
+            window.location.reload(true);
+        } else {
+            setSeverity('');
+            window.location.reload(true);
+        }
+    };
+
+    const renderSwitchForSnackbar = (severity) => {
+        switch (severity) {
+            case 'success':
+                return <Snackbar open={openSnackbar} autoHideDuration={1500} onClose={handleCloseSnackbar}>
+                    <Alert onClose={handleCloseSnackbar} severity='success'>
+                        Subject added!
+                </Alert>
+                </Snackbar>
+            case 'error':
+                return <Snackbar open={openSnackbar} autoHideDuration={1500} onClose={handleCloseSnackbar}>
+                    <Alert onClose={handleCloseSnackbar} severity='error'>
+                        Couldn't add the selected subject. Try again!
+                        </Alert>
+                </Snackbar>
+            default:
+                return null
+        }
+    };
 
     return (
         <div className={classesProfile.container}>
@@ -107,15 +151,19 @@ function ProfileSubjects({ classesProfile, classesSelect, profile, classesField,
                                             ))}
                                         </Field>
                                         <Button classes={classesButton} disabled={!(formik.isValid && formik.dirty) || disabled}
-                                            type="submit" color="primary" variant='outlined'>
+                                            type="submit" color="primary" variant='outlined' onClick={handleOpenSnackbar}>
                                             Add subject
                                         </Button>
                                     </Form>
                                 )}
                         </Formik>
+
                         : <span>Subjects loading...</span>
                 }
             </div>
+            {
+                renderSwitchForSnackbar(severity)
+            }
         </div>
     )
 }

@@ -137,12 +137,12 @@ function SignUp({ universities }) {
                 resetForm({ values: values });
                 if (err.response.status === 409) {                    
                     setDisabled(false);
-                    setSeverity('emailError');
+                    setSeverity('errorEmail');
                     setOpenSnackbar(true);
                 } else {
                     setSeverity('error');
-                    setOpenSnackbar(true);
-                } 
+                }                
+                setOpenSnackbar(true);
             });
     }
 
