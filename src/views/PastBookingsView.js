@@ -3,6 +3,8 @@ import UserService from '../services/UserService';
 import axios from 'axios';
 import PastBooking from '../components/PastBooking'
 import { makeStyles } from '@material-ui/core';
+import confused from '../images/confused-cat.png'
+import Search from '../components/Search';
 
 const useStylesBooking = makeStyles(() => ({
     container: {

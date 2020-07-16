@@ -5,7 +5,8 @@ import CurrentBookingOwn from '../components/CurrentBookingOwn';
 import CurrentBookingAccepted from '../components/CurrentBookingAccepted';
 import CurrentBookingNotPaid from '../components/CurrentBookingNotPaid';
 import { makeStyles } from '@material-ui/core';
-import { Link } from 'react-router-dom';
+import confused from '../images/confused-cat.png'
+import Search from '../components/Search';
 
 const useStylesBooking = makeStyles(() => ({
     container: {
@@ -40,6 +41,8 @@ function CurrentBookingsView(props) {
     const [acceptedInvitations, setAcceptedInvitations] = useState([]);
     const [bookingsNotPaid, setBookingsNotPaid] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [loadingSecond, setLoadingSecond] = useState(true);
+    const [loadingThird, setLoadingThird] = useState(true);
     const [token, setToken] = useState(window.localStorage.getItem('jwtToken'));
     const classesBooking = useStylesBooking();
     useEffect(() => {
@@ -90,7 +93,7 @@ function CurrentBookingsView(props) {
                         });
                         console.log(acceptedInvitationsWithoutBookingsNull);
                         setAcceptedInvitations(acceptedInvitationsWithoutBookingsNull);
-                        setLoading(false);
+                        setLoadingSecond(false);
                     }
                 })
                 .catch(err => {
@@ -115,7 +118,7 @@ function CurrentBookingsView(props) {
                     if (isMounted) {
                         console.log(res.data);
                         setBookingsNotPaid(res.data);
-                        setLoading(false);
+                        setLoadingThird(false);
                     }
                 })
                 .catch(err => {
@@ -130,7 +133,7 @@ function CurrentBookingsView(props) {
     }
     //make sure that bookings are properly populated with the tutor/subject objects before accessing their properties
     if (UserService.isAuthenticated()) {
-        if (!loading) {
+        if (!loading && !loadingSecond && !loadingThird) {
             if (bookings.length > 0 || acceptedInvitations.length > 0 || bookingsNotPaid.length > 0) {
                 return (
                     <div>
