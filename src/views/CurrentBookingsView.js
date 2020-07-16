@@ -5,6 +5,8 @@ import CurrentBookingOwn from '../components/CurrentBookingOwn';
 import CurrentBookingAccepted from '../components/CurrentBookingAccepted';
 import CurrentBookingNotPaid from '../components/CurrentBookingNotPaid';
 import { makeStyles } from '@material-ui/core';
+import confused from '../images/confused-cat.png'
+import Search from '../components/Search';
 
 const useStylesBooking = makeStyles(() => ({
     container: {
@@ -13,7 +15,8 @@ const useStylesBooking = makeStyles(() => ({
         marginRight: '200px',
         minWidth: '1100px',
         marginBottom: '30px',
-        borderRadius: '4px'
+        borderRadius: '4px',
+        textAlign: 'center'
     },
     heading: {
         marginLeft: '200px',
@@ -38,6 +41,8 @@ function CurrentBookingsView(props) {
     const [acceptedInvitations, setAcceptedInvitations] = useState([]);
     const [bookingsNotPaid, setBookingsNotPaid] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [loadingSecond, setLoadingSecond] = useState(true);
+    const [loadingThird, setLoadingThird] = useState(true);
     const [token, setToken] = useState(window.localStorage.getItem('jwtToken'));
     const classesBooking = useStylesBooking();
     useEffect(() => {
@@ -88,7 +93,7 @@ function CurrentBookingsView(props) {
                         });
                         console.log(acceptedInvitationsWithoutBookingsNull);
                         setAcceptedInvitations(acceptedInvitationsWithoutBookingsNull);
-                        setLoading(false);
+                        setLoadingSecond(false);
                     }
                 })
                 .catch(err => {
@@ -113,7 +118,7 @@ function CurrentBookingsView(props) {
                     if (isMounted) {
                         console.log(res.data);
                         setBookingsNotPaid(res.data);
-                        setLoading(false);
+                        setLoadingThird(false);
                     }
                 })
                 .catch(err => {
@@ -128,7 +133,7 @@ function CurrentBookingsView(props) {
     }
     //make sure that bookings are properly populated with the tutor/subject objects before accessing their properties
     if (UserService.isAuthenticated()) {
-        if (!loading) {
+        if (!loading && !loadingSecond && !loadingThird) {
             if (bookings.length > 0 || acceptedInvitations.length > 0 || bookingsNotPaid.length > 0) {
                 return (
                     <div>
@@ -162,8 +167,15 @@ function CurrentBookingsView(props) {
                 )
             } else {
                 return (
-                    <div>
-                        <p>You currently don't have any bookings.</p>
+                    <div style={{ fontSize: '1.35rem', textAlign: 'center', marginTop: '50px' }}>
+                        <div>
+                            <span>You currently don't have any bookings.</span>
+                        </div>
+                        <img width='200px' height='200px' src={confused} />
+                        <div style={{ marginTop: '25px' }}>
+                            <span>Search for a subject with which you struggle and we'll find tutors for you.</span>
+                        </div>
+                        <div style={{ textAlign: '-webkit-center', marginTop: '10px' }}><Search /></div>
                     </div>
                 )
             }

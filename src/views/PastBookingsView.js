@@ -3,6 +3,9 @@ import UserService from '../services/UserService';
 import axios from 'axios';
 import PastBooking from '../components/PastBooking'
 import { makeStyles } from '@material-ui/core';
+import confused from '../images/confused-cat.png'
+import Search from '../components/Search';
+
 const useStylesBooking = makeStyles(() => ({
     container: {
         backgroundColor: 'rgba(152, 158, 157, 0.438)',
@@ -10,6 +13,7 @@ const useStylesBooking = makeStyles(() => ({
         marginRight: '200px',
         minWidth: '1100px',
         marginBottom: '30px',
+        textAlign: 'center'
     },
     heading:  {
         marginLeft: '200px',
@@ -59,7 +63,7 @@ function PastBookingsView(props) {
             if (bookings.length > 0) {
                 return (
                     <div>
-                        <h3 className={classesBooking.heading}>You had {bookings.length} scheduled lessons.</h3>
+                        <h3 className={classesBooking.heading}>You completed {bookings.length} lessons.</h3>
                         <div className={classesBooking.container}>
                         { bookings.map((booking) => (<div key={booking._id} className={classesBooking.booking}><PastBooking booking={booking} /></div>)) }
                         </div>
@@ -67,15 +71,22 @@ function PastBookingsView(props) {
                 )
             } else {
                 return (
-                    <div>
-                        <p>You currently don't have any past bookings.</p>
+                    <div style={{ fontSize: '1.35rem', textAlign: 'center', marginTop: '50px' }}>
+                        <div>
+                            <span>You currently don't have any past bookings.</span>
+                        </div>
+                        <img width='200px' height='200px' src={confused} />
+                        <div style={{ marginTop: '25px' }}>
+                            <span>Search for a subject with which you struggle and we'll find tutors for you.</span>
+                        </div>
+                        <div style={{ textAlign: '-webkit-center', marginTop: '10px' }}><Search /></div>
                     </div>
                 )
             }
         } else {
             return (
                 <div>
-                    <p>Loading past bookings...</p>
+                    <p>Loading completed bookings...</p>
                 </div>
             )
         }

@@ -29,7 +29,7 @@ function BookingAcceptedSuccessView(props) {
         }
     }, [token, props.history, props.location.search]);
     return (
-        <div>            
+        <div style={{ fontSize: '1.25rem', textAlign: 'center', marginTop: '100px' }}>            
             {loading ? `Loading success page...` : `Successful payment for accepted booking. Redirecting to current bookings view.`}
         </div>
     )

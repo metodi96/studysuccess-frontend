@@ -4,6 +4,7 @@ import ProfileSubjects from '../components/ProfileSubjects';
 import ProfileTutorSubjects from '../components/ProfileTutorSubjects';
 import axios from 'axios';
 import { makeStyles } from '@material-ui/core';
+import FavouriteTutorsList from '../components/FavouriteTutorsList';
 
 const useStylesProfile = makeStyles(() => ({
     container: {
@@ -68,6 +69,12 @@ const useStylesButton = makeStyles(() => ({
     }
 }));
 
+const useStylesFavourites = makeStyles(() => ({
+    container: {
+        margin: '20px 40px 40px 20px'
+    }
+}));
+
 function ManageProfileView(props) {
 
     const [profile, setProfile] = useState(undefined);
@@ -77,6 +84,7 @@ function ManageProfileView(props) {
     const classesSelect = useStylesSelect();
     const classesButton = useStylesButton();
     const classesBox = useStylesBox();
+    const classesFavourites = useStylesFavourites();
 
     useEffect(() => {
         let isMounted = true; // note this flag denote mount status
@@ -103,13 +111,18 @@ function ManageProfileView(props) {
 
     return (
         profile !== undefined ?
-            <div className={classesBox.container} style={{ display: 'flex' }}>
-                <PersonalInfo classesProfile={classesProfile} classesSelect={classesSelect} classesButton={classesButton}
-                    classesField={classesField} profile={profile} studyPrograms={props.studyPrograms} universities={props.universities} />
-                <ProfileSubjects classesField={classesField} classesSelect={classesSelect} classesButton={classesButton}
-                    classesProfile={classesProfile} profile={profile} />
-                <ProfileTutorSubjects classesField={classesField} classesSelect={classesSelect}
-                    classesProfile={classesProfile} profile={profile} />
+            <div>
+                <div className={classesBox.container} style={{ display: 'flex' }}>
+                    <PersonalInfo classesProfile={classesProfile} classesSelect={classesSelect} classesButton={classesButton}
+                        classesField={classesField} profile={profile} studyPrograms={props.studyPrograms} universities={props.universities} />
+                    <ProfileSubjects classesField={classesField} classesSelect={classesSelect} classesButton={classesButton}
+                        classesProfile={classesProfile} profile={profile} />
+                    <ProfileTutorSubjects classesField={classesField} classesSelect={classesSelect}
+                        classesProfile={classesProfile} profile={profile} />
+                </div>
+                <div className={classesFavourites.container}>
+                    <FavouriteTutorsList profile={profile} />
+                </div>
             </div> : <div>Loading profile...</div>
 
     )

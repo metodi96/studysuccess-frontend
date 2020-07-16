@@ -3,6 +3,8 @@ import UserService from '../services/UserService'
 import axios from 'axios';
 import PendingBooking from '../components/PendingBooking';
 import { makeStyles } from '@material-ui/core';
+import Search from '../components/Search';
+import confused from '../images/confused-cat.png'
 
 const useStylesBooking = makeStyles(() => ({
     container: {
@@ -11,8 +13,9 @@ const useStylesBooking = makeStyles(() => ({
         marginRight: '200px',
         minWidth: '1100px',
         marginBottom: '30px',
+        textAlign: 'center'
     },
-    heading:  {
+    heading: {
         marginLeft: '200px',
         marginTop: '60px',
     },
@@ -23,7 +26,7 @@ const useStylesBooking = makeStyles(() => ({
         marginBottom: '50px',
         marginTop: '20px',
         minWidth: '400px',
-    } 
+    }
 }));
 
 function PendingBookingsView(props) {
@@ -34,7 +37,7 @@ function PendingBookingsView(props) {
 
     useEffect(() => {
         setToken(window.localStorage.getItem('jwtToken'));
-        if (window.localStorage.getItem('jwtToken') !== null  && UserService.isAuthenticated()) {
+        if (window.localStorage.getItem('jwtToken') !== null && UserService.isAuthenticated()) {
             console.log(token)
             axios
                 .get('http://localhost:5000/bookings/pending', {
@@ -65,14 +68,17 @@ function PendingBookingsView(props) {
                     <div>
                         <h3 className={classesBooking.heading}>You have {invitations.length} invitations.</h3>
                         <div className={classesBooking.container}>
-                        { invitations.sort((invitationA, invitationB) => invitationB.createdAt.localeCompare(invitationA.createdAt)).map((invitation) => (<div key={invitation._id} className={classesBooking.booking}><PendingBooking history={props.history} invitation={invitation} /></div>)) }
+                            {invitations.sort((invitationA, invitationB) => invitationB.createdAt.localeCompare(invitationA.createdAt)).map((invitation) => (<div key={invitation._id} className={classesBooking.booking}><PendingBooking history={props.history} invitation={invitation} /></div>))}
                         </div>
                     </div>
                 )
             } else {
                 return (
-                    <div style={{height: '64vh'}}>
-                        <p>You currently don't have any pending invitations.</p>
+                    <div style={{ fontSize: '1.35rem', textAlign: 'center', marginTop: '50px', height: '64vh' }}>
+                        <div>
+                            <span>You currently don't have any pending invitations.</span>
+                        </div>
+                        <img width='200px' height='200px' src={confused} />
                     </div>
                 )
             }

@@ -123,7 +123,6 @@ function MainView(props) {
                         <TrendingTutors classesTutor={classesTutor}></TrendingTutors>
                     </div>
             }
-
         </div>
     )
 }
