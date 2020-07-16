@@ -69,7 +69,7 @@ function TutorProfileView(props) {
                 })
                 .then(res => {
                     if (isMounted) {
-                        setTutorIsInFavourites(res.data.favouriteTutors?.some(tutor => tutor === tutorId));
+                        setTutorIsInFavourites(res.data.favouriteTutors?.some(tutor => tutor._id === tutorId));
                     }
                 })
                 .catch(err => {

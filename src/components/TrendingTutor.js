@@ -59,7 +59,7 @@ function TrendingTutor({ tutor }) {
                 .then(res => {
                     if (isMounted) {
                         setProfile(res.data);
-                        setTutorIsInFavourites(res.data.favouriteTutors?.some(element => element === tutor._id))
+                        setTutorIsInFavourites(res.data.favouriteTutors?.some(element => element._id === tutor._id))
                     }
                 })
                 .catch(err => {

@@ -219,7 +219,7 @@ function Navbar() {
                                     onClose={handleClose}
                                 >
                                     <MenuItem onClick={handleClose} component={Link} to="/profile">Manage my profile</MenuItem>
-                                    <MenuItem onClick={logout}>Log Out</MenuItem>
+                                    <MenuItem onClick={logout}>Log out</MenuItem>
                                 </Menu>
                             </div>
 
@@ -232,29 +232,3 @@ function Navbar() {
 }
 
 export default Navbar
-
-//axios.get(`http://localhost:5000/${UserService.getCurrentUser().userImage}`)
-/*
-<div>
-                        <Button className={classesNavBarButtons.root}>My Bookings</Button>
-                        <Menu
-                                id="menu-appbar"
-                                anchorEl={anchorEl}
-                                anchorOrigin={{
-                                    vertical: 'top',
-                                    horizontal: 'right',
-                                }}
-                                keepMounted
-                                transformOrigin={{
-                                    vertical: 'top',
-                                    horizontal: 'right',
-                                }}
-                                open={open}
-                                onClose={handleClose}
-                            >
-                                <MenuItem onClick={handleClose} component={Link} to="/bookings/current">Scheduled Bookings</MenuItem>
-                                <MenuItem onClick={handleClose} component={Link} to="/bookings/past">Completed Bookings</MenuItem>
-                                <MenuItem onClick={handleClose} component={Link} to="/bookings/pending">Pending Bookings</MenuItem>
-                            </Menu>
-                        </div>
-*/

@@ -426,8 +426,8 @@ function BookTutor({ tutor, subjectId }) {
                                                 <div className={timePreferences.length > 0 ? classesSuggest.root : classesSuggest.rootBackup}>
                                                     <Tooltip title='Tip' aria-label='tip'><img style={{ position: 'absolute', right: '-10%', top: '-40%' }} src={tips} width='50px' height='50px' /></Tooltip>
                                                     <div>
-                                                        <Typography style={{ fontSize: 'smaller', textAlign: 'center' }}>Not happy with what you see? Feel free to suggest</Typography>
-                                                        <Typography style={{ fontSize: 'smaller', textAlign: 'center' }}> another timeslot and the tutor will review it.</Typography>
+                                                        <Typography style={{ fontSize: '1rem', textAlign: 'center' }}>These time slots don't work for you?</Typography>
+                                                        <Typography style={{ fontSize: '1rem', textAlign: 'center' }}>Feel free to suggest another time slot to the tutor!</Typography>
                                                     </div>
                                                     <div style={{ display: 'flex', justifyContent: 'center' }}>
                                                         <FormControlLabel
