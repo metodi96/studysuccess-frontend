@@ -71,7 +71,7 @@ function PendingBookingsTutorView(props) {
                 )
             } else {
                 return (
-                    <div style={{ fontSize: '1.35rem', textAlign: 'center', marginTop: '50px' }}>
+                    <div style={{ fontSize: '1.35rem', textAlign: 'center', marginTop: '50px', height: '64vh' }}>
                         <div>
                             <span>You currently don't have any pending invitations from students.</span>
                         </div>

@@ -8,8 +8,8 @@ import FavouriteTutorsList from '../components/FavouriteTutorsList';
 
 const useStylesProfile = makeStyles(() => ({
     container: {
-        backgroundColor: 'rgba(152, 158, 157, 0.438)',
-        marginLeft: '100px',
+        backgroundColor: 'rgba(240, 240, 240, 0.9)',
+        marginLeft: '30px',
         marginBottom: '30px',
         marginTop: '25px',
         paddingLeft: '25px',
@@ -17,6 +17,19 @@ const useStylesProfile = makeStyles(() => ({
         paddingBottom: '25px',
         maxWidth: '350px',
         minWidth: '350px'
+    }
+}));
+
+const useStylesBox = makeStyles(() => ({
+    container: {
+        backgroundColor: 'rgba(152, 158, 157, 0.3)',
+        marginLeft: '100px',
+        marginBottom: '30px',
+        marginTop: '25px',
+        paddingLeft: '25px',
+        paddingTop: '25px',
+        paddingBottom: '25px',
+        width:'1270px'
     }
 }));
 
@@ -70,6 +83,7 @@ function ManageProfileView(props) {
     const classesField = useStylesField();
     const classesSelect = useStylesSelect();
     const classesButton = useStylesButton();
+    const classesBox = useStylesBox();
     const classesFavourites = useStylesFavourites();
 
     useEffect(() => {
@@ -98,7 +112,7 @@ function ManageProfileView(props) {
     return (
         profile !== undefined ?
             <div>
-                <div style={{ display: 'flex' }}>
+                <div className={classesBox.container} style={{ display: 'flex' }}>
                     <PersonalInfo classesProfile={classesProfile} classesSelect={classesSelect} classesButton={classesButton}
                         classesField={classesField} profile={profile} studyPrograms={props.studyPrograms} universities={props.universities} />
                     <ProfileSubjects classesField={classesField} classesSelect={classesSelect} classesButton={classesButton}

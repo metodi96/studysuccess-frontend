@@ -36,7 +36,8 @@ const useStylesButton = makeStyles(() => ({
     root: {
         maxHeight: '100px',
         color: 'white',
-        justifyContent: 'center'
+        justifyContent: 'center',
+        marginLeft: '-33px'
     }
 }));
 

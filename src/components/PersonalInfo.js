@@ -25,7 +25,7 @@ const useStylesEmail = makeStyles(() => ({
     }
 }));
 
-function PersonalInfo({ profile, universities, studyPrograms, classesProfile, classesField, classesSelect, classesButton, openProfileAlert, setOpenProfileAlert }) {
+function PersonalInfo({ profile, universities, studyPrograms, classesProfile, classesField, classesSelect, classesButton}) {
     
     const classesEmail = useStylesEmail();
     const [disabled, setDisabled] = useState(false);
@@ -39,7 +39,6 @@ function PersonalInfo({ profile, universities, studyPrograms, classesProfile, cl
     const [selectedFileGrade, setSelectedFileGrade] = useState(null);
     const [openSnackbar, setOpenSnackbar] = useState(false);
     const [severity, setSeverity] = useState('');
-    //doesn't work super correctly
     const [hasCertificateOfEnrolment, setHasCertificateOfEnrolment] = useState(profile.hasCertificateOfEnrolment);
     const [hasGradeExcerpt, setHasGradeExcerpt] = useState(profile.hasGradeExcerpt);
 
@@ -152,19 +151,20 @@ function PersonalInfo({ profile, universities, studyPrograms, classesProfile, cl
                 .then(res => {
                     setDisabled(false);
                     resetForm({ values: values });
-                    window.location.reload();
+                    setSeverity('success');
                     console.log(res.data)
                 })
                 .catch(err => {
                     resetForm({ values: values });
-                    setDisabled(false)
+                    setDisabled(false);
+                    setSeverity('error');
                     console.log('response: ', err.response.data);
                 });
         }
     }
 
-    const handleCloseProfileAlert = () => {
-        setOpenProfileAlert(false);
+    const handleOpenSnackbar = () => {
+        setOpenSnackbar(true);
     };
 
     const handleCloseSnackbar = (event, reason) => {
@@ -173,21 +173,26 @@ function PersonalInfo({ profile, universities, studyPrograms, classesProfile, cl
         }
 
         setOpenSnackbar(false);
-        setSeverity('');
-        handleCloseProfileAlert();
-        window.location.reload(true);
+
+        if (severity === 'success') {
+            setSeverity('');
+            window.location.reload(true);
+        } else {
+            setSeverity('');
+            window.location.reload(true);
+        }
     };
 
     const renderSwitchForSnackbar = (severity) => {
         switch (severity) {
             case 'success':
-                return <Snackbar open={openSnackbar} autoHideDuration={2500} onClose={handleCloseSnackbar}>
+                return <Snackbar open={openSnackbar} autoHideDuration={1500} onClose={handleCloseSnackbar}>
                     <Alert onClose={handleCloseSnackbar} severity='success'>
                         Changes saved successfully!
                 </Alert>
                 </Snackbar>
             case 'error':
-                return <Snackbar open={openSnackbar} autoHideDuration={2500} onClose={handleCloseSnackbar}>
+                return <Snackbar open={openSnackbar} autoHideDuration={1500} onClose={handleCloseSnackbar}>
                     <Alert onClose={handleCloseSnackbar} severity='error'>
                         Couldn't save the changes
                         </Alert>
@@ -207,6 +212,7 @@ function PersonalInfo({ profile, universities, studyPrograms, classesProfile, cl
                     formik => (
                         <Form>
                             <div style={{ position: 'relative' }}>
+                                <h2 style={{color:'slategrey', marginTop:'-70px', marginLeft:'100px'}}>My profile</h2>
                                 <Field
                                     component={TextField}
                                     classes={classesField}
@@ -216,7 +222,7 @@ function PersonalInfo({ profile, universities, studyPrograms, classesProfile, cl
                                     variant="outlined"
                                     label='First name'
                                 />
-                                <div style={{ position: 'absolute', left: '70%', top: '20%' }} >
+                                <div style={{ position: 'absolute', left: '70%', top: '50%' }} >
                                     <EditIcon />
                                 </div>
                             </div>
@@ -262,7 +268,7 @@ function PersonalInfo({ profile, universities, studyPrograms, classesProfile, cl
                                         </MenuItem>
                                     ))}
                                 </Field>
-                                <div style={{ position: 'absolute', left: '67%', top: '17%' }} >
+                                <div style={{ position: 'absolute', left: '67%', top: '15%' }} >
                                     <EditIcon />
                                 </div>
                             </div>
@@ -381,7 +387,7 @@ function PersonalInfo({ profile, universities, studyPrograms, classesProfile, cl
                             </div>
                             <div style={{ marginLeft: '53px' }}>
                                 <Button classes={classesButton} disabled={!formik.isValid || disabled || !typeImageRight || !typePdfCertificateRight || !typePdfGradeRight}
-                                    type="submit" color="primary" variant='outlined'>
+                                    type="submit" color="primary" variant='outlined' onClick={handleOpenSnackbar}>
                                     Save changes
                                 </Button>
                             </div>

@@ -154,15 +154,16 @@ function Navbar() {
                                     anchorEl={anchorElBookings}
                                     anchorOrigin={{
                                         vertical: 'top',
-                                        horizontal: 'right',
+                                        horizontal: 'right'
                                     }}
                                     keepMounted
                                     transformOrigin={{
                                         vertical: 'top',
-                                        horizontal: 'right',
+                                        horizontal: 'right'
                                     }}
                                     open={openBookings}
                                     onClose={handleCloseBookings}
+                                    style={{marginTop: '30px', marginLeft: '76px'}}
                                 >
                                     <MenuItem onClick={handleCloseBookings} component={Link} to="/bookings/current">Scheduled Bookings</MenuItem>
                                     <MenuItem onClick={handleCloseBookings} component={Link} to="/bookings/past">Completed Bookings</MenuItem>
@@ -215,6 +216,7 @@ function Navbar() {
                                         vertical: 'top',
                                         horizontal: 'right',
                                     }}
+                                    style={{marginTop: '33px', marginLeft: '40px'}}
                                     open={open}
                                     onClose={handleClose}
                                 >

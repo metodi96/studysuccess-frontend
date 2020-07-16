@@ -8,14 +8,6 @@ import { Button, MenuItem, FormControl, FormGroup, FormControlLabel, FormHelperT
 import { Redirect } from 'react-router-dom';
 import Alert from './Alert';
 
-const useStylesContainer = makeStyles(() => ({
-    container: {
-        backgroundColor: 'rgba(152, 158, 157, 0.238)',
-        marginTop: '25px',
-        paddingBottom: '25px'
-    }
-}));
-
 const useStylesField = makeStyles(() => ({
     root: {
         '& input': {
@@ -45,13 +37,15 @@ const useStylesForm = makeStyles(() => ({
     root: {
         justifyContent: 'center',
         display: 'flex',
+        color: 'slategrey'
     }
 }));
 
 const useStylesHeading = makeStyles(() => ({
     root: {
         justifyContent: 'center',
-        display: 'flex'
+        display: 'flex',
+        color: 'slategrey'
     }
 }));
 
@@ -81,7 +75,6 @@ function SignUp({ universities }) {
     const classesButton = useStylesButton();
     const classesHeading = useStylesHeading();
     const classesSelect = useStylesSelect();
-    const classesContainer = useStylesContainer();
     const classesTerms = useStylesTerms();
     const [disabled, setDisabled] = useState(false);
     const [redirectToLogin, setRedirectToLogin] = useState(false);
@@ -137,12 +130,12 @@ function SignUp({ universities }) {
                 resetForm({ values: values });
                 if (err.response.status === 409) {                    
                     setDisabled(false);
-                    setSeverity('emailError');
+                    setSeverity('errorEmail');
                     setOpenSnackbar(true);
                 } else {
                     setSeverity('error');
-                    setOpenSnackbar(true);
-                } 
+                }                
+                setOpenSnackbar(true);
             });
     }
 
@@ -172,7 +165,7 @@ function SignUp({ universities }) {
     };
 
     return (
-        <div className={classesContainer.container}>
+        <div>
             {
                 redirectToLogin ? <Redirect to='/auth/login' /> :
                     <div>
