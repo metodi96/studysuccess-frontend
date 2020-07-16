@@ -56,7 +56,7 @@ function MainView(props) {
                     <SignUp universities={props.universities}></SignUp>
                     : null
             }
-            <div>
+             <div className={classesTutor.container}>
                 <h3 className={classesTutor.heading}>Tutors with highest rating</h3>
                 <TrendingTutors classesTutor={classesTutor}></TrendingTutors>
             </div>
