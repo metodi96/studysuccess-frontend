@@ -14,7 +14,7 @@ const useStylesFooter = makeStyles(() => ({
             justifyContent: 'left',
             backgroundColor: "rgba(152, 158, 157, 0.438)",
             position: 'absolute',
-            width: '1535px'
+            width: '1518px'
         },
         "& .MuiBottomNavigationAction-label": {
             width: 'max-content'

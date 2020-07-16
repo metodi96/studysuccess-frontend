@@ -58,7 +58,7 @@ const useStyles = makeStyles((theme) => ({
 
 const useStylesIcon = makeStyles(() => ({
   clickedIcon: {
-    color: 'gold',
+    color: 'goldenrod',
   }
 }));
 //const boxProperties = 

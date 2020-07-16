@@ -134,26 +134,31 @@ function ProfileSubjects({ classesProfile, classesSelect, profile, classesField,
                             {
                                 formik => (
                                     <Form>
-                                        <Field
-                                            component={TextField}
-                                            type="text"
-                                            name="subject"
-                                            label="Subject"
-                                            select
-                                            variant="outlined"
-                                            helperText="Please select one of the options"
-                                            classes={classesSelect}
-                                        >
-                                            {subjects.map(option => (
-                                                <MenuItem key={option._id} value={option._id}>
-                                                    {option.name}
-                                                </MenuItem>
-                                            ))}
-                                        </Field>
-                                        <Button classes={classesButton} disabled={!(formik.isValid && formik.dirty) || disabled}
-                                            type="submit" color="primary" variant='outlined' onClick={handleOpenSnackbar}>
-                                            Add subject
-                                        </Button>
+                                        <div>
+                                            <h2 style={{ color: 'slategrey', marginLeft: '73px'}}>I want to learn:</h2>
+                                            <Field
+                                                component={TextField}
+                                                type="text"
+                                                name="subject"
+                                                label="Subject"
+                                                select
+                                                variant="outlined"
+                                                helperText="Please select one of the options"
+                                                classes={classesSelect}
+                                            >
+                                                {subjects.map(option => (
+                                                    <MenuItem key={option._id} value={option._id}>
+                                                        {option.name}
+                                                    </MenuItem>
+                                                ))}
+                                            </Field>
+                                            <div style={{ marginLeft: '62px' }}>
+                                                <Button classes={classesButton} disabled={!(formik.isValid && formik.dirty) || disabled}
+                                                    type="submit" color="primary" variant='outlined' onClick={handleOpenSnackbar}>
+                                                    Add subject
+                                                </Button>
+                                            </div>
+                                        </div>
                                     </Form>
                                 )}
                         </Formik>

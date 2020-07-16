@@ -25,7 +25,7 @@ const useStylesEmail = makeStyles(() => ({
     }
 }));
 
-function PersonalInfo({ profile, universities, studyPrograms, classesProfile, classesField, classesSelect, classesButton, openProfileAlert, setOpenProfileAlert }) {
+function PersonalInfo({ profile, universities, studyPrograms, classesProfile, classesField, classesSelect, classesButton}) {
     
     const classesEmail = useStylesEmail();
     const [disabled, setDisabled] = useState(false);
@@ -212,6 +212,7 @@ function PersonalInfo({ profile, universities, studyPrograms, classesProfile, cl
                     formik => (
                         <Form>
                             <div style={{ position: 'relative' }}>
+                                <h2 style={{color:'slategrey', marginTop:'-70px', marginLeft:'100px'}}>My profile</h2>
                                 <Field
                                     component={TextField}
                                     classes={classesField}
@@ -221,7 +222,7 @@ function PersonalInfo({ profile, universities, studyPrograms, classesProfile, cl
                                     variant="outlined"
                                     label='First name'
                                 />
-                                <div style={{ position: 'absolute', left: '70%', top: '20%' }} >
+                                <div style={{ position: 'absolute', left: '70%', top: '50%' }} >
                                     <EditIcon />
                                 </div>
                             </div>
@@ -267,7 +268,7 @@ function PersonalInfo({ profile, universities, studyPrograms, classesProfile, cl
                                         </MenuItem>
                                     ))}
                                 </Field>
-                                <div style={{ position: 'absolute', left: '67%', top: '17%' }} >
+                                <div style={{ position: 'absolute', left: '67%', top: '15%' }} >
                                     <EditIcon />
                                 </div>
                             </div>
