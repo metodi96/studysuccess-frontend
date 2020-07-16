@@ -5,6 +5,7 @@ import CurrentBookingOwn from '../components/CurrentBookingOwn';
 import CurrentBookingAccepted from '../components/CurrentBookingAccepted';
 import CurrentBookingNotPaid from '../components/CurrentBookingNotPaid';
 import { makeStyles } from '@material-ui/core';
+import { Link } from 'react-router-dom';
 
 const useStylesBooking = makeStyles(() => ({
     container: {
@@ -13,7 +14,8 @@ const useStylesBooking = makeStyles(() => ({
         marginRight: '200px',
         minWidth: '1100px',
         marginBottom: '30px',
-        borderRadius: '4px'
+        borderRadius: '4px',
+        textAlign: 'center'
     },
     heading: {
         marginLeft: '200px',
@@ -162,8 +164,15 @@ function CurrentBookingsView(props) {
                 )
             } else {
                 return (
-                    <div>
-                        <p>You currently don't have any bookings.</p>
+                    <div style={{ fontSize: '1.35rem', textAlign: 'center', marginTop: '50px' }}>
+                        <div>
+                            <span>You currently don't have any bookings.</span>
+                        </div>
+                        <img width='200px' height='200px' src={confused} />
+                        <div style={{ marginTop: '25px' }}>
+                            <span>Search for a subject with which you struggle and we'll find tutors for you.</span>
+                        </div>
+                        <div style={{ textAlign: '-webkit-center', marginTop: '10px' }}><Search /></div>
                     </div>
                 )
             }

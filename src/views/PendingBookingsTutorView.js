@@ -9,8 +9,8 @@ const useStylesBooking = makeStyles(() => ({
         backgroundColor: 'rgba(152, 158, 157, 0.438)',
         marginLeft: '200px',
         marginRight: '200px',
-        minWidth: '1100px',
         marginBottom: '30px',
+        textAlign: 'center'
     },
     heading: {
         marginLeft: '200px',
@@ -71,8 +71,11 @@ function PendingBookingsTutorView(props) {
                 )
             } else {
                 return (
-                    <div>
-                        <p>You currently don't have any pending invitations.</p>
+                    <div style={{ fontSize: '1.35rem', textAlign: 'center', marginTop: '50px' }}>
+                        <div>
+                            <span>You currently don't have any pending invitations from students.</span>
+                        </div>
+                        <img width='200px' height='200px' src={confused} />
                     </div>
                 )
             }

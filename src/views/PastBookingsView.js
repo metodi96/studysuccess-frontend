@@ -10,6 +10,7 @@ const useStylesBooking = makeStyles(() => ({
         marginRight: '200px',
         minWidth: '1100px',
         marginBottom: '30px',
+        textAlign: 'center'
     },
     heading:  {
         marginLeft: '200px',
@@ -67,8 +68,15 @@ function PastBookingsView(props) {
                 )
             } else {
                 return (
-                    <div>
-                        <p>You currently don't have any past bookings.</p>
+                    <div style={{ fontSize: '1.35rem', textAlign: 'center', marginTop: '50px' }}>
+                        <div>
+                            <span>You currently don't have any past bookings.</span>
+                        </div>
+                        <img width='200px' height='200px' src={confused} />
+                        <div style={{ marginTop: '25px' }}>
+                            <span>Search for a subject with which you struggle and we'll find tutors for you.</span>
+                        </div>
+                        <div style={{ textAlign: '-webkit-center', marginTop: '10px' }}><Search /></div>
                     </div>
                 )
             }
