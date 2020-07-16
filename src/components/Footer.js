@@ -1,6 +1,6 @@
 import React from "react";
 import { makeStyles } from '@material-ui/core/styles';
-import { BottomNavigation } from '@material-ui/core';
+import { BottomNavigation, BottomNavigationAction } from '@material-ui/core';
 import CopyrightIcon from '@material-ui/icons/Copyright';
 
 const useStylesFooter = makeStyles(() => ({
@@ -16,6 +16,13 @@ const useStylesFooter = makeStyles(() => ({
             position: 'absolute',
             width: '1535px'
         },
+        "& .MuiBottomNavigationAction-label": {
+            width: 'max-content'
+        },
+        "& .MuiBottomNavigationAction-root": {
+            flex: '0'
+        },
+        bottom: '0%'
     }
 }))
 
@@ -24,9 +31,12 @@ function Footer() {
 
     return (
         <div className={classesFooter.root}>
-            <BottomNavigation>
-                <CopyrightIcon style={{ marginTop: '2px', marginLeft: '8px' }}></CopyrightIcon>
-                <p style={{ marginTop: '3px', marginLeft: '5px' }}>2020 StudySuccess. All rights reserved.</p>
+            <BottomNavigation showLabels>
+
+                <BottomNavigationAction disabled icon={<CopyrightIcon style={{ marginTop: '2px', marginLeft: '8px' }}></CopyrightIcon>} />
+                <BottomNavigationAction disabled label={<span style={{ marginTop: '3px', marginLeft: '110px' }}>2020 StudySuccess. All rights reserved.</span>} />
+
+
             </BottomNavigation>
         </div>
     )

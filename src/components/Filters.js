@@ -42,8 +42,7 @@ const useStyles = makeStyles((theme) => ({
     fontSize: 'small',
     display: 'inline-grid',
     textAlign: '-webkit-center',
-    paddingRight: 7,
-    backgroundColor: '#E9EB78'
+    paddingRight: 7
   },
   wrapperBox: {
     backgroundColor: 'white'
@@ -166,7 +165,7 @@ function Filters(props) {
               </IconButton>
               <IconButton onClick={() => {setDayTime(4)}}>
                 <div style={{textAlign: '-webkit-center'}} className={dayTime==4 ? classes.markedButton : classes.buttons}>
-                  <WeekendOutlinedIcon ></WeekendOutlinedIcon>
+                  <WeekendOutlinedIcon  className={dayTime==4 ? classesIcon.clickedIcon : ''}></WeekendOutlinedIcon>
                   Weekends
                 </div>
               </IconButton>

@@ -6,6 +6,8 @@ import Button from '@material-ui/core/Button';
 import { Link } from 'react-router-dom';
 import UserService from '../services/UserService';
 import React from 'react';
+import { Avatar } from '@material-ui/core';
+import logo from '../images/logo.png';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -41,25 +43,58 @@ function MainView(props) {
 
     return (
         <div>
-            <div className={classes.root}>
+
+
+
+
+            <div style={{textAlign: 'center', position: 'relative' }}>
                 {UserService.isAuthenticated() ?
-                    '' :
-                    <Button
-                        variant="outlined"
-                        component={Link}
-                        to={'/auth/login'}>Login</Button>
+                    <div style={{ display: 'flex' }}>
+                        <div >
+                            <div style={{ marginTop: "5%", textAlign: 'center' }}>
+                                <h2>StudySuccess</h2>
+                                <p>Come to improve your studies.</p>
+                                <p>Stay because you enjoy the success.</p>
+                            </div>
+                            <Avatar src={logo} alt="StudySuccess" style={{ position: 'absolute' }} />
+                            <div style={{ marginTop: "16%", marginLeft: "30%" }}>
+                                <Search></Search>
+                            </div>
+                        </div>
+                    </div>
+                    :
+                    <div>
+                        <div style={{ display: 'flex' }}>
+                            <Avatar src={logo} alt="StudySuccess" style={{ position: 'absolute' }} />
+                            <div style={{ marginLeft: "3%" }}>
+                                <Search></Search>
+                            </div>
+                            <div style={{ marginTop: "5%" }}>
+                                <h2>StudySuccess</h2>
+                                <p>Come to improve your studies.</p>
+                                <p>Stay because you enjoy the success.</p>
+                            </div>
+                            <div style={{ position: 'absolute', right: '2%', display: 'flex' }}>
+                                <Button
+                                    variant="outlined"
+                                    component={Link}
+                                    to={'/auth/login'}>Login</Button>
+                            </div>
+                        </div>
+                    </div>
+
                 }
+
             </div>
-            <Search></Search>
             {
                 !UserService.isAuthenticated() ?
                     <SignUp universities={props.universities}></SignUp>
-                    : null
+                    : <div>
+                        <h3 className={classesTutor.heading}>Tutors with highest rating</h3>
+                        <TrendingTutors classesTutor={classesTutor}></TrendingTutors>
+                    </div>
             }
-            <div>
-                <h3 className={classesTutor.heading}>Tutors with highest rating</h3>
-                <TrendingTutors classesTutor={classesTutor}></TrendingTutors>
-            </div>
+
         </div>
     )
 }

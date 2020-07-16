@@ -71,7 +71,7 @@ function PendingBookingsTutorView(props) {
                 )
             } else {
                 return (
-                    <div>
+                    <div style={{height: '100vh'}}>
                         <p>You currently don't have any pending invitations.</p>
                     </div>
                 )
