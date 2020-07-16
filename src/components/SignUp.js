@@ -123,7 +123,7 @@ function SignUp({ universities }) {
         axios.post('http://localhost:5000/signup', values)
             .then(res => {
                 console.log(res.data)
-                setSubmitting(false);
+                ;
             })
             .catch(err => {
                 //use this to precisely tell what the response from the server is

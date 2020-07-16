@@ -10,11 +10,14 @@ import Button from '@material-ui/core/Button';
 import { Link } from "react-router-dom";
 import { makeStyles } from '@material-ui/styles';
 import { Tooltip } from '@material-ui/core';
+import DoubleArrowOutlinedIcon from '@material-ui/icons/DoubleArrowOutlined';
 
 const useStylesTutor = makeStyles(() => ({
     container: {
         backgroundColor: 'rgba(152, 158, 157, 0.438)',
-        padding: '1em'
+        padding: '1em',
+        margin: 'auto',
+        width: '70%',             
     },
     content: {
         backgroundColor: 'white',
@@ -28,7 +31,13 @@ const useStylesTutor = makeStyles(() => ({
     },
     test: {
         fontWeight: 'bold'
+    },
+    headline:{
+        backgroundColor: 'white',
+        padding: '0.5em',
+        textAlign: 'center'
     }
+
 }));
 
 const useStylesFavourites = makeStyles(() => ({
@@ -150,6 +159,14 @@ function TutorProfileView(props) {
     if (UserService.isAuthenticated()) {
         if (!loading) {
             return (
+               <div>
+                <div className={classesTutor.container}>   
+                <div class={classesTutor.headline}>
+                    <Typography variant="body1" color="textPrimary" component="p" id="tutorName">
+                        <b>This is the full profile of the tutor {`${tutor.firstname} ${tutor.lastname}`}</b>
+                    </Typography>
+                </div>
+                </div>
                 <div className={classesTutor.container}>
                     <div className={classesTutor.content}>
                         <div className={classesTutor.grid}>
@@ -199,9 +216,11 @@ function TutorProfileView(props) {
                                                             <FavoriteIcon />
                                                         </IconButton>
                                                     </Tooltip>
-                                                    <Button variant="contained" color="primary" component={Link} to={`/tutors/${subjectId}/booking/${tutorId}`}>
+                                                </div>
+                                                <div style={{ textAlign: 'right' }}>
+                                                    <Button variant="outlined" style={{ marginBottom: '2%' }} endIcon={<DoubleArrowOutlinedIcon />} component={Link} to={`/tutors/${subjectId}/booking/${tutorId}`}>
                                                         Book
-                                                </Button>
+                                                    </Button>
                                                 </div>
                                             </Grid>
                                         </Grid>
@@ -227,6 +246,7 @@ function TutorProfileView(props) {
                     </div>
 
                 </div>
+                </div>    
 
 
             )
