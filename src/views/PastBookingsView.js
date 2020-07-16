@@ -3,6 +3,7 @@ import UserService from '../services/UserService';
 import axios from 'axios';
 import PastBooking from '../components/PastBooking'
 import { makeStyles } from '@material-ui/core';
+
 const useStylesBooking = makeStyles(() => ({
     container: {
         backgroundColor: 'rgba(152, 158, 157, 0.438)',
@@ -60,7 +61,7 @@ function PastBookingsView(props) {
             if (bookings.length > 0) {
                 return (
                     <div>
-                        <h3 className={classesBooking.heading}>You had {bookings.length} scheduled lessons.</h3>
+                        <h3 className={classesBooking.heading}>You completed {bookings.length} lessons.</h3>
                         <div className={classesBooking.container}>
                         { bookings.map((booking) => (<div key={booking._id} className={classesBooking.booking}><PastBooking booking={booking} /></div>)) }
                         </div>
@@ -83,7 +84,7 @@ function PastBookingsView(props) {
         } else {
             return (
                 <div>
-                    <p>Loading past bookings...</p>
+                    <p>Loading completed bookings...</p>
                 </div>
             )
         }

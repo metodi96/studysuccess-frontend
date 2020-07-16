@@ -11,7 +11,7 @@ import PersonOutlineSharpIcon from '@material-ui/icons/PersonOutlineSharp';
 import GroupSharpIcon from '@material-ui/icons/GroupSharp';
 import EuroSharpIcon from '@material-ui/icons/EuroSharp';
 import Divider from '@material-ui/core/Divider';
-import { Button } from '@material-ui/core';
+import { Button, Snackbar } from '@material-ui/core';
 import Dialog from '@material-ui/core/Dialog';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
@@ -22,6 +22,11 @@ import * as Yup from 'yup'
 import TextError from './TextError'
 import Rating from '@material-ui/lab/Rating';
 import Typography from '@material-ui/core/Typography';
+import Alert from './Alert';
+import CreateIcon from '@material-ui/icons/Create';
+
+
+
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -58,6 +63,8 @@ const useStylesTutor = makeStyles(() => ({
     }
 }));
 
+
+
 function PastBooking({ booking }) {
     const classes = useStyles();
     const classesAvatar = useStylesAvatar();
@@ -66,6 +73,18 @@ function PastBooking({ booking }) {
     const [token, setToken] = useState(window.localStorage.getItem('jwtToken'));
     const [openAlert, setOpenAlert] = useState(false);
     const [rating, setRating] = React.useState(5);
+    const [openSnackbar, setOpenSnackbar] = useState(false);
+    const [severity, setSeverity] = useState('');
+
+    
+    const initialValues = {
+        comment: ''
+    }
+    
+    // define the validation object schema
+    const validationSchema = Yup.object({
+        comment: Yup.string().required('This field is obligatory')
+    })
 
     const handleClickOpenAlert = () => {
         setOpenAlert(true);
@@ -75,14 +94,21 @@ function PastBooking({ booking }) {
         setOpenAlert(false);
     };
 
-    const initialValues = {
-        comment: ''
-    }
+    const handleCloseSnackbar = (event, reason) => {
+        if (reason === 'clickaway') {
+            return;
+        }
     
-    // define the validation object schema
-    const validationSchema = Yup.object({
-        comment: Yup.string().required('This field is obligatory')
-    })
+        setOpenSnackbar(false);
+
+        if(severity === 'success') {
+            setSeverity('');
+        } else {
+            setSeverity('');
+        }
+    }; 
+
+    
 
     const onSubmit = comment => {
         console.log(comment)
@@ -100,13 +126,36 @@ function PastBooking({ booking }) {
                 })
                 .then(res => {
                     console.log(res.data);
-                    //window.location.reload(true);
+                    setSeverity('success');
+                    setOpenSnackbar(true);
+                    setTimeout(() => window.location.reload(true), 5000);
                 })
                 .catch(err => {
-                    console.log(err);
+                    setSeverity('error');
+                    setOpenSnackbar(true);
+                    console.log(`Something went wrong  ${err}`);
+                    setTimeout(() => window.location.reload(true), 5000);
                 })
         }
     }
+
+    const renderSwitchForSnackbar = (severity) => {
+        switch (severity) {
+            case 'success':
+                return <Snackbar open={openSnackbar} autoHideDuration={2500} onClose={handleCloseSnackbar}>
+                        <Alert onClose={handleCloseSnackbar} severity='success'>
+                             Thank you for your feedback!
+                        </Alert>
+                     </Snackbar>
+            case 'error':
+                return <Snackbar open={openSnackbar} autoHideDuration={2500} onClose={handleCloseSnackbar}>
+                        <Alert onClose={handleCloseSnackbar} severity='error'>
+                             Something went wrong!
+                        </Alert>
+                    </Snackbar>
+            default:
+                return null
+    }};
 
     return (
         <div>
@@ -160,8 +209,9 @@ function PastBooking({ booking }) {
                     {
                         !booking.feedbackGiven ? <Button
                             variant="contained"
-                            color="secondary"
-                            onClick={handleClickOpenAlert}>
+                            color="primary"
+                            onClick={handleClickOpenAlert}
+                            startIcon={<CreateIcon />}>
                             Give Feedback
                         </Button> : <div>Feedback already given.</div>
                     }
@@ -205,6 +255,11 @@ function PastBooking({ booking }) {
                                     <Button onClick={handleCloseAlert} color="primary" autoFocus>
                                        Cancel
                                     </Button>
+                                    <div>
+                                        {
+                                             renderSwitchForSnackbar(severity)
+                                        }
+                                    </div>
                                 </Form>
                             </Formik>                            
                         </DialogContent>
