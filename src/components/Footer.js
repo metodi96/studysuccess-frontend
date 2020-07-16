@@ -32,34 +32,11 @@ function Footer() {
     return (
         <div className={classesFooter.root}>
             <BottomNavigation showLabels>
-
                 <BottomNavigationAction disabled icon={<CopyrightIcon style={{ marginTop: '2px', marginLeft: '8px' }}></CopyrightIcon>} />
                 <BottomNavigationAction disabled label={<span style={{ marginTop: '3px', marginLeft: '110px' }}>{new Date().getFullYear()} StudySuccess. All rights reserved.</span>} />
-
-
             </BottomNavigation>
         </div>
     )
-
 }
 
 export default Footer
-
-/*const FooterContainer = styled.div`
-  text-align: center;
-  position: absolute;
-  bottom: 0;
-  width: 100% !important;
-  height: 100px !important ;
-  background: #6cf;
-  //
-  max-height: 35px;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    position: fixed;
-    background: white;
-    > p {
-        text-align: center;
-        margin-top: 4px;
-`;  */

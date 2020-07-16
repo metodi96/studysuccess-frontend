@@ -97,7 +97,6 @@ function Search({ subjectIdParam }) {
                             if (!option.name !== '') {
                                 return (option.name === value);
                             }
-
                             return false;
                         }}
                         renderInput={(params) => (
@@ -123,10 +122,6 @@ function Search({ subjectIdParam }) {
                     /> : <div>Search options loading...</div>
             }
         </div>
-
-
-
-
     )
 }
 

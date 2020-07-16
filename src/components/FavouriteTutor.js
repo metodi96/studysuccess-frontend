@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { makeStyles } from '@material-ui/styles';
 import { Grid, Typography, Tooltip, IconButton, Button } from '@material-ui/core';
 import FavoriteIcon from '@material-ui/icons/Favorite';

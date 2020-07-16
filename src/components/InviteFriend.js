@@ -196,7 +196,6 @@ function InviteFriend({ booking, classesAvatar, openInvitationAlert, setOpenInvi
         }
     };
 
-
     return (
         <div>
             <Dialog

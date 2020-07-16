@@ -402,18 +402,3 @@ function PersonalInfo({ profile, universities, studyPrograms, classesProfile, cl
 }
 
 export default PersonalInfo
-
-
-/*
-                            <div>
-                                <Field
-                                    component={TextField}
-                                    classes={classesField}
-                                    type='subjectsToTakeLessonsIn'
-                                    id='subjectsToTakeLessonsIn'
-                                    name='subjectsToTakeLessonsIn'
-                                    value={initialValues.subjectsToTakeLessonsIn}
-                                />
-                            </div>
-
-*/

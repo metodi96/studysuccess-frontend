@@ -1,11 +1,10 @@
-import React, { useState, useEffect } from 'react'
-import UserService from '../services/UserService'
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import CurrentBookingOwn from '../components/CurrentBookingOwn';
 import CurrentBookingAccepted from '../components/CurrentBookingAccepted';
 import CurrentBookingNotPaid from '../components/CurrentBookingNotPaid';
 import { makeStyles, Box, InputLabel, Select, MenuItem } from '@material-ui/core';
-import confused from '../images/confused-cat.png'
+import confused from '../images/confused-cat.png';
 import Search from '../components/Search';
 
 const useStylesBooking = makeStyles(() => ({
@@ -132,10 +131,6 @@ function CurrentBookingsView(props) {
         return () => { isMounted = false } // use effect cleanup to set flag false, if unmounted
     }, [token]);
 
-    const redirect = () => {
-        props.history.push('/')
-    }
-
     //createdAt desc, createdAt asc, timeslotEnd desc, timeslotEnd asc
     const handleChangeSortBookings = (event) => {
         setSortMethodBookings(event.target.value);
@@ -187,118 +182,107 @@ function CurrentBookingsView(props) {
     }
 
     //make sure that bookings are properly populated with the tutor/subject objects before accessing their properties
-    if (UserService.isAuthenticated()) {
-        if (!loading && !loadingSecond && !loadingThird) {
-            if (bookings.length > 0 || acceptedInvitations.length > 0 || bookingsNotPaid.length > 0) {
-                return (
-                    <div>
-                        <h3 className={classesBooking.heading}>You have {bookings.length + acceptedInvitations.length} scheduled lessons in total.</h3>
-                        {
-                            bookings.length > 0 ?
-                                <div style={{display: 'flex'}}>
-                                    <h4 className={classesBooking.headingSecondary}>Out of these {bookings.length} {bookings.length === 1 ? 'is' : 'are'} your own. You are free to either invite friends to a booking or cancel it entirely.</h4>
-                                    <Box>
-                                        <InputLabel id="sort-by-label">Sort by</InputLabel>
-                                        <Select
-                                            labelId="sort-by-label"
-                                            id="sort-by"
-                                            value={sortMethodBookings}
-                                            onChange={handleChangeSortBookings}
-                                        >
-                                            <MenuItem value={1}>{"Latest created"}</MenuItem>
-                                            <MenuItem value={2}>{"Earliest created"}</MenuItem>
-                                            <MenuItem value={3}>{"Timeslot End (desc)"}</MenuItem>
-                                            <MenuItem value={4}>{"Timeslot End (asc)"}</MenuItem>
-                                        </Select>
-                                    </Box>
-                                </div>
-                                : null
-                        }
-                        <div className={classesBooking.container}>
-                            {bookings.map((booking) => (<div key={booking._id} className={classesBooking.booking}><CurrentBookingOwn booking={booking} /></div>))}
-                        </div>
-                        {
-                            acceptedInvitations.length > 0 ?
-                                <div style={{ display: 'flex' }}>
-                                    <h4 className={classesBooking.headingSecondary}>You have {acceptedInvitations.length} accepted invitation{acceptedInvitations.length === 1 ? '' : 's'} to bookings created by friends. You cannot invite friends or cancel the lesson.</h4>
-                                    <Box>
-                                        <InputLabel id="sort-by-label">Sort by</InputLabel>
-                                        <Select
-                                            labelId="sort-by-label"
-                                            id="sort-by"
-                                            value={sortMethodInvitations}
-                                            onChange={handleChangeSortInvitations}
-                                        >
-                                            <MenuItem value={1}>{"Latest created"}</MenuItem>
-                                            <MenuItem value={2}>{"Earliest created"}</MenuItem>
-                                            <MenuItem value={3}>{"Timeslot End (desc)"}</MenuItem>
-                                            <MenuItem value={4}>{"Timeslot End (asc)"}</MenuItem>
-                                        </Select>
-                                    </Box>
-                                </div>
-                                : null
-                        }
-
-                        <div className={classesBooking.container}>
-                            {acceptedInvitations.map((invitation) => (<div key={invitation._id} className={classesBooking.booking}><CurrentBookingAccepted invitation={invitation} /></div>))}
-                        </div>
-                        {
-                            bookingsNotPaid.length > 0 ?
-                                <div style={{ display: 'flex' }}>
-                                    <h4 className={classesBooking.headingSecondary}>You have {bookingsNotPaid.length} booking(s) which have not yet been paid or await approval from your tutor.</h4>
-                                    <Box>
-                                        <InputLabel id="sort-by-label">Sort by</InputLabel>
-                                        <Select
-                                            labelId="sort-by-label"
-                                            id="sort-by"
-                                            value={sortMethodPending}
-                                            onChange={handleChangeSortPending}
-                                        >
-                                            <MenuItem value={1}>{"Latest created"}</MenuItem>
-                                            <MenuItem value={2}>{"Earliest created"}</MenuItem>
-                                            <MenuItem value={3}>{"Timeslot End (desc)"}</MenuItem>
-                                            <MenuItem value={4}>{"Timeslot End (asc)"}</MenuItem>
-                                        </Select>
-                                    </Box>
-                                </div>
-                                : null
-                        }
-                        <div className={classesBooking.container}>
-                            {bookingsNotPaid.map((booking) => (<div key={booking._id} className={classesBooking.booking}><CurrentBookingNotPaid booking={booking} token={token} /></div>))}
-                        </div>
-                    </div>
-                )
-            } else {
-                return (
-                    <div style={{ fontSize: '1.35rem', textAlign: 'center', marginTop: '50px' }}>
-                        <div>
-                            <span>You currently don't have any bookings.</span>
-                        </div>
-                        <img width='200px' height='200px' src={confused} />
-                        <div style={{ marginTop: '25px' }}>
-                            <span>Search for a subject with which you struggle and we'll find tutors for you.</span>
-                        </div>
-                        <div style={{ textAlign: '-webkit-center', marginTop: '10px' }}><Search /></div>
-                    </div>
-                )
-            }
-        } else {
+    if (!loading && !loadingSecond && !loadingThird) {
+        if (bookings.length > 0 || acceptedInvitations.length > 0 || bookingsNotPaid.length > 0) {
             return (
                 <div>
-                    <p>Loading bookings...</p>
+                    <h3 className={classesBooking.heading}>You have {bookings.length + acceptedInvitations.length} scheduled lessons in total.</h3>
+                    {
+                        bookings.length > 0 ?
+                            <div style={{ display: 'flex' }}>
+                                <h4 className={classesBooking.headingSecondary}>Out of these {bookings.length} {bookings.length === 1 ? 'is' : 'are'} your own. You are free to either invite friends to a booking or cancel it entirely.</h4>
+                                <Box>
+                                    <InputLabel id="sort-by-label">Sort by</InputLabel>
+                                    <Select
+                                        labelId="sort-by-label"
+                                        id="sort-by"
+                                        value={sortMethodBookings}
+                                        onChange={handleChangeSortBookings}
+                                    >
+                                        <MenuItem value={1}>{"Latest created"}</MenuItem>
+                                        <MenuItem value={2}>{"Earliest created"}</MenuItem>
+                                        <MenuItem value={3}>{"Timeslot End (desc)"}</MenuItem>
+                                        <MenuItem value={4}>{"Timeslot End (asc)"}</MenuItem>
+                                    </Select>
+                                </Box>
+                            </div>
+                            : null
+                    }
+                    <div className={classesBooking.container}>
+                        {bookings.map((booking) => (<div key={booking._id} className={classesBooking.booking}><CurrentBookingOwn booking={booking} /></div>))}
+                    </div>
+                    {
+                        acceptedInvitations.length > 0 ?
+                            <div style={{ display: 'flex' }}>
+                                <h4 className={classesBooking.headingSecondary}>You have {acceptedInvitations.length} accepted invitation{acceptedInvitations.length === 1 ? '' : 's'} to bookings created by friends. You cannot invite friends or cancel the lesson.</h4>
+                                <Box>
+                                    <InputLabel id="sort-by-label">Sort by</InputLabel>
+                                    <Select
+                                        labelId="sort-by-label"
+                                        id="sort-by"
+                                        value={sortMethodInvitations}
+                                        onChange={handleChangeSortInvitations}
+                                    >
+                                        <MenuItem value={1}>{"Latest created"}</MenuItem>
+                                        <MenuItem value={2}>{"Earliest created"}</MenuItem>
+                                        <MenuItem value={3}>{"Timeslot End (desc)"}</MenuItem>
+                                        <MenuItem value={4}>{"Timeslot End (asc)"}</MenuItem>
+                                    </Select>
+                                </Box>
+                            </div>
+                            : null
+                    }
+
+                    <div className={classesBooking.container}>
+                        {acceptedInvitations.map((invitation) => (<div key={invitation._id} className={classesBooking.booking}><CurrentBookingAccepted invitation={invitation} /></div>))}
+                    </div>
+                    {
+                        bookingsNotPaid.length > 0 ?
+                            <div style={{ display: 'flex' }}>
+                                <h4 className={classesBooking.headingSecondary}>You have {bookingsNotPaid.length} booking(s) which have not yet been paid or await approval from your tutor.</h4>
+                                <Box>
+                                    <InputLabel id="sort-by-label">Sort by</InputLabel>
+                                    <Select
+                                        labelId="sort-by-label"
+                                        id="sort-by"
+                                        value={sortMethodPending}
+                                        onChange={handleChangeSortPending}
+                                    >
+                                        <MenuItem value={1}>{"Latest created"}</MenuItem>
+                                        <MenuItem value={2}>{"Earliest created"}</MenuItem>
+                                        <MenuItem value={3}>{"Timeslot End (desc)"}</MenuItem>
+                                        <MenuItem value={4}>{"Timeslot End (asc)"}</MenuItem>
+                                    </Select>
+                                </Box>
+                            </div>
+                            : null
+                    }
+                    <div className={classesBooking.container}>
+                        {bookingsNotPaid.map((booking) => (<div key={booking._id} className={classesBooking.booking}><CurrentBookingNotPaid booking={booking} token={token} /></div>))}
+                    </div>
+                </div>
+            )
+        } else {
+            return (
+                <div style={{ fontSize: '1.35rem', textAlign: 'center', marginTop: '50px' }}>
+                    <div>
+                        <span>You currently don't have any bookings.</span>
+                    </div>
+                    <img width='200px' height='200px' src={confused} />
+                    <div style={{ marginTop: '25px' }}>
+                        <span>Search for a subject with which you struggle and we'll find tutors for you.</span>
+                    </div>
+                    <div style={{ textAlign: '-webkit-center', marginTop: '10px' }}><Search /></div>
                 </div>
             )
         }
     } else {
         return (
             <div>
-                {
-                    redirect()
-                }
+                <p>Loading bookings...</p>
             </div>
         )
     }
-
 }
 
 export default CurrentBookingsView

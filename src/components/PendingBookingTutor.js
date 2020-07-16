@@ -50,7 +50,7 @@ const useStylesInvitation = makeStyles(() => ({
     }
 }));
 
-function PendingBookingTutor({ history, bookingPending }) {
+function PendingBookingTutor({ bookingPending }) {
     const classesList = useStylesList();
     const classesAvatar = useStylesAvatar();
     const classesButton = useStylesButton();
@@ -70,10 +70,9 @@ function PendingBookingTutor({ history, bookingPending }) {
                 })
                 .then(() => {
                     console.log('Accepted proposed time!')
-                    window.location.reload(true);
+                    window.location.reload();
                 })
                 .catch(err => {
-                   // window.location.reload(true);
                     //use this to precisely tell what the response from the server is
                     console.log('response: ', err.response.data);
                 })

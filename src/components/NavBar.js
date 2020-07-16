@@ -171,16 +171,12 @@ function Navbar() {
                                     
                                 </Menu>
                             </div>
-
                             {
                                 profile !== undefined && profile.hasCertificateOfEnrolment && profile.hasGradeExcerpt ?
                                     <Button component={Link} to="/bookings/pendingTutor" className={classesNavBarButtons.root} >
                                         <Badge classes={classesBadge} color="secondary" badgeContent={pendingNumberTutor}>Booking Requests</Badge>
                                     </Button> : null
                             }
-                            
-
-
                             <div style={{ position: 'absolute', right: '2%' }}>
                                 <IconButton
                                     aria-label="account of current user"
@@ -224,7 +220,6 @@ function Navbar() {
                                     <MenuItem onClick={logout}>Log out</MenuItem>
                                 </Menu>
                             </div>
-
                         </Toolbar>
                     </AppBar>
                 </Box>

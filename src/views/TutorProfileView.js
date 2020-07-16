@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import UserService from '../services/UserService';
 import axios from 'axios';
 import IconButton from '@material-ui/core/IconButton';
 import Typography from '@material-ui/core/Typography';
@@ -107,8 +106,6 @@ function TutorProfileView(props) {
         setToken(window.localStorage.getItem('jwtToken'));
         console.log(`Tutor in favourites ${tutorIsInFavourites}`)
         if (window.localStorage.getItem('jwtToken') !== null) {
-            console.log(token);
-            console.log(tutor._id);
             if (!tutorIsInFavourites) {
                 console.log('Add tutor to favourites');
                 axios
@@ -122,7 +119,6 @@ function TutorProfileView(props) {
                     .then(res => {
                         console.log(res.data);
                         setTutorIsInFavourites(true);
-                        //window.location.reload(true);
                     })
                     .catch(err => {
                         console.log(err.response.data);
@@ -140,7 +136,6 @@ function TutorProfileView(props) {
                     .then(res => {
                         console.log(res.data);
                         setTutorIsInFavourites(false);
-                        //window.location.reload(true);
                     })
                     .catch(err => {
                         console.log(err.response.data);
@@ -149,123 +144,108 @@ function TutorProfileView(props) {
         }
     }
 
-    const redirectToLogin = () => {
-        props.history.push('/auth/login')
-    }
-
-    if (UserService.isAuthenticated()) {
-        if (!loading) {
-            return (
-                <div>
-                    <div className={classesTutor.container}>
-                        <div className={classesTutor.headline}>
-                            <Typography variant="body1" color="textPrimary" component="p" id="tutorName">
-                                <b>This is the full profile of the tutor {`${tutor.firstname} ${tutor.lastname}`}</b>
-                            </Typography>
-                        </div>
+    if (!loading) {
+        return (
+            <div>
+                <div className={classesTutor.container}>
+                    <div className={classesTutor.headline}>
+                        <Typography variant="body1" color="textPrimary" component="p" id="tutorName">
+                            <b>This is the full profile of the tutor {`${tutor.firstname} ${tutor.lastname}`}</b>
+                        </Typography>
                     </div>
-                    <div className={classesTutor.container}>
-                        <div className={classesTutor.content}>
-                            <div className={classesTutor.grid}>
-                                <Grid container spacing={3}>
-                                    <Grid item xs={12}>
-                                        <Grid container spacing={3}>
-                                            <Grid item xs={3}>
-                                                <img width='250px' height='250px' src={`http://localhost:5000/${tutor.userImage}`} alt={`${tutor.firstname} ${tutor.lastname}`} title={`${tutor.firstname} ${tutor.lastname}`} />
-                                            </Grid>
-                                            <Grid item xs={3}>
-                                                <div>
-                                                    <Typography variant="body2" color="textSecondary" component="p" id="tutorName">
-                                                        {`${tutor.firstname} ${tutor.lastname}`}
-                                                    </Typography>
-                                                    <div className={classesTutor.rating}>
-                                                        {
-                                                            tutor.avgRating !== undefined ?
-                                                                <div>
-                                                                    <Rating value={Number(tutor.avgRating)} precision={0.5} readOnly />
-                                                                    <Typography component="legend">{Number(tutor.avgRating).toFixed(1)}</Typography>
-                                                                </div> : <div>No rating available</div>
-                                                        }
-
-                                                    </div>
-                                                    <Typography variant="body2" color="textSecondary" component="p">
-                                                        Tutor for {
-                                                            Object.values(tutor.subjectsToTeach).map((value, i) => (
-                                                                <span key={i}>{tutor.subjectsToTeach.length - 1 === i ? <b>{`${value.name}.`}</b> : <b>{`${value.name}, `}</b>}</span>
-                                                            ))
-                                                        }
-                                                    </Typography>
-                                                </div>
-                                            </Grid>
-                                            <Grid item xs={6}>
-                                                <div style={{ textAlign: 'right' }}>
-                                                    <Typography variant="body2" color="textSecondary" component="p">
-                                                        {tutor.pricePerHour} € / hour
+                </div>
+                <div className={classesTutor.container}>
+                    <div className={classesTutor.content}>
+                        <div className={classesTutor.grid}>
+                            <Grid container spacing={3}>
+                                <Grid item xs={12}>
+                                    <Grid container spacing={3}>
+                                        <Grid item xs={3}>
+                                            <img width='250px' height='250px' src={`http://localhost:5000/${tutor.userImage}`} alt={`${tutor.firstname} ${tutor.lastname}`} title={`${tutor.firstname} ${tutor.lastname}`} />
+                                        </Grid>
+                                        <Grid item xs={3}>
+                                            <div>
+                                                <Typography variant="body2" color="textSecondary" component="p" id="tutorName">
+                                                    {`${tutor.firstname} ${tutor.lastname}`}
                                                 </Typography>
-                                                    <Typography variant="body2" color="textSecondary" component="p">
-                                                        Languages: {tutor.languages?.join(", ")}
-                                                    </Typography>
+                                                <div className={classesTutor.rating}>
+                                                    {
+                                                        tutor.avgRating !== undefined ?
+                                                            <div>
+                                                                <Rating value={Number(tutor.avgRating)} precision={0.5} readOnly />
+                                                                <Typography component="legend">{Number(tutor.avgRating).toFixed(1)}</Typography>
+                                                            </div> : <div>No rating available</div>
+                                                    }
+
                                                 </div>
-                                                <Grid item xs={12}>
-                                                    <div style={{ textAlign: 'right' }}>
-                                                        <Tooltip title={tutorIsInFavourites ? 'Remove tutor from favourites' : 'Add tutor to favourites'} aria-label={tutorIsInFavourites ? 'remove-favourites' : 'add-favourites'}>
-                                                            <IconButton className={tutorIsInFavourites ? classesFavourites.add : ''} onClick={addRemoveFavourite} aria-label="add to favorites">
-                                                                <FavoriteIcon />
-                                                            </IconButton>
-                                                        </Tooltip>
-                                                    </div>
-                                                    <div style={{ textAlign: 'right' }}>
-                                                        <Button variant="outlined" style={{ marginBottom: '2%' }} endIcon={<DoubleArrowOutlinedIcon />} component={Link} to={`/tutors/${subjectId}/booking/${tutorId}`}>
-                                                            Book
+                                                <Typography variant="body2" color="textSecondary" component="p">
+                                                    Tutor for {
+                                                        Object.values(tutor.subjectsToTeach).map((value, i) => (
+                                                            <span key={i}>{tutor.subjectsToTeach.length - 1 === i ? <b>{`${value.name}.`}</b> : <b>{`${value.name}, `}</b>}</span>
+                                                        ))
+                                                    }
+                                                </Typography>
+                                            </div>
+                                        </Grid>
+                                        <Grid item xs={6}>
+                                            <div style={{ textAlign: 'right' }}>
+                                                <Typography variant="body2" color="textSecondary" component="p">
+                                                    {tutor.pricePerHour} € / hour
+                                                </Typography>
+                                                <Typography variant="body2" color="textSecondary" component="p">
+                                                    Languages: {tutor.languages?.join(", ")}
+                                                </Typography>
+                                            </div>
+                                            <Grid item xs={12}>
+                                                <div style={{ textAlign: 'right' }}>
+                                                    <Tooltip title={tutorIsInFavourites ? 'Remove tutor from favourites' : 'Add tutor to favourites'} aria-label={tutorIsInFavourites ? 'remove-favourites' : 'add-favourites'}>
+                                                        <IconButton className={tutorIsInFavourites ? classesFavourites.add : ''} onClick={addRemoveFavourite} aria-label="add to favorites">
+                                                            <FavoriteIcon />
+                                                        </IconButton>
+                                                    </Tooltip>
+                                                </div>
+                                                <div style={{ textAlign: 'right' }}>
+                                                    <Button variant="outlined" style={{ marginBottom: '2%' }} endIcon={<DoubleArrowOutlinedIcon />} component={Link} to={`/tutors/${subjectId}/booking/${tutorId}`}>
+                                                        Book
                                                     </Button>
-                                                    </div>
-                                                </Grid>
+                                                </div>
                                             </Grid>
                                         </Grid>
                                     </Grid>
-                                    <Grid item xs={12}>
-                                        <Typography variant="body2" color="textSecondary" component="p">
-                                            {tutor.personalStatement !== undefined ? tutor.personalStatement : <i>No description</i>}
-                                        </Typography>
-                                    </Grid>
-
                                 </Grid>
-                            </div>
-                            {tutor.feedback !== undefined ? tutor.feedback.map((feedback) => (
-                                <div key={feedback._id}>
-                                    <hr />
-                                    <div className={classesTutor.rating}>
-                                        <Rating value={feedback.rating} readOnly />
-                                        <Typography component="legend">{feedback.rating}</Typography>
-                                    </div>
-                                    <Typography variant="body2" color="textPrimary" component="p">For Subject: {feedback.forSubject?.name}</Typography>
-                                    <Typography variant="body2" color="textSecondary" component="p">{feedback.comment}</Typography>
-                                </div>
-                            )) : null}
+                                <Grid item xs={12}>
+                                    <Typography variant="body2" color="textSecondary" component="p">
+                                        {tutor.personalStatement !== undefined ? tutor.personalStatement : <i>No description</i>}
+                                    </Typography>
+                                </Grid>
+
+                            </Grid>
                         </div>
-
+                        {tutor.feedback !== undefined ? tutor.feedback.map((feedback) => (
+                            <div key={feedback._id}>
+                                <hr />
+                                <div className={classesTutor.rating}>
+                                    <Rating value={feedback.rating} readOnly />
+                                    <Typography component="legend">{feedback.rating}</Typography>
+                                </div>
+                                <Typography variant="body2" color="textPrimary" component="p">For Subject: {feedback.forSubject?.name}</Typography>
+                                <Typography variant="body2" color="textSecondary" component="p">{feedback.comment}</Typography>
+                            </div>
+                        )) : null}
                     </div>
+
                 </div>
+            </div>
 
 
-            )
-        } else {
-            return (
-                <div>
-                    <p>Loading tutor...</p>
-                </div>
-            )
-        }
+        )
     } else {
         return (
             <div>
-                {
-                    redirectToLogin()
-                }
+                <p>Loading tutor...</p>
             </div>
         )
     }
-
 }
 
 export default TutorProfileView

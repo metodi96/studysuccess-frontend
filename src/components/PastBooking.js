@@ -25,9 +25,6 @@ import Typography from '@material-ui/core/Typography';
 import Alert from './Alert';
 import CreateIcon from '@material-ui/icons/Create';
 
-
-
-
 const useStyles = makeStyles((theme) => ({
     root: {
         width: '100%',
@@ -52,7 +49,8 @@ const useStylesButton = makeStyles(() => ({
 
 const useStylesTutor = makeStyles(() => ({
     rating: {
-        display: 'flex'
+        display: 'flex',
+        justifyContent: 'center'
     },
     container: {
         display: 'flex',
@@ -63,6 +61,13 @@ const useStylesTutor = makeStyles(() => ({
     }
 }));
 
+const useStylesComment = makeStyles(() => ({
+    root: {
+        minWidth: '200px',
+        minHeight: '100px'
+    }
+}))
+
 
 
 function PastBooking({ booking }) {
@@ -70,20 +75,20 @@ function PastBooking({ booking }) {
     const classesAvatar = useStylesAvatar();
     const classesButton = useStylesButton();
     const classesTutor = useStylesTutor();
+    const classesComment = useStylesComment();
     const [token, setToken] = useState(window.localStorage.getItem('jwtToken'));
     const [openAlert, setOpenAlert] = useState(false);
-    const [rating, setRating] = React.useState(5);
+    const [rating, setRating] = useState(5);
     const [openSnackbar, setOpenSnackbar] = useState(false);
     const [severity, setSeverity] = useState('');
 
-    
     const initialValues = {
         comment: ''
     }
     
     // define the validation object schema
     const validationSchema = Yup.object({
-        comment: Yup.string().required('This field is obligatory')
+        comment: Yup.string().required('This field is mandatory')
     })
 
     const handleClickOpenAlert = () => {
@@ -107,8 +112,6 @@ function PastBooking({ booking }) {
             setSeverity('');
         }
     }; 
-
-    
 
     const onSubmit = comment => {
         console.log(comment)
@@ -230,9 +233,10 @@ function PastBooking({ booking }) {
                                 validateOnChange={false}
                                 onSubmit={onSubmit}>
                                 <Form>
-                                    <div className='form-control'>
+                                    <div style={{textAlign: 'center'}}>
                                         <label htmlFor='comment'></label>
                                         <Field
+                                            className={classesComment.root}
                                             type='text'
                                             id='comment'
                                             name='comment'
@@ -252,7 +256,7 @@ function PastBooking({ booking }) {
                                         <Typography component="legend">{rating}</Typography>
                                     </div>
                                     <Button type='submit' color="primary" bottom = {10}>Submit</Button>
-                                    <Button onClick={handleCloseAlert} color="primary" autoFocus>
+                                    <Button style={{float: 'right'}} onClick={handleCloseAlert} color="primary" autoFocus>
                                        Cancel
                                     </Button>
                                     <div>

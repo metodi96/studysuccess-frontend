@@ -73,8 +73,6 @@ function TrendingTutor({ tutor }) {
         setToken(window.localStorage.getItem('jwtToken'));
         console.log(`Tutor in favourites ${tutorIsInFavourites}`)
         if (window.localStorage.getItem('jwtToken') !== null) {
-            console.log(token);
-            console.log(tutor._id);
             if (!tutorIsInFavourites) {
                 console.log('Add tutor to favourites');
                 axios

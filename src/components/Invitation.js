@@ -29,7 +29,6 @@ function Invitation({ bookingId, invitation, classesAvatar }) {
                     setSeverity('success');
                     setOpenSnackbar(true);
                     console.log(res.data);
-                    //window.location.reload(true);
                 })
                 .catch(err => {
                     setSeverity('error');

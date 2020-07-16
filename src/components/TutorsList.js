@@ -15,7 +15,7 @@ import InputLabel from '@material-ui/core/InputLabel';
 import Select from '@material-ui/core/Select';
 import Rating from '@material-ui/lab/Rating';
 import { TutorsContext } from './TutorsContext';
-import { MenuItem, FormControl } from '@material-ui/core';
+import { MenuItem } from '@material-ui/core';
 
 const useStyles = makeStyles((theme) => ({
     root: {

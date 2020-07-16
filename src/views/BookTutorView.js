@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import UserService from '../services/UserService';
 import axios from 'axios';
 import Card from '@material-ui/core/Card';
 import CardHeader from '@material-ui/core/CardHeader';
@@ -104,71 +103,58 @@ function BookTutorView(props) {
         return () => { isMounted = false } // use effect cleanup to set flag false, if unmounted
     }, [token, tutorId, subjectId]);
 
-    const redirect = () => {
-        props.history.push('/')
-    }
-    if (UserService.isAuthenticated()) {
-        if (!loading) {
-            return (
-                <div>
-                    <h2 style={{ marginLeft: '100px' }}>Book an online lesson</h2>
-                    <div style={{ display: 'flex' }}>   
-                        <div className={classesBox.container}>
-                            <div className={classesTutor.container}>
-                                <Card className={classesCard.root}>
-                                    <CardHeader
-                                        title={`${tutor.firstname} ${tutor.lastname}`}
-                                        subheader={
-                                            <div className={classesTutor.rating}>
-                                                {
-                                                    tutor.avgRating !== undefined ?
-                                                        <div style={{ display: 'flex' }}>
-                                                            <Rating name="read-only" value={Number(tutor.avgRating)} precision={0.5} readOnly />
-                                                            <Typography component="legend">{tutor.avgRating?.toFixed(1)}</Typography>
-                                                        </div> : <div>Rating not available. No reviews.</div>
-                                                }
-
-                                            </div>
-                                        }
-                                    />
-                                    <div style={{ justifyContent: 'center', display: 'flex' }}>
-                                        <img width='250px' height='250px' src={tutorHasImage ? `http://localhost:5000/${tutor.userImage}` : person} alt={`${tutor.firstname} ${tutor.lastname}`} title={`${tutor.firstname} ${tutor.lastname}`} />
-                                    </div>
-                                    <CardContent>
-                                        <Typography variant="body2" color="textSecondary" component="p">
-                                            Tutor for {
-                                                Object.values(tutor.subjectsToTeach).map((value, i) => (
-                                                    <span key={i}>{tutor.subjectsToTeach.length - 1 === i ? <b>{`${value.name}.`}</b> : <b>{`${value.name}, `}</b>}</span>
-                                                ))
+    if (!loading) {
+        return (
+            <div>
+                <h2 style={{ marginLeft: '100px' }}>Book an online lesson</h2>
+                <div style={{ display: 'flex' }}>
+                    <div className={classesBox.container}>
+                        <div className={classesTutor.container}>
+                            <Card className={classesCard.root}>
+                                <CardHeader
+                                    title={`${tutor.firstname} ${tutor.lastname}`}
+                                    subheader={
+                                        <div className={classesTutor.rating}>
+                                            {
+                                                tutor.avgRating !== undefined ?
+                                                    <div style={{ display: 'flex' }}>
+                                                        <Rating name="read-only" value={Number(tutor.avgRating)} precision={0.5} readOnly />
+                                                        <Typography component="legend">{tutor.avgRating?.toFixed(1)}</Typography>
+                                                    </div> : <div>Rating not available. No reviews.</div>
                                             }
-                                        </Typography>
-                                    </CardContent>
-                                </Card>
-                            </div>
-                        </div>
-                        <div>
-                            <div className={classesTutor.availability}>
-                                <div className={classesBoxRight.container}>
-                                    <BookTutor tutor={tutor} subjectId={subjectId} />
+
+                                        </div>
+                                    }
+                                />
+                                <div style={{ justifyContent: 'center', display: 'flex' }}>
+                                    <img width='250px' height='250px' src={tutorHasImage ? `http://localhost:5000/${tutor.userImage}` : person} alt={`${tutor.firstname} ${tutor.lastname}`} title={`${tutor.firstname} ${tutor.lastname}`} />
                                 </div>
+                                <CardContent>
+                                    <Typography variant="body2" color="textSecondary" component="p">
+                                        Tutor for {
+                                            Object.values(tutor.subjectsToTeach).map((value, i) => (
+                                                <span key={i}>{tutor.subjectsToTeach.length - 1 === i ? <b>{`${value.name}.`}</b> : <b>{`${value.name}, `}</b>}</span>
+                                            ))
+                                        }
+                                    </Typography>
+                                </CardContent>
+                            </Card>
+                        </div>
+                    </div>
+                    <div>
+                        <div className={classesTutor.availability}>
+                            <div className={classesBoxRight.container}>
+                                <BookTutor tutor={tutor} subjectId={subjectId} />
                             </div>
                         </div>
                     </div>
                 </div>
-            )
-        } else {
-            return (
-                <div>
-                    <p>Loading tutor...</p>
-                </div>
-            )
-        }
+            </div>
+        )
     } else {
         return (
             <div>
-                {
-                    redirect()
-                }
+                <p>Loading tutor...</p>
             </div>
         )
     }

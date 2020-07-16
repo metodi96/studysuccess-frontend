@@ -60,10 +60,6 @@ function PendingBookingsView(props) {
         return () => { isMounted = false } // use effect cleanup to set flag false, if unmounted
     }, [token]);
 
-    const redirect = () => {
-        props.history.push('/')
-    }
-
     //createdAt desc, createdAt asc, timeslotEnd desc, timeslotEnd asc
     const handleChangeSortBookings = (event) => {
         setSortMethodBookings(event.target.value);
@@ -83,56 +79,46 @@ function PendingBookingsView(props) {
     }
 
     //make sure that bookings are properly populated with the tutor/subject objects before accessing their properties
-    if (UserService.isAuthenticated()) {
-        if (!loading) {
-            if (invitations.length > 0) {
-                return (
-                    <div>
-                        <div style={{ display: 'flex', marginTop: '60px' }}>
-                            <h3 className={classesBooking.heading}>You have {invitations.length} invitations to participate in tutorials.</h3>
-                            <Box>
-                                <InputLabel id="sort-by-label">Sort by</InputLabel>
-                                <Select
-                                    labelId="sort-by-label"
-                                    id="sort-by"
-                                    value={sortMethodBookings}
-                                    onChange={handleChangeSortBookings}
-                                >
-                                    <MenuItem value={1}>{"Latest created"}</MenuItem>
-                                    <MenuItem value={2}>{"Earliest created"}</MenuItem>
-                                    <MenuItem value={3}>{"Timeslot End (desc)"}</MenuItem>
-                                    <MenuItem value={4}>{"Timeslot End (asc)"}</MenuItem>
-                                </Select>
-                            </Box>
-                        </div>
-                        <div className={classesBooking.container}>
-                            {invitations.map((invitation) => (<div key={invitation._id} className={classesBooking.booking}><PendingBooking history={props.history} invitation={invitation} /></div>))}
-                        </div>
-                    </div>
-                )
-            } else {
-                return (
-                    <div style={{ fontSize: '1.35rem', textAlign: 'center', marginTop: '50px', height: '64vh' }}>
-                        <div>
-                            <span>You currently don't have any pending invitations.</span>
-                        </div>
-                        <img width='200px' height='200px' src={confused} />
-                    </div>
-                )
-            }
-        } else {
+    if (!loading) {
+        if (invitations.length > 0) {
             return (
                 <div>
-                    <p>Loading pending invitations...</p>
+                    <div style={{ display: 'flex', marginTop: '60px' }}>
+                        <h3 className={classesBooking.heading}>You have {invitations.length} invitations to participate in tutorials.</h3>
+                        <Box>
+                            <InputLabel id="sort-by-label">Sort by</InputLabel>
+                            <Select
+                                labelId="sort-by-label"
+                                id="sort-by"
+                                value={sortMethodBookings}
+                                onChange={handleChangeSortBookings}
+                            >
+                                <MenuItem value={1}>{"Latest created"}</MenuItem>
+                                <MenuItem value={2}>{"Earliest created"}</MenuItem>
+                                <MenuItem value={3}>{"Timeslot End (desc)"}</MenuItem>
+                                <MenuItem value={4}>{"Timeslot End (asc)"}</MenuItem>
+                            </Select>
+                        </Box>
+                    </div>
+                    <div className={classesBooking.container}>
+                        {invitations.map((invitation) => (<div key={invitation._id} className={classesBooking.booking}><PendingBooking history={props.history} invitation={invitation} /></div>))}
+                    </div>
+                </div>
+            )
+        } else {
+            return (
+                <div style={{ fontSize: '1.35rem', textAlign: 'center', marginTop: '50px', height: '64vh' }}>
+                    <div>
+                        <span>You currently don't have any pending invitations.</span>
+                    </div>
+                    <img width='200px' height='200px' src={confused} />
                 </div>
             )
         }
     } else {
         return (
             <div>
-                {
-                    redirect()
-                }
+                <p>Loading pending invitations...</p>
             </div>
         )
     }
