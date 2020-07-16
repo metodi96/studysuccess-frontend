@@ -16,7 +16,7 @@ import moment from 'moment';
 const useStylesList = makeStyles((theme) => ({
     root: {
         width: '100%',
-        maxWidth: 360,
+        maxWidth: 390,
         backgroundColor: theme.palette.background.paper,
         borderRadius: '20px'
     },

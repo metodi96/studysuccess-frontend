@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import UserService from '../services/UserService'
 import axios from 'axios';
 import PendingBookingTutor from '../components/PendingBookingTutor';
-import { makeStyles } from '@material-ui/core';
+import { makeStyles, Box, InputLabel, Select, MenuItem } from '@material-ui/core';
 
 const useStylesBooking = makeStyles(() => ({
     container: {
@@ -14,7 +14,7 @@ const useStylesBooking = makeStyles(() => ({
     },
     heading: {
         marginLeft: '200px',
-        marginTop: '60px',
+        minWidth: '950px'
     },
     booking: {
         marginLeft: '100px',
@@ -30,6 +30,7 @@ function PendingBookingsTutorView(props) {
     const [bookingsPending, setBookingsPending] = useState([]);
     const [loading, setLoading] = useState(true);
     const [token, setToken] = useState(window.localStorage.getItem('jwtToken'));
+    const [sortMethodBookings, setSortMethodBookings] = useState(1);
     const classesBooking = useStylesBooking();
 
     useEffect(() => {
@@ -46,7 +47,7 @@ function PendingBookingsTutorView(props) {
                 .then(res => {
                     if (isMounted) {
                         console.log(res.data);
-                        setBookingsPending(res.data);
+                        setBookingsPending(res.data.sort((bookingA, bookingB) => bookingB.createdAt.localeCompare(bookingA.createdAt)));
                         setLoading(false);
                     }
                 })
@@ -60,16 +61,48 @@ function PendingBookingsTutorView(props) {
     const redirect = () => {
         props.history.push('/')
     }
-
+    //createdAt desc, createdAt asc, timeslotEnd desc, timeslotEnd asc
+    const handleChangeSortBookings = (event) => {
+        setSortMethodBookings(event.target.value);
+        console.log(sortMethodBookings)
+        if (event.target.value == 1) {
+            setBookingsPending(bookingsPending.sort((bookingA, bookingB) => bookingB.createdAt.localeCompare(bookingA.createdAt)));
+        }
+        else if (event.target.value == 2) {
+            setBookingsPending(bookingsPending.sort((bookingA, bookingB) => bookingA.createdAt.localeCompare(bookingB.createdAt)));
+        }
+        else if (event.target.value == 3) {
+            setBookingsPending(bookingsPending.sort((bookingA, bookingB) => bookingB.timeslotEnd.localeCompare(bookingA.timeslotEnd)))
+        }
+        else if (event.target.value == 4) {
+            setBookingsPending(bookingsPending.sort((bookingA, bookingB) => bookingA.createdAt.localeCompare(bookingB.timeslotEnd)))
+        }
+    }
     //make sure that bookings are properly populated with the tutor/subject objects before accessing their properties
     if (UserService.isAuthenticated()) {
         if (!loading) {
             if (bookingsPending.length > 0) {
                 return (
                     <div>
-                        <h3 className={classesBooking.heading}>You have {bookingsPending.length} invitations with suggested timeslots from students.</h3>
+                        <div style={{ display: 'flex', marginTop: '60px' }}>
+                            <h3 className={classesBooking.heading}>You have {bookingsPending.length} invitations with suggested timeslots from students.</h3>
+                            <Box>
+                                <InputLabel id="sort-by-label">Sort by</InputLabel>
+                                <Select
+                                    labelId="sort-by-label"
+                                    id="sort-by"
+                                    value={sortMethodBookings}
+                                    onChange={handleChangeSortBookings}
+                                >
+                                    <MenuItem value={1}>{"Latest created"}</MenuItem>
+                                    <MenuItem value={2}>{"Earliest created"}</MenuItem>
+                                    <MenuItem value={3}>{"Timeslot End (desc)"}</MenuItem>
+                                    <MenuItem value={4}>{"Timeslot End (asc)"}</MenuItem>
+                                </Select>
+                            </Box>
+                        </div>
                         <div className={classesBooking.container}>
-                            {bookingsPending.sort((bookingPendingA, bookingPendingB) => bookingPendingB.createdAt.localeCompare(bookingPendingA.createdAt)).map((bookingPending) => (<div key={bookingPending._id} className={classesBooking.booking}><PendingBookingTutor history={props.history} bookingPending={bookingPending} /></div>))}
+                            {bookingsPending.map((bookingPending) => (<div key={bookingPending._id} className={classesBooking.booking}><PendingBookingTutor history={props.history} bookingPending={bookingPending} /></div>))}
                         </div>
                     </div>
                 )

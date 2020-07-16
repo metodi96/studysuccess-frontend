@@ -105,6 +105,7 @@ function Search({ subjectIdParam }) {
                                 {...params}
                                 variant="outlined"
                                 onChange={handleSearchInput}
+                                label="Find tutors for a subject"
                                 InputProps={{
                                     ...params.InputProps, type: 'search',
                                     endAdornment: (

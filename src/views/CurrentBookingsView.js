@@ -4,7 +4,7 @@ import axios from 'axios';
 import CurrentBookingOwn from '../components/CurrentBookingOwn';
 import CurrentBookingAccepted from '../components/CurrentBookingAccepted';
 import CurrentBookingNotPaid from '../components/CurrentBookingNotPaid';
-import { makeStyles } from '@material-ui/core';
+import { makeStyles, Box, InputLabel, Select, MenuItem } from '@material-ui/core';
 import confused from '../images/confused-cat.png'
 import Search from '../components/Search';
 
@@ -25,6 +25,7 @@ const useStylesBooking = makeStyles(() => ({
     headingSecondary: {
         marginLeft: '200px',
         marginTop: '10px',
+        minWidth: '950px'
     },
     booking: {
         marginLeft: '100px',
@@ -44,6 +45,9 @@ function CurrentBookingsView(props) {
     const [loadingSecond, setLoadingSecond] = useState(true);
     const [loadingThird, setLoadingThird] = useState(true);
     const [token, setToken] = useState(window.localStorage.getItem('jwtToken'));
+    const [sortMethodBookings, setSortMethodBookings] = useState(1);
+    const [sortMethodInvitations, setSortMethodInvitations] = useState(1);
+    const [sortMethodPending, setSortMethodPending] = useState(1);
     const classesBooking = useStylesBooking();
     useEffect(() => {
         let isMounted = true; // note this flag denote mount status
@@ -59,7 +63,7 @@ function CurrentBookingsView(props) {
                 .then(res => {
                     if (isMounted) {
                         console.log(res.data);
-                        setBookings(res.data);
+                        setBookings(res.data.sort((bookingA, bookingB) => bookingB.createdAt.localeCompare(bookingA.createdAt)));
                         setLoading(false);
                     }
                 })
@@ -92,7 +96,7 @@ function CurrentBookingsView(props) {
                             }
                         });
                         console.log(acceptedInvitationsWithoutBookingsNull);
-                        setAcceptedInvitations(acceptedInvitationsWithoutBookingsNull);
+                        setAcceptedInvitations(acceptedInvitationsWithoutBookingsNull.sort((bookingA, bookingB) => bookingB.createdAt.localeCompare(bookingA.createdAt)));
                         setLoadingSecond(false);
                     }
                 })
@@ -117,7 +121,7 @@ function CurrentBookingsView(props) {
                 .then(res => {
                     if (isMounted) {
                         console.log(res.data);
-                        setBookingsNotPaid(res.data);
+                        setBookingsNotPaid(res.data.sort((bookingA, bookingB) => bookingB.createdAt.localeCompare(bookingA.createdAt)));
                         setLoadingThird(false);
                     }
                 })
@@ -131,6 +135,57 @@ function CurrentBookingsView(props) {
     const redirect = () => {
         props.history.push('/')
     }
+
+    //createdAt desc, createdAt asc, timeslotEnd desc, timeslotEnd asc
+    const handleChangeSortBookings = (event) => {
+        setSortMethodBookings(event.target.value);
+        console.log(sortMethodBookings)
+        if (event.target.value == 1) {
+            setBookings(bookings.sort((bookingA, bookingB) => bookingB.createdAt.localeCompare(bookingA.createdAt)));
+        }
+        else if (event.target.value == 2) {
+            setBookings(bookings.sort((bookingA, bookingB) => bookingA.createdAt.localeCompare(bookingB.createdAt)));
+        }
+        else if (event.target.value == 3) {
+            setBookings(bookings.sort((bookingA, bookingB) => bookingB.timeslotEnd.localeCompare(bookingA.timeslotEnd)))
+        }
+        else if (event.target.value == 4) {
+            setBookings(bookings.sort((bookingA, bookingB) => bookingA.createdAt.localeCompare(bookingB.timeslotEnd)))
+        }
+    }
+
+    const handleChangeSortInvitations = (event) => {
+        setSortMethodInvitations(event.target.value)
+        if (event.target.value == 1) {
+            setAcceptedInvitations(acceptedInvitations.sort((bookingA, bookingB) => bookingB.booking.createdAt.localeCompare(bookingA.booking.createdAt)));
+        }
+        else if (event.target.value == 2) {
+            setAcceptedInvitations(acceptedInvitations.sort((bookingA, bookingB) => bookingA.booking.createdAt.localeCompare(bookingB.booking.createdAt)));
+        }
+        else if (event.target.value == 3) {
+            setAcceptedInvitations(acceptedInvitations.sort((bookingA, bookingB) => bookingB.booking.timeslotEnd.localeCompare(bookingA.booking.timeslotEnd)))
+        }
+        else if (event.target.value == 4) {
+            setAcceptedInvitations(acceptedInvitations.sort((bookingA, bookingB) => bookingA.booking.timeslotEnd.localeCompare(bookingB.booking.timeslotEnd)))
+        }
+    }
+
+    const handleChangeSortPending = (event) => {
+        setSortMethodPending(event.target.value)
+        if (event.target.value == 1) {
+            setBookingsNotPaid(bookingsNotPaid.sort((bookingA, bookingB) => bookingB.createdAt.localeCompare(bookingA.createdAt)));
+        }
+        else if (event.target.value == 2) {
+            setBookingsNotPaid(bookingsNotPaid.sort((bookingA, bookingB) => bookingA.createdAt.localeCompare(bookingB.createdAt)));
+        }
+        else if (event.target.value == 3) {
+            setBookingsNotPaid(bookingsNotPaid.sort((bookingA, bookingB) => bookingB.timeslotEnd.localeCompare(bookingA.timeslotEnd)))
+        }
+        else if (event.target.value == 4) {
+            setBookingsNotPaid(bookingsNotPaid.sort((bookingA, bookingB) => bookingA.createdAt.localeCompare(bookingB.timeslotEnd)))
+        }
+    }
+
     //make sure that bookings are properly populated with the tutor/subject objects before accessing their properties
     if (UserService.isAuthenticated()) {
         if (!loading && !loadingSecond && !loadingThird) {
@@ -140,28 +195,76 @@ function CurrentBookingsView(props) {
                         <h3 className={classesBooking.heading}>You have {bookings.length + acceptedInvitations.length} scheduled lessons in total.</h3>
                         {
                             bookings.length > 0 ?
-                                <h4 className={classesBooking.headingSecondary}>Out of these {bookings.length} {bookings.length === 1 ? 'is' : 'are'} your own. You are free to either invite friends to a booking or cancel it entirely.</h4>
+                                <div style={{display: 'flex'}}>
+                                    <h4 className={classesBooking.headingSecondary}>Out of these {bookings.length} {bookings.length === 1 ? 'is' : 'are'} your own. You are free to either invite friends to a booking or cancel it entirely.</h4>
+                                    <Box>
+                                        <InputLabel id="sort-by-label">Sort by</InputLabel>
+                                        <Select
+                                            labelId="sort-by-label"
+                                            id="sort-by"
+                                            value={sortMethodBookings}
+                                            onChange={handleChangeSortBookings}
+                                        >
+                                            <MenuItem value={1}>{"Latest created"}</MenuItem>
+                                            <MenuItem value={2}>{"Earliest created"}</MenuItem>
+                                            <MenuItem value={3}>{"Timeslot End (desc)"}</MenuItem>
+                                            <MenuItem value={4}>{"Timeslot End (asc)"}</MenuItem>
+                                        </Select>
+                                    </Box>
+                                </div>
                                 : null
                         }
                         <div className={classesBooking.container}>
-                            {bookings.sort((bookingA, bookingB) => bookingB.createdAt.localeCompare(bookingA.createdAt)).map((booking) => (<div key={booking._id} className={classesBooking.booking}><CurrentBookingOwn booking={booking} /></div>))}
+                            {bookings.map((booking) => (<div key={booking._id} className={classesBooking.booking}><CurrentBookingOwn booking={booking} /></div>))}
                         </div>
                         {
                             acceptedInvitations.length > 0 ?
-                                <h4 className={classesBooking.headingSecondary}>You have {acceptedInvitations.length} accepted invitation{acceptedInvitations.length === 1 ? '' : 's'} to bookings created by friends. You cannot invite friends or cancel the lesson.</h4>
+                                <div style={{ display: 'flex' }}>
+                                    <h4 className={classesBooking.headingSecondary}>You have {acceptedInvitations.length} accepted invitation{acceptedInvitations.length === 1 ? '' : 's'} to bookings created by friends. You cannot invite friends or cancel the lesson.</h4>
+                                    <Box>
+                                        <InputLabel id="sort-by-label">Sort by</InputLabel>
+                                        <Select
+                                            labelId="sort-by-label"
+                                            id="sort-by"
+                                            value={sortMethodInvitations}
+                                            onChange={handleChangeSortInvitations}
+                                        >
+                                            <MenuItem value={1}>{"Latest created"}</MenuItem>
+                                            <MenuItem value={2}>{"Earliest created"}</MenuItem>
+                                            <MenuItem value={3}>{"Timeslot End (desc)"}</MenuItem>
+                                            <MenuItem value={4}>{"Timeslot End (asc)"}</MenuItem>
+                                        </Select>
+                                    </Box>
+                                </div>
                                 : null
                         }
 
                         <div className={classesBooking.container}>
-                            {acceptedInvitations.sort((invitationA, invitationB) => invitationB.createdAt.localeCompare(invitationA.createdAt)).map((invitation) => (<div key={invitation._id} className={classesBooking.booking}><CurrentBookingAccepted invitation={invitation} /></div>))}
+                            {acceptedInvitations.map((invitation) => (<div key={invitation._id} className={classesBooking.booking}><CurrentBookingAccepted invitation={invitation} /></div>))}
                         </div>
                         {
                             bookingsNotPaid.length > 0 ?
-                                <h4 className={classesBooking.headingSecondary}>You have {bookingsNotPaid.length} booking(s) which have not yet been paid or await approval from your tutor.</h4>
+                                <div style={{ display: 'flex' }}>
+                                    <h4 className={classesBooking.headingSecondary}>You have {bookingsNotPaid.length} booking(s) which have not yet been paid or await approval from your tutor.</h4>
+                                    <Box>
+                                        <InputLabel id="sort-by-label">Sort by</InputLabel>
+                                        <Select
+                                            labelId="sort-by-label"
+                                            id="sort-by"
+                                            value={sortMethodPending}
+                                            onChange={handleChangeSortPending}
+                                        >
+                                            <MenuItem value={1}>{"Latest created"}</MenuItem>
+                                            <MenuItem value={2}>{"Earliest created"}</MenuItem>
+                                            <MenuItem value={3}>{"Timeslot End (desc)"}</MenuItem>
+                                            <MenuItem value={4}>{"Timeslot End (asc)"}</MenuItem>
+                                        </Select>
+                                    </Box>
+                                </div>
                                 : null
                         }
                         <div className={classesBooking.container}>
-                            {bookingsNotPaid.sort((bookingA, bookingB) => bookingB.createdAt.localeCompare(bookingA.createdAt)).map((booking) => (<div key={booking._id} className={classesBooking.booking}><CurrentBookingNotPaid booking={booking} token={token} /></div>))}
+                            {bookingsNotPaid.map((booking) => (<div key={booking._id} className={classesBooking.booking}><CurrentBookingNotPaid booking={booking} token={token} /></div>))}
                         </div>
                     </div>
                 )
