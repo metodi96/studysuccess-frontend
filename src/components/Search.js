@@ -29,10 +29,12 @@ const useStyles = makeStyles(() => ({
     }
 }));
 
-function Search() {
+function Search({ subjectIdParam }) {
     const [subjects, setSubjects] = useState([]);
     const [disabled, setDisabled] = useState(true);
     const [subjectId, setSubjectId] = useState({});
+    const [initialValue, setInitialValue] = useState('');
+    const [loading, setLoading] = useState(true);
     const classes = useStyles();
 
     useEffect(() => {
@@ -42,6 +44,14 @@ function Search() {
             .then(res => {
                 if (isMounted) {
                     setSubjects(res.data);
+                    if (subjectIdParam !== undefined) {
+                        const subjectForInitialValue = res.data.find(subject => subject._id === subjectIdParam);
+                        if (subjectForInitialValue !== undefined) {
+                            setInitialValue(subjectForInitialValue.name);
+                            setLoading(false);
+                        }
+                    }
+                    setLoading(false);
                 }
             })
             .catch(err => {
@@ -72,37 +82,43 @@ function Search() {
 
     return (
         <div>
-            <Autocomplete
-                size='small'
-                onChange={handleAutocomplete}
-                fullWidth={false}
-                disableClearable
-                forcePopupIcon={false}
-                classes={classes}
-                options={subjects.map((subject) => subject.name)}
-                renderInput={(params) => (
-                    <TextField
-                        {...params}
-                        variant="outlined"
-                        onChange={handleSearchInput}
-                        InputProps={{
-                            ...params.InputProps, type: 'search',
-                            endAdornment: (
-                                <IconButton disabled={disabled}
-                                    size='small'
-                                    component={Link}
-                                    to={`/tutors/${subjectId}`}
-                                    aria-label="search">
-                                    <SearchIcon />
-                                </IconButton>
-                            )
-                        }}
-                    />
-                )}
-            />
-
-
+            {
+                !loading ? 
+                <Autocomplete
+                    size='small'
+                    onChange={handleAutocomplete}
+                    fullWidth={false}
+                    disableClearable
+                    forcePopupIcon={false}
+                    classes={classes}
+                    options={subjects.map((subject) => subject.name)}
+                    value={initialValue}
+                    renderInput={(params) => (
+                        <TextField
+                            {...params}
+                            variant="outlined"
+                            onChange={handleSearchInput}
+                            InputProps={{
+                                ...params.InputProps, type: 'search',
+                                endAdornment: (
+                                    <IconButton disabled={disabled}
+                                        size='small'
+                                        component={Link}
+                                        to={`/tutors/${subjectId}`}
+                                        aria-label="search">
+                                        <SearchIcon />
+                                    </IconButton>
+                                )
+                            }}
+                        />
+                    )}
+                /> : <div>Search options loading...</div>
+            }
         </div>
+
+
+
+
     )
 }
 
