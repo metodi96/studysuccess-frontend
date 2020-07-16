@@ -69,7 +69,7 @@ function Navbar() {
     useEffect(() => {
         let isMounted = true; // note this flag denote mount status
         setToken(window.localStorage.getItem('jwtToken'));
-        if (window.localStorage.getItem('jwtToken') !== null) {
+        if (window.localStorage.getItem('jwtToken') !== null && UserService.isAuthenticated()) {
             console.log(token)
             axios
                 .get('http://localhost:5000/profile', {

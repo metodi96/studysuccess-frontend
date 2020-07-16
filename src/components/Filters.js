@@ -41,7 +41,6 @@ const useStyles = makeStyles((theme) => ({
     fontSize: 'small',
     display: 'inline-grid',
     paddingRight: 7,
-    backgroundColor: '#E9EB7F'
   },
   wrapperBox: {
     //width: '100%',
@@ -51,6 +50,12 @@ const useStyles = makeStyles((theme) => ({
   },
   insideBox: {
 
+  }
+}));
+
+const useStylesIcon = makeStyles(() => ({
+  clickedIcon: {
+    color: 'gold',
   }
 }));
 //const boxProperties = 
@@ -65,6 +70,7 @@ function Filters(props) {
     const {tutorsForSubject, setTutorsForSubject} = useContext(TutorsContext);
     const [maxTutorPriceVisible, setMaxTutorPriceVisible] = useState(0);
     const [marks, setMarks] = useState([]);
+    const classesIcon = useStylesIcon();
     useEffect(() => {
       if(maxTutorPriceVisible == 0 && tutorsForSubject.length > 0) {
         console.log("I am in isMounted");
@@ -127,25 +133,25 @@ function Filters(props) {
               </Typography>  
               <IconButton onClick={() => {setDayTime(1)}}>
                 <div className={dayTime==1 ? classes.markedButton : classes.buttons}>
-                  <WbSunnyOutlinedIcon></WbSunnyOutlinedIcon>
+                  <WbSunnyOutlinedIcon className={dayTime==1 ? classesIcon.clickedIcon : ''}></WbSunnyOutlinedIcon>
                   8 AM - 2 PM
                 </div>
               </IconButton>
               <IconButton onClick={() => {setDayTime(2)}}>
                 <div className={dayTime==2 ? classes.markedButton : classes.buttons}>
-                  <WbCloudyOutlinedIcon></WbCloudyOutlinedIcon>
+                  <WbCloudyOutlinedIcon  className={dayTime==2 ? classesIcon.clickedIcon : ''}></WbCloudyOutlinedIcon>
                   2-8 PM
                 </div>
               </IconButton>
               <IconButton onClick={() => {setDayTime(3)}}>
                 <div className={dayTime==3 ? classes.markedButton : classes.buttons}>
-                  <NightsStayOutlinedIcon></NightsStayOutlinedIcon>
+                  <NightsStayOutlinedIcon  className={dayTime==3 ? classesIcon.clickedIcon : ''}></NightsStayOutlinedIcon>
                   8-11 PM
                 </div>
               </IconButton>
               <IconButton onClick={() => {setDayTime(4)}}>
                 <div className={dayTime==4 ? classes.markedButton : classes.buttons}>
-                  <WeekendOutlinedIcon></WeekendOutlinedIcon>
+                  <WeekendOutlinedIcon  className={dayTime==4 ? classesIcon.clickedIcon : ''}></WeekendOutlinedIcon>
                   Weekends
                 </div>
               </IconButton>
