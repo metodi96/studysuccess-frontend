@@ -83,36 +83,43 @@ function Search({ subjectIdParam }) {
     return (
         <div>
             {
-                !loading ? 
-                <Autocomplete
-                    size='small'
-                    onChange={handleAutocomplete}
-                    fullWidth={false}
-                    disableClearable
-                    forcePopupIcon={false}
-                    classes={classes}
-                    options={subjects.map((subject) => subject.name)}
-                    value={initialValue}
-                    renderInput={(params) => (
-                        <TextField
-                            {...params}
-                            variant="outlined"
-                            onChange={handleSearchInput}
-                            InputProps={{
-                                ...params.InputProps, type: 'search',
-                                endAdornment: (
-                                    <IconButton disabled={disabled}
-                                        size='small'
-                                        component={Link}
-                                        to={`/tutors/${subjectId}`}
-                                        aria-label="search">
-                                        <SearchIcon />
-                                    </IconButton>
-                                )
-                            }}
-                        />
-                    )}
-                /> : <div>Search options loading...</div>
+                !loading ?
+                    <Autocomplete
+                        size='small'
+                        onChange={handleAutocomplete}
+                        fullWidth={false}
+                        disableClearable
+                        forcePopupIcon={false}
+                        classes={classes}
+                        options={subjects.map((subject) => subject.name)}
+                        value={initialValue}
+                        getOptionSelected={(option, { value }) => {
+                            if (!option.name !== '') {
+                                return (option.name === value);
+                            }
+
+                            return false;
+                        }}
+                        renderInput={(params) => (
+                            <TextField
+                                {...params}
+                                variant="outlined"
+                                onChange={handleSearchInput}
+                                InputProps={{
+                                    ...params.InputProps, type: 'search',
+                                    endAdornment: (
+                                        <IconButton disabled={disabled}
+                                            size='small'
+                                            component={Link}
+                                            to={`/tutors/${subjectId}`}
+                                            aria-label="search">
+                                            <SearchIcon />
+                                        </IconButton>
+                                    )
+                                }}
+                            />
+                        )}
+                    /> : <div>Search options loading...</div>
             }
         </div>
 

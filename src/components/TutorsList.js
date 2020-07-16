@@ -86,19 +86,23 @@ function TutorsList(props) {
     }
 
     useEffect(() => {
+        let isMounted = true;
         axios.post(`http://localhost:5000/tutors/${props.subjectId}/filtered`)
             .then(res => {
-                console.log(res.data);
-                setTutorsForSubject(res.data);
-                //setTutorsForSubject(res.data.sort((a, b) => {return a.avgRating - b.avgRating} ));     
+                if (isMounted) {
+                    console.log(res.data);
+                    setTutorsForSubject(res.data);
+                    //setTutorsForSubject(res.data.sort((a, b) => {return a.avgRating - b.avgRating} ));  
+                }
             })
             .catch(err => {
                 console.log(err);
             })
+        return () => { isMounted = false } // use effect cleanup to set flag false, if unmounted
     }, [])
     if (tutorsForSubject.length > 0) {
         return (
-            <Box style={{borderRadius: '4px'}} bgcolor="rgba(152, 158, 157, 0.438)" width="80%" py={2} pl={3}>
+            <Box style={{ borderRadius: '4px' }} bgcolor="rgba(152, 158, 157, 0.438)" width="80%" py={2} pl={3}>
                 <Box pl={2} display='flex'>
                     <Box mr="60%">{tutorsForSubject.length} tutor(s) match(es) your search</Box>
                     <Box>
@@ -120,7 +124,7 @@ function TutorsList(props) {
                     {
                         tutorsForSubject.map(tutor => {
                             return <ListItem key={tutor._id}>
-                                <Box style={{borderRadius: '4px'}} bgcolor="white" width="80%" className={classes.listItem}>
+                                <Box style={{ borderRadius: '4px' }} bgcolor="white" width="80%" className={classes.listItem}>
                                     <Box className={classes.inline}>
                                         <ListItemAvatar>
                                             <Avatar alt={tutor.firstname} src={`http://localhost:5000/${tutor.userImage}`} className={classes.avatar} />
@@ -140,13 +144,13 @@ function TutorsList(props) {
                                             }
                                         />
                                         <div className={classes.pricePerHour} style={{ textAlign: 'right' }}>
-                                                <Typography variant="body2" component="p">
-                                                    {tutor.pricePerHour} € / hour
+                                            <Typography variant="body2" component="p">
+                                                {tutor.pricePerHour} € / hour
                                                 </Typography>
-                                                <Typography variant="body2" component="p">
-                                                    Languages: {tutor.languages?.join(", ")}
-                                                </Typography>
-                                            </div>
+                                            <Typography variant="body2" component="p">
+                                                Languages: {tutor.languages?.join(", ")}
+                                            </Typography>
+                                        </div>
                                     </Box>
                                     <Box style={{ display: "flex" }}>
                                         <div className={classes.tutorDescription}>

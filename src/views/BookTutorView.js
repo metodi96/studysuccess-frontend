@@ -24,7 +24,6 @@ const useStylesBox = makeStyles(() => ({
         backgroundColor: 'rgba(152, 158, 157, 0.438)',
         marginLeft: '100px',
         marginBottom: '30px',
-        marginTop: '25px',
         padding: '25px 0px 25px 25px',
         maxWidth: '375px',
         minWidth: '375px',
@@ -38,8 +37,7 @@ const useStylesBoxTwo = makeStyles(() => ({
         backgroundColor: 'rgba(152, 158, 157, 0.438)',
         marginLeft: '100px',
         marginBottom: '30px',
-        marginTop: '25px',
-        padding: '25px 25px 25px 25px',     
+        padding: '25px 25px 25px 25px',
         maxWidth: '600px',
         minWidth: '600px',
         borderRadius: '4px'
@@ -82,17 +80,17 @@ function BookTutorView(props) {
                     if (isMounted) {
                         console.log(res.data);
                         setTutor(res.data);
-                        if(res.data.userImage !== undefined) {
-                        axios
-                            .get(`http://localhost:5000/${res.data.userImage}`)
-                            .then(() => {
-                                setTutorHasImage(true);
-                                setLoading(false);
-                            })
-                            .catch(() => {
-                                setTutorHasImage(false);
-                                setLoading(false);
-                            })
+                        if (res.data.userImage !== undefined) {
+                            axios
+                                .get(`http://localhost:5000/${res.data.userImage}`)
+                                .then(() => {
+                                    setTutorHasImage(true);
+                                    setLoading(false);
+                                })
+                                .catch(() => {
+                                    setTutorHasImage(false);
+                                    setLoading(false);
+                                })
                         } else {
                             console.log('undefined')
                             setLoading(false);
@@ -112,41 +110,47 @@ function BookTutorView(props) {
     if (UserService.isAuthenticated()) {
         if (!loading) {
             return (
-                <div className={classesBox.container}>
-                    <div className={classesTutor.container}>
-                        <Card className={classesCard.root}>
-                            <CardHeader
-                                title={`${tutor.firstname} ${tutor.lastname}`}
-                                subheader={
-                                    <div className={classesTutor.rating}>
-                                        {
-                                            tutor.avgRating !== undefined ?
-                                                <div style={{display: 'flex'}}>
-                                                    <Rating name="read-only" value={Number(tutor.avgRating)} precision={0.5} readOnly />
-                                                    <Typography component="legend">{tutor.avgRating?.toFixed(1)}</Typography>
-                                                </div> : <div>Rating not available. No reviews.</div>
-                                        }
+                <div>
+                    <h2 style={{ marginLeft: '100px' }}>Book an online lesson</h2>
+                    <div style={{ display: 'flex' }}>   
+                        <div className={classesBox.container}>
+                            <div className={classesTutor.container}>
+                                <Card className={classesCard.root}>
+                                    <CardHeader
+                                        title={`${tutor.firstname} ${tutor.lastname}`}
+                                        subheader={
+                                            <div className={classesTutor.rating}>
+                                                {
+                                                    tutor.avgRating !== undefined ?
+                                                        <div style={{ display: 'flex' }}>
+                                                            <Rating name="read-only" value={Number(tutor.avgRating)} precision={0.5} readOnly />
+                                                            <Typography component="legend">{tutor.avgRating?.toFixed(1)}</Typography>
+                                                        </div> : <div>Rating not available. No reviews.</div>
+                                                }
 
+                                            </div>
+                                        }
+                                    />
+                                    <div style={{ justifyContent: 'center', display: 'flex' }}>
+                                        <img width='250px' height='250px' src={tutorHasImage ? `http://localhost:5000/${tutor.userImage}` : person} alt={`${tutor.firstname} ${tutor.lastname}`} title={`${tutor.firstname} ${tutor.lastname}`} />
                                     </div>
-                                }
-                            />
-                            <div style={{ justifyContent: 'center', display: 'flex' }}>
-                                <img width='250px' height='250px' src={tutorHasImage ? `http://localhost:5000/${tutor.userImage}` : person} alt={`${tutor.firstname} ${tutor.lastname}`} title={`${tutor.firstname} ${tutor.lastname}`} />
+                                    <CardContent>
+                                        <Typography variant="body2" color="textSecondary" component="p">
+                                            Tutor for {
+                                                Object.values(tutor.subjectsToTeach).map((value, i) => (
+                                                    <span key={i}>{tutor.subjectsToTeach.length - 1 === i ? <b>{`${value.name}.`}</b> : <b>{`${value.name}, `}</b>}</span>
+                                                ))
+                                            }
+                                        </Typography>
+                                    </CardContent>
+                                </Card>
                             </div>
-                            <CardContent>
-                                <Typography variant="body2" color="textSecondary" component="p">
-                                    Tutor for {
-                                        Object.values(tutor.subjectsToTeach).map((value, i) => (
-                                            <span key={i}>{tutor.subjectsToTeach.length - 1 === i ? <b>{`${value.name}.`}</b> : <b>{`${value.name}, `}</b>}</span>
-                                        ))
-                                    }
-                                </Typography>
-                            </CardContent>
-                        </Card>
-                        <div className={classesTutor.availability}>
-                            <h2 style={{marginLeft: '100px'}}>Book an online lesson</h2>
-                            <div className={classesBoxRight.container}>
-                                <BookTutor tutor={tutor} subjectId={subjectId} />
+                        </div>
+                        <div>
+                            <div className={classesTutor.availability}>
+                                <div className={classesBoxRight.container}>
+                                    <BookTutor tutor={tutor} subjectId={subjectId} />
+                                </div>
                             </div>
                         </div>
                     </div>

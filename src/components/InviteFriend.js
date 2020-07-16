@@ -143,6 +143,7 @@ function InviteFriend({ booking, classesAvatar, openInvitationAlert, setOpenInvi
     };
 
     useEffect(() => {
+        let isMounted = true; // note this flag denote mount status
         setToken(window.localStorage.getItem('jwtToken'));
         if (window.localStorage.getItem('jwtToken') !== null) {
             axios
@@ -153,12 +154,15 @@ function InviteFriend({ booking, classesAvatar, openInvitationAlert, setOpenInvi
                         }
                     })
                 .then(res => {
-                    setInvitations(res.data);
+                    if (isMounted) {
+                        setInvitations(res.data);
+                    }
                 })
                 .catch(err => {
                     console.log('response: ', err.response.data);
                 })
         }
+        return () => { isMounted = false } // use effect cleanup to set flag false, if unmounted
     }, [token, booking._id]);
 
     const renderSwitchForSnackbar = (severity) => {

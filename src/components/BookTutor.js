@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import Box from '@material-ui/core/Box';
-import { Button, Typography, Snackbar, Tooltip } from '@material-ui/core';
+import { Button, Typography, Snackbar, Tooltip, Divider } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 import MomentUtils from '@date-io/moment';
@@ -19,6 +19,20 @@ import tips from '../images/tips.png'
 import Alert from './Alert';
 
 const useStylesBox = makeStyles(() => ({
+    root: {
+        maxWidth: 1200,
+        maxHeight: 500,
+        borderRadius: '5px',
+        backgroundColor: 'white',
+        justifyContent: 'center',
+        paddingTop: '20px',
+        paddingBottom: '20px',
+        marginBottom: '5px',
+        display: 'block'
+    }
+}));
+
+const useStylesBoxButtons = makeStyles(() => ({
     root: {
         maxWidth: 1200,
         maxHeight: 500,
@@ -78,6 +92,8 @@ const useStylesSuggest = makeStyles((theme) => ({
 
 
 function BookTutor({ tutor, subjectId }) {
+    const [subject, setSubject] = useState(undefined);
+    const [loadingSubject, setLoadingSubject] = useState(true);
     const [timePreferences, setTimePreferences] = useState([]);
     const [selectedDate, setSelectedDate] = useState(moment().add(1, 'days'));
     const [selectedTimeslot, setSelectedTimeslot] = useState(null);
@@ -97,6 +113,7 @@ function BookTutor({ tutor, subjectId }) {
     const [severity, setSeverity] = useState('');
     const [forwardLink, setForwardLink] = useState('');
     const classesBox = useStylesBox();
+    const classesBoxButtons = useStylesBoxButtons();
     const classesDatePicker = useStylesDatePicker();
     const classesButton = useStylesButton();
     const classesTimePicker = useStylesTimepicker();
@@ -114,7 +131,7 @@ function BookTutor({ tutor, subjectId }) {
 
         setOpenSnackbar(false);
 
-        if(severity === 'success') {
+        if (severity === 'success') {
             setRedirectToCurrentBookings(true);
             setSeverity('');
         } else if (severity === 'successPaypal' && forwardLink !== '') {
@@ -140,6 +157,14 @@ function BookTutor({ tutor, subjectId }) {
             .catch(err => {
                 console.log(`Something went wrong with getting time preferences ${err}`);
             })
+        axios.get(`http://localhost:5000/subjects/${subjectId}`)
+            .then(res => {
+                if (res.status === 200 && isMounted) {
+                    setSubject(res.data);
+                    setLoadingSubject(false);
+                }
+            })
+            .catch(err => console.log(`Something went wrong with getting the subject from params: ${err.response.data}`))
         return () => { isMounted = false } // use effect cleanup to set flag false, if unmounted
     }, [tutor._id])
 
@@ -378,6 +403,13 @@ function BookTutor({ tutor, subjectId }) {
                         onSubmit={proposeOptionChosen ? onSubmitPropose : onSubmit}>
                         <Form>
                             <Box classes={classesBox}>
+                                {
+                                    !loadingSubject ?
+                                        <div style={{ textAlign: 'center', paddingBottom: '20px', fontSize: '1.25rem' }}>
+                                            <span ><b>Subject:</b> {subject.name}</span>
+                                        </div> : null
+                                }
+                                <Divider />
                                 <div style={{ padding: 20 }}>
                                     <MuiPickersUtilsProvider utils={MomentUtils}>
                                         <Grid container
@@ -424,7 +456,7 @@ function BookTutor({ tutor, subjectId }) {
                                                     })
                                                 }
                                                 <div className={timePreferences.length > 0 ? classesSuggest.root : classesSuggest.rootBackup}>
-                                                    <Tooltip title='Tip' aria-label='tip'><img style={{ position: 'absolute', right: '-10%', top: '-40%' }} src={tips} width='50px' height='50px' /></Tooltip>
+                                                    <Tooltip title='Tip' aria-label='tip'><img style={{ position: 'absolute', right: '-10%', top: '-35%' }} src={tips} width='50px' height='50px' /></Tooltip>
                                                     <div>
                                                         <Typography style={{ fontSize: '1rem', textAlign: 'center' }}>These time slots don't work for you?</Typography>
                                                         <Typography style={{ fontSize: '1rem', textAlign: 'center' }}>Feel free to suggest another time slot to the tutor!</Typography>
@@ -484,20 +516,20 @@ function BookTutor({ tutor, subjectId }) {
                                     :
                                     <div></div>
                             }
-                            <Box classes={classesBox}>
+                            <Box classes={classesBoxButtons}>
                                 <div className={classesButton.root}>
                                     <Button
                                         disabled={disabled}
                                         variant="outlined"
                                         type="submit"
-                                    >Book and pay tutorial</Button>
+                                    >{ !proposeOptionChosen ? 'Book and pay tutorial' : 'Propose time' }</Button>
                                 </div>
                                 <div className={classesButton.root}>
                                     <Button
                                         disabled={disabled}
                                         variant="outlined"
                                         onClick={onSubmitBackup}
-                                    >Book (no paypal)</Button>
+                                    >Book (backup)</Button>
                                 </div>
                             </Box>
                             <div>

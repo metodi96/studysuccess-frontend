@@ -33,8 +33,9 @@ function PendingBookingsTutorView(props) {
     const classesBooking = useStylesBooking();
 
     useEffect(() => {
+        let isMounted = true;
         setToken(window.localStorage.getItem('jwtToken'));
-        if (window.localStorage.getItem('jwtToken') !== null  && UserService.isAuthenticated()) {
+        if (window.localStorage.getItem('jwtToken') !== null && UserService.isAuthenticated()) {
             console.log(token)
             axios
                 .get('http://localhost:5000/bookings/pendingTutor', {
@@ -43,14 +44,17 @@ function PendingBookingsTutorView(props) {
                     }
                 })
                 .then(res => {
-                    console.log(res.data);
-                    setBookingsPending(res.data);
-                    setLoading(false);
+                    if (isMounted) {
+                        console.log(res.data);
+                        setBookingsPending(res.data);
+                        setLoading(false);
+                    }
                 })
                 .catch(err => {
                     console.log(err);
                 })
         }
+        return () => { isMounted = false } // use effect cleanup to set flag false, if unmounted
     }, [token]);
 
     const redirect = () => {

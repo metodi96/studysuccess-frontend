@@ -15,7 +15,7 @@ const useStylesBooking = makeStyles(() => ({
         marginBottom: '30px',
         textAlign: 'center'
     },
-    heading:  {
+    heading: {
         marginLeft: '200px',
         marginTop: '60px',
     },
@@ -26,7 +26,7 @@ const useStylesBooking = makeStyles(() => ({
         marginBottom: '50px',
         marginTop: '20px',
         minWidth: '400px',
-    } 
+    }
 }));
 
 function PastBookingsView(props) {
@@ -35,6 +35,7 @@ function PastBookingsView(props) {
     const [token, setToken] = useState(window.localStorage.getItem('jwtToken'));
     const classesBooking = useStylesBooking();
     useEffect(() => {
+        let isMounted = true; // note this flag denote mount status
         setToken(window.localStorage.getItem('jwtToken'));
         if (window.localStorage.getItem('jwtToken') !== null) {
             console.log(token)
@@ -45,14 +46,17 @@ function PastBookingsView(props) {
                     }
                 })
                 .then(res => {
-                    console.log(res.data);
-                    setBookings(res.data);
-                    setLoading(false);
+                    if (isMounted) {
+                        console.log(res.data);
+                        setBookings(res.data);
+                        setLoading(false);
+                    }
                 })
                 .catch(err => {
                     console.log(err);
                 })
         }
+        return () => { isMounted = false } // use effect cleanup to set flag false, if unmounted
     }, [token]);
     const redirect = () => {
         props.history.push('/')
@@ -65,7 +69,7 @@ function PastBookingsView(props) {
                     <div>
                         <h3 className={classesBooking.heading}>You completed {bookings.length} lessons.</h3>
                         <div className={classesBooking.container}>
-                        { bookings.map((booking) => (<div key={booking._id} className={classesBooking.booking}><PastBooking booking={booking} /></div>)) }
+                            {bookings.map((booking) => (<div key={booking._id} className={classesBooking.booking}><PastBooking booking={booking} /></div>))}
                         </div>
                     </div>
                 )

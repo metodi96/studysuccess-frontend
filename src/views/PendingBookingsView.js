@@ -35,6 +35,7 @@ function PendingBookingsView(props) {
     const classesBooking = useStylesBooking();
 
     useEffect(() => {
+        let isMounted = true;
         setToken(window.localStorage.getItem('jwtToken'));
         if (window.localStorage.getItem('jwtToken') !== null && UserService.isAuthenticated()) {
             console.log(token)
@@ -45,14 +46,17 @@ function PendingBookingsView(props) {
                     }
                 })
                 .then(res => {
-                    console.log(res.data);
-                    setInvitations(res.data);
-                    setLoading(false);
+                    if (isMounted) {
+                        console.log(res.data);
+                        setInvitations(res.data);
+                        setLoading(false);
+                    }
                 })
                 .catch(err => {
                     console.log(err);
                 })
         }
+        return () => { isMounted = false } // use effect cleanup to set flag false, if unmounted
     }, [token]);
 
     const redirect = () => {

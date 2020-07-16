@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
 function BookingAddSuccessView(props) {
@@ -7,6 +7,7 @@ function BookingAddSuccessView(props) {
     const [token, setToken] = useState(window.localStorage.getItem('jwtToken'));
 
     useEffect(() => {
+        let isMounted = true;
         setToken(window.localStorage.getItem('jwtToken'));
         if (window.localStorage.getItem('jwtToken') !== null) {
             console.log(token)
@@ -18,19 +19,22 @@ function BookingAddSuccessView(props) {
                     }
                 })
                 .then(res => {
-                    console.log(res.data);
-                    setLoading(false);
-                    props.history.push('/bookings/current')
+                    if (isMounted) {
+                        console.log(res.data);
+                        setLoading(false);
+                        props.history.push('/bookings/current');
+                    }
                 })
                 .catch(err => {
                     console.log('Something went wrong')
                     console.log(err);
                 })
         }
+        return () => { isMounted = false } // use effect cleanup to set flag false, if unmounted
     }, [token, props.history, props.location.search]);
     return (
-        <div style={{ fontSize: '1.25rem', textAlign: 'center', marginTop: '100px' }}>   
-            {loading ? `Loading success page...`: `Successful payment. Redirecting to current bookings view.` }
+        <div style={{ fontSize: '1.25rem', textAlign: 'center', marginTop: '100px' }}>
+            {loading ? `Loading success page...` : `Successful payment. Redirecting to current bookings view.`}
         </div>
     )
 }
