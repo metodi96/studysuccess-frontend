@@ -8,12 +8,12 @@ import FavouriteTutorsList from '../components/FavouriteTutorsList';
 
 const useStylesProfile = makeStyles(() => ({
     container: {
-        backgroundColor: 'rgba(240, 240, 240, 0.9)',
+        backgroundColor: 'white',
         marginLeft: '30px',
         marginBottom: '30px',
         marginTop: '25px',
         paddingLeft: '25px',
-        paddingTop: '25px',
+        paddingTop: '50px',
         paddingBottom: '25px',
         maxWidth: '350px',
         minWidth: '350px'
@@ -29,7 +29,7 @@ const useStylesBox = makeStyles(() => ({
         paddingLeft: '25px',
         paddingTop: '25px',
         paddingBottom: '25px',
-        width:'1270px'
+        width: '1270px'
     }
 }));
 
@@ -53,6 +53,7 @@ const useStylesSelect = makeStyles(() => ({
     root: {
         '& .MuiSelect-select.MuiSelect-select': {
             backgroundColor: 'white !important',
+            fontSize: '14px',
         },
         marginBottom: '20px',
         marginRight: '-20px',
@@ -79,6 +80,7 @@ function ManageProfileView(props) {
 
     const [profile, setProfile] = useState(undefined);
     const [token, setToken] = useState(window.localStorage.getItem('jwtToken'));
+    const [loading, setLoading] = useState(true);
     const classesProfile = useStylesProfile();
     const classesField = useStylesField();
     const classesSelect = useStylesSelect();
@@ -100,6 +102,7 @@ function ManageProfileView(props) {
                 .then(res => {
                     if (isMounted) {
                         setProfile(res.data);
+                        setLoading(false);
                     }
                 })
                 .catch(err => {
@@ -110,7 +113,7 @@ function ManageProfileView(props) {
     }, [token]);
 
     return (
-        profile !== undefined ?
+        !loading ?
             <div>
                 <div className={classesBox.container} style={{ display: 'flex' }}>
                     <PersonalInfo classesProfile={classesProfile} classesSelect={classesSelect} classesButton={classesButton}

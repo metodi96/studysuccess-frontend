@@ -91,10 +91,10 @@ function PendingBookingsTutorView() {
                                 value={sortMethodBookings}
                                 onChange={handleChangeSortBookings}
                             >
-                                <MenuItem value={1}>{"Latest created"}</MenuItem>
-                                <MenuItem value={2}>{"Earliest created"}</MenuItem>
-                                <MenuItem value={3}>{"Timeslot End (desc)"}</MenuItem>
-                                <MenuItem value={4}>{"Timeslot End (asc)"}</MenuItem>
+                                <MenuItem value={1}>{"Oldest created"}</MenuItem>
+                                <MenuItem value={2}>{"Newest created"}</MenuItem>
+                                <MenuItem value={3}>{"Last bookings"}</MenuItem>
+                                <MenuItem value={4}>{"Next bookings"}</MenuItem>
                             </Select>
                         </Box>
                     </div>

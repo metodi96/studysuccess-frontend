@@ -32,7 +32,7 @@ function FavouriteTutorsList({ profile }) {
         <div className={classesFavourites.container}>
             <div className={classesFavourites.containerTwo}>
                 <div className={classesFavourites.headline}>
-                    <Typography variant="body1" color="textPrimary" component="p">
+                    <Typography style={{color: 'slategray', fontSize: '1.5em'}} component="h2">
                         <b>Your favourite tutors</b>
                     </Typography>
                 </div>

@@ -170,7 +170,7 @@ function App() {
           </div>
           <Footer />
         </div>
-      </Router> : <div>Loading page...</div>
+      </Router> : <div style={{marginBottom: '1080px'}}>Loading page...</div>
   );
 }
 

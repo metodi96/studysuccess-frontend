@@ -79,7 +79,12 @@ function Filters(props) {
       if(maxTutorPriceVisible == 0 && tutorsForSubject.length > 0) {
         console.log("I am in isMounted");
         var maxPriceVisible = tutorsForSubject.map(tutor => tutor.pricePerHour).sort((a, b) => {return b-a})[0];
-        setMaxTutorPriceVisible(maxPriceVisible);
+        if(maxPriceVisible !== undefined) {
+          setMaxTutorPriceVisible(maxPriceVisible);
+        } else {
+          maxPriceVisible = 40;
+          setMaxTutorPriceVisible(maxPriceVisible);
+        }
         setMarks([{value: 0, label: '0 €'}, {value: maxPriceVisible, label: maxPriceVisible + ' €'}]);
         setLanguages( () => {
           return tutorsForSubject.map(tutor => tutor.languages).flat().filter((v, i, a) => a.indexOf(v) === i);
@@ -114,7 +119,13 @@ function Filters(props) {
           .then(result => {
                 setTutorsForSubject(result.data);
                 var maxPriceVisible = result.data.map(tutor => tutor.pricePerHour).sort((a, b) => {return b-a})[0];
-                setMaxTutorPriceVisible(maxPriceVisible);
+                if (maxPriceVisible !== undefined) {
+                  setMaxTutorPriceVisible(maxPriceVisible);
+                } else {
+                  maxPriceVisible = 40;
+                  setMaxTutorPriceVisible(maxPriceVisible);
+                }
+                
                 setMarks([{value: 0, label: '0 €'}, {value: maxPriceVisible, label: maxPriceVisible + ' €'}]);
                 setLanguages( () => {
                   return result.data.map(tutor => tutor.languages)[0];
@@ -134,7 +145,6 @@ function Filters(props) {
     }
     
     const classes = useStyles();
-    if(tutorsForSubject.length > 0) {
     return (
         <Box style={{borderRadius: '4px'}} bgcolor= 'rgba(152, 158, 157, 0.438)' minWidth="30%" height="100%" py={2} pl={3} mr={3}>
           <Box className={classes.wrapperBox} width = "90%" height = "80%" border={2} bgcolor="white">
@@ -211,11 +221,7 @@ function Filters(props) {
             </Box>
           </Box>
         </Box> 
-    )
-    }
-    else {
-      return null;
-    }          
+    )    
 }
 
 export default Filters;

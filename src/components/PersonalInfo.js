@@ -212,7 +212,6 @@ function PersonalInfo({ profile, universities, studyPrograms, classesProfile, cl
                     formik => (
                         <Form>
                             <div style={{ position: 'relative' }}>
-                                <h2 style={{color:'slategrey', marginTop:'-70px', marginLeft:'100px'}}>My profile</h2>
                                 <Field
                                     component={TextField}
                                     classes={classesField}

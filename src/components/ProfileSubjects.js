@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import SubjectToTakeLessonsIn from './SubjectToTakeLessonsIn';
-import { MenuItem, Button } from '@material-ui/core';
+import { MenuItem, Button, Divider } from '@material-ui/core';
 import { TextField } from 'formik-material-ui';
 import axios from 'axios';
 import { Formik, Form, Field } from 'formik';
@@ -117,52 +117,55 @@ function ProfileSubjects({ classesProfile, classesSelect, profile, classesField,
     };
 
     return (
-        <div className={classesProfile.container}>
-            {
-                profile.subjectsToTakeLessonsIn !== undefined ?
-                    profile.subjectsToTakeLessonsIn.map(subject => (
-                        <SubjectToTakeLessonsIn classesField={classesField} key={subject._id} subject={subject} />
-                    )) : null
-            }
+        <div className={classesProfile.container} style={{paddingTop: '0px'}}>
             <div>
                 {
                     !loading ?
-                        <Formik
-                            initialValues={initialValues}
-                            validationSchema={validationSchema}
-                            onSubmit={addSubject}>
-                            {
-                                formik => (
-                                    <Form>
-                                        <div>
-                                            <h2 style={{ color: 'slategrey', marginLeft: '73px'}}>I want to learn:</h2>
-                                            <Field
-                                                component={TextField}
-                                                type="text"
-                                                name="subject"
-                                                label="Subject"
-                                                select
-                                                variant="outlined"
-                                                helperText="Please select one of the options"
-                                                classes={classesSelect}
-                                            >
-                                                {subjects.map(option => (
-                                                    <MenuItem key={option._id} value={option._id}>
-                                                        {option.name}
-                                                    </MenuItem>
-                                                ))}
-                                            </Field>
-                                            <div style={{ marginLeft: '62px' }}>
-                                                <Button classes={classesButton} disabled={!(formik.isValid && formik.dirty) || disabled}
-                                                    type="submit" color="primary" variant='outlined' onClick={handleOpenSnackbar}>
-                                                    Add subject
+                        <div>
+                            <Formik
+                                initialValues={initialValues}
+                                validationSchema={validationSchema}
+                                onSubmit={addSubject}>
+                                {
+                                    formik => (
+                                        <Form>
+                                            <div>
+                                                <h2 style={{ color: 'slategrey', marginLeft: '73px' }}>I want to learn:</h2>
+                                                <div style={{ marginTop: '20px' }}>
+                                                    {
+                                                        profile.subjectsToTakeLessonsIn !== undefined ?
+                                                            profile.subjectsToTakeLessonsIn.map(subject => (
+                                                                <SubjectToTakeLessonsIn classesField={classesField} key={subject._id} subject={subject} />
+                                                            )) : null
+                                                    }
+                                                </div>
+                                                <Field
+                                                    component={TextField}
+                                                    type="text"
+                                                    name="subject"
+                                                    label="Subject"
+                                                    select
+                                                    variant="outlined"
+                                                    helperText="Please select one of the options"
+                                                    classes={classesSelect}
+                                                >
+                                                    {subjects.map(option => (
+                                                        <MenuItem key={option._id} value={option._id}>
+                                                            {option.name}
+                                                        </MenuItem>
+                                                    ))}
+                                                </Field>
+                                                <div style={{ marginLeft: '62px' }}>
+                                                    <Button classes={classesButton} disabled={!(formik.isValid && formik.dirty) || disabled}
+                                                        type="submit" color="primary" variant='outlined' onClick={handleOpenSnackbar}>
+                                                        Add subject
                                                 </Button>
+                                                </div>
                                             </div>
-                                        </div>
-                                    </Form>
-                                )}
-                        </Formik>
-
+                                        </Form>
+                                    )}
+                            </Formik>
+                        </div>
                         : <span>Subjects loading...</span>
                 }
             </div>
