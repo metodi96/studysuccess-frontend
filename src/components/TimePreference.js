@@ -9,7 +9,8 @@ const useStyles = makeStyles({
     root: {
         minWidth: 275,
         position: 'relative',
-        marginRight: '20px'
+        marginRight: '20px',
+        boxShadow: '0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)'
     }
 });
 
@@ -87,10 +88,7 @@ function TimePreference({ timePreference }) {
         }
     };
     return (
-        <div>
-            {
-                console.log(timePreference)
-            }
+        <div style={{marginTop: '10px'}}>
             <Card className={classes.root}>
                 <CardContent>
                     <Typography className={classes.title} color="textSecondary" gutterBottom>
