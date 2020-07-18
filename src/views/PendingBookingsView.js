@@ -51,10 +51,12 @@ function PendingBookingsView(props) {
                 .then(res => {
                     if (isMounted) {
                         console.log(res.data);
-                        setInvitations(res.data.filter(invitation => {
-                            const date = new Date(invitation.booking.timeslotStart);
-                            return date >= new Date()
-                        }).sort((bookingA, bookingB) => bookingB.booking.createdAt.localeCompare(bookingA.booking.createdAt)));
+                        if (res.data.length > 0) {
+                            setInvitations(res.data.filter(invitation => {
+                                const date = new Date(invitation.booking.timeslotStart);
+                                return date >= new Date()
+                            }).sort((bookingA, bookingB) => bookingB.booking.createdAt.localeCompare(bookingA.booking.createdAt)));
+                        }
                         setLoading(false);
                     }
                 })
@@ -113,11 +115,11 @@ function PendingBookingsView(props) {
             )
         } else {
             return (
-                <div style={{ fontSize: '1.35rem', textAlign: 'center', marginTop: '50px', height: '64vh' }}>
+                <div style={{ fontSize: '1.35rem', textAlign: 'center', height: '56vh' }}>
                     <div>
                         <span>You currently don't have any pending invitations.</span>
                     </div>
-                    <img width='200px' height='200px' src={confused} />
+                    <img width='150px' height='150px' src={confused} />
                 </div>
             )
         }

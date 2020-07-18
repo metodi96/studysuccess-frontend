@@ -7,6 +7,7 @@ import { makeStyles, Box, InputLabel, Select, MenuItem } from '@material-ui/core
 import confused from '../images/confused-cat.png';
 import ArrowUpwardIcon from '@material-ui/icons/ArrowUpward';
 import ArrowDownwardIcon from '@material-ui/icons/ArrowDownward';
+import Search from '../components/Search';
 
 const useStylesBooking = makeStyles(() => ({
     container: {
@@ -271,11 +272,11 @@ function CurrentBookingsView({ classesSort }) {
                     <div>
                         <span>You currently don't have any bookings.</span>
                     </div>
-                    <img width='200px' height='200px' src={confused} />
+                    <img width='150px' height='150px' src={confused} />
                     <div style={{ marginTop: '25px' }}>
                         <span>Search for a subject with which you struggle and we'll find tutors for you.</span>
                     </div>
-                    <div style={{ textAlign: '-webkit-center', marginTop: '10px' }}><Search /></div>
+                    <div style={{ textAlign: '-webkit-center', marginTop: '10px', display: 'inline-block', marginBottom: '76px' }}><Search /></div>
                 </div>
             )
         }

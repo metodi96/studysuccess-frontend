@@ -27,8 +27,8 @@ const useStyles = makeStyles((theme) => ({
         display: 'flex',
     },
     avatar: {
-        width: theme.spacing(7),
-        height: theme.spacing(7),
+        width: theme.spacing(10),
+        height: theme.spacing(10),
         marginRight: theme.spacing(4),
         marginTop: theme.spacing(1),
         marginLeft: theme.spacing(1)
@@ -49,7 +49,7 @@ const useStyles = makeStyles((theme) => ({
         fontWeight: 400,
         lineHeight: '1.5em',
         letterSpacing: '0.00938em',
-        marginLeft: '10%',
+        marginLeft: '12.5%',
         marginRight: '8%'
     },
     pricePerHour: {

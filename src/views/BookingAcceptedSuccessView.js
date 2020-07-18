@@ -10,7 +10,6 @@ function BookingAcceptedSuccessView(props) {
         let isMounted = true;
         setToken(window.localStorage.getItem('jwtToken'));
         if (window.localStorage.getItem('jwtToken') !== null) {
-            console.log(token)
             // to be added behind /success
             axios
                 .get(`http://localhost:5000/bookings/successAccepted${props.location.search}`, {
@@ -22,7 +21,8 @@ function BookingAcceptedSuccessView(props) {
                     if (isMounted) {
                         console.log(res.data);
                         setLoading(false);
-                        props.history.push('/bookings/current')
+                        console.log(props.location.search);
+                        //props.history.push('/bookings/current')
                     }
                 })
                 .catch(err => {

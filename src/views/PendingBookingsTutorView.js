@@ -108,11 +108,11 @@ function PendingBookingsTutorView({classesSort}) {
             )
         } else {
             return (
-                <div style={{ fontSize: '1.35rem', textAlign: 'center', marginTop: '50px', height: '64vh' }}>
+                <div style={{ fontSize: '1.35rem', textAlign: 'center', height: '56vh' }}>
                     <div>
                         <span>You currently don't have any pending invitations from students.</span>
                     </div>
-                    <img width='200px' height='200px' src={confused} />
+                    <img width='150px' height='150px' src={confused} />
                 </div>
             )
         }

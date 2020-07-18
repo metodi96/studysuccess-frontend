@@ -108,14 +108,14 @@ function App() {
                   if (UserService.isAuthenticated()) {
                     return <ManageProfileView {...props} studyPrograms={studyPrograms} universities={universities} />
                   } else {
-                    return <Redirect to={'/auth/login'} />
+                    return <Redirect to={'/'} />
                   }
                 }} />
                 <Route path='/bookings/pendingTutor' render={props => {
                   if (UserService.isAuthenticated() && profile.hasCertificateOfEnrolment && profile.hasGradeExcerpt) {
                     return <PendingBookingsTutorView {...props} classesSort={classesSort} />
                   } else if (!UserService.isAuthenticated()) {
-                    return <Redirect to={'/auth/login'} />
+                    return <Redirect to={'/'} />
                   } else if (!profile.hasCertificateOfEnrolment || !profile.hasGradeExcerpt) {
                     return <Redirect to={'/profile'} />
                   }
@@ -125,49 +125,49 @@ function App() {
                   if (UserService.isAuthenticated()) {
                     return <BookTutorView {...props} />
                   } else {
-                    return <Redirect to={'/auth/login'} />
+                    return <Redirect to={'/'} />
                   }
                 }} />
                 <Route path='/tutors/:subjectId/profiles/:tutorId' exact render={props => {
                   if (UserService.isAuthenticated()) {
                     return <TutorProfileView {...props} />
                   } else {
-                    return <Redirect to={'/auth/login'} />
+                    return <Redirect to={'/'} />
                   }
                 }} />
                 <Route path='/bookings/current' exact render={props => {
                   if (UserService.isAuthenticated()) {
                     return <CurrentBookingsView {...props} classesSort={classesSort} />
                   } else {
-                    return <Redirect to={'/auth/login'} />
+                    return <Redirect to={'/'} />
                   }
                 }} />
                 <Route path='/bookings/success' exact render={props => {
                   if (UserService.isAuthenticated()) {
                     return <BookingAddSuccessView {...props} />
                   } else {
-                    return <Redirect to={'/auth/login'} />
+                    return <Redirect to={'/'} />
                   }
                 }} />
                 <Route path='/bookings/successAccepted' exact render={props => {
                   if (UserService.isAuthenticated()) {
                     return <BookingAcceptedSuccessView {...props} />
                   } else {
-                    return <Redirect to={'/auth/login'} />
+                    return <Redirect to={'/'} />
                   }
                 }} />
                 <Route path='/bookings/past' exact render={props => {
                   if (UserService.isAuthenticated()) {
                     return <PastBookingsView {...props} classesSort={classesSort} />
                   } else {
-                    return <Redirect to={'/auth/login'} />
+                    return <Redirect to={'/'} />
                   }
                 }} />
                 <Route path='/bookings/pending' exact render={props => {
                   if (UserService.isAuthenticated()) {
                     return <PendingBookingsView {...props} classesSort={classesSort} />
                   } else {
-                    return <Redirect to={'/auth/login'} />
+                    return <Redirect to={'/'} />
                   }
                 }} />
                 <Route path='*' render={() => {

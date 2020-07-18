@@ -137,6 +137,7 @@ function BookTutor({ tutor, subjectId }) {
             setRedirectToCurrentBookings(true);
             setSeverity('');
         } else if (severity === 'successPaypal' && forwardLink !== '') {
+            //we redirect to the forward link which is the approval url from the backend
             window.location = forwardLink;
             setSeverity('');
         } else if (severity === 'successPropose') {
@@ -314,6 +315,7 @@ function BookTutor({ tutor, subjectId }) {
                         console.log(res.data);
                         setSeverity('successPaypal');
                         setOpenSnackbar(true);
+                        //we set the forward link by getting it from the response
                         setForwardLink(res.data.forwardLink);
                     }
                 })

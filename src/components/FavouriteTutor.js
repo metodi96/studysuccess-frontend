@@ -7,38 +7,14 @@ import Rating from '@material-ui/lab/Rating';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
 
-const useStylesTutor = makeStyles(() => ({
-    container: {
-        backgroundColor: 'rgba(152, 158, 157, 0.438)',
-        padding: '1em',
-        borderRadius: '4px',
-    },
-    content: {
-        backgroundColor: 'white',
-        padding: '0.5em',
-        boxShadow: '0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)',
-        borderRadius: '4px'
-    },
-    grid: {
-        flexGrow: '1'
-    },
-    rating: {
-        display: 'flex'
-    },
-    test: {
-        fontWeight: 'bold'
-    }
-}));
-
 const useStylesFavourites = makeStyles(() => ({
     add: {
         color: 'red',
     }
 }));
 
-function FavouriteTutor({ tutor }) {
+function FavouriteTutor({ tutor, classesTutor }) {
 
-    const classesTutor = useStylesTutor();
     const classesFavourites = useStylesFavourites();
     const [tutorIsInFavourites, setTutorIsInFavourites] = useState(true);
     const [token, setToken] = useState(window.localStorage.getItem('jwtToken'));

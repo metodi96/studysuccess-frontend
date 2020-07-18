@@ -45,6 +45,7 @@ function ProfileTutorSubjects({ classesProfile, classesSelect, profile, classesF
     const [openSnackbarTimeslots, setOpenSnackbarTimeslots] = useState(false);
     const [severityTimeslots, setSeverityTimeslots] = useState('');
     const [timePreferences, setTimePreferences] = useState([]);
+    const [showWarningIncluded, setShowWarningIncluded] = useState(false);
 
     const days = [
         {
@@ -196,43 +197,54 @@ function ProfileTutorSubjects({ classesProfile, classesSelect, profile, classesF
         }
     };
 
-    const addTimeslot = (values) => {
-        console.log(values);
-        setDisabledTimeslot(true);
-        setToken(window.localStorage.getItem('jwtToken'));
-        console.log(timeslotFrom);
-        console.log(timeslotTo);
-        if (window.localStorage.getItem('jwtToken') !== null) {
-            const headers = {
-                Authorization: `Bearer ${token.slice(10, -2)}`
-            }
-            console.log(headers)
-            axios
-                .post(`http://localhost:5000/profile/addTimeslot`,
-                    {
-                        day: values.day,
-                        startTime: {
-                            hours: timeslotFrom.substring(0, 2),
-                            minutes: timeslotFrom.substring(3, 5),
+    const addTimeslot = (values, { resetForm }) => {
+        const timePreferenceIncluded = timePreferences.some(timePreference =>
+            timePreference.day === values.day && (timePreference.startTime.hours === timeslotFrom.substring(0, 2)
+                || (timePreference.startTime.hours === timeslotTo.substring(0, 2) && timePreference.endTime.minutes !== timeslotFrom.substring(3, 5)))
+        );
+        if (timePreferenceIncluded) {
+            setShowWarningIncluded(true);
+            resetForm({ values: values });
+            console.log('Included time pref')
+        } else {
+            console.log('Not included time pref')
+            setShowWarningIncluded(false);
+            console.log(values);
+            setDisabledTimeslot(true);
+            setToken(window.localStorage.getItem('jwtToken'));
+            console.log(timeslotFrom);
+            console.log(timeslotTo);
+            if (window.localStorage.getItem('jwtToken') !== null) {
+                const headers = {
+                    Authorization: `Bearer ${token.slice(10, -2)}`
+                }
+                console.log(headers)
+                axios
+                    .post(`http://localhost:5000/profile/addTimeslot`,
+                        {
+                            day: values.day,
+                            startTime: {
+                                hours: timeslotFrom.substring(0, 2),
+                                minutes: timeslotFrom.substring(3, 5),
+                            },
+                            endTime: {
+                                hours: timeslotTo.substring(0, 2),
+                                minutes: timeslotTo.substring(3, 5),
+                            },
                         },
-                        endTime: {
-                            hours: timeslotTo.substring(0, 2),
-                            minutes: timeslotTo.substring(3, 5),
-                        },
-                    },
-                    {
-                        headers: headers
+                        {
+                            headers: headers
+                        })
+                    .then(() => {
+                        console.log('Timeslot added successfully!');
+                        setSeverityTimeslots('success');
+                        //window.location.reload();
                     })
-                .then(() => {
-                    console.log('Timeslot added successfully!');
-                    setSeverityTimeslots('success');
-                    //window.location.reload();
-                })
-                .catch(err => {
-                    console.log(err.response.data);
-                    setSeverityTimeslots('Error');
-                });
-
+                    .catch(err => {
+                        console.log(err.response.data);
+                        setSeverityTimeslots('Error');
+                    });
+            }
         }
     };
 
@@ -370,7 +382,7 @@ function ProfileTutorSubjects({ classesProfile, classesSelect, profile, classesF
                             </div>
                             : <span>Subjects loading...</span>
                     }
-                    <Divider style={{marginTop: '20px'}} />
+                    <Divider style={{ marginTop: '20px' }} />
                     {
                         <div>
                             <Formik
@@ -438,6 +450,10 @@ function ProfileTutorSubjects({ classesProfile, classesSelect, profile, classesF
                                                         Add time preference
                                                     </Button>
                                                 </div>
+                                                {showWarningIncluded ?
+                                                    <div style={{ textAlign: 'center' }}>
+                                                        <p style={{ color: 'red' }}>Overlapping time preference. Please choose another date/time.</p>
+                                                    </div> : null}
                                                 <div style={{ marginTop: '20px' }}>
                                                     <h2 style={{ color: 'slategrey', textAlign: 'center' }}>Your time preferences:</h2>
                                                     {
@@ -462,7 +478,8 @@ function ProfileTutorSubjects({ classesProfile, classesSelect, profile, classesF
     }
     else {
         return (
-            <div className={classesProfile.container}>
+            <div className={classesProfile.container} style={{ paddingTop: '0px' }}>
+                <h2 style={{ color: 'slategrey', marginLeft: '73px' }}>I want to teach:</h2>
                 Currently, you don't offer help in any subjects. Let's change that! Upload Certificate of Enrolment and Grade Excerpt to become a tutor!
             </div>
         )
