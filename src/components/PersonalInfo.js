@@ -30,11 +30,10 @@ const useStylesTextArea = makeStyles(() => ({
         height: '150px',
         padding: '12px 20px',
         boxSizing: 'border-box',
-        border: '1px solid #ddd',
+        border: '1px solid #ccc',
         borderRadius: '4px',
-        backgroundColor: '#f8f8f8',
-        fontSize: '16px',
         resize: 'vertical horizontal',
+        fontFamily: '"Titillium Web", sans-serif',
         maxWidth: '300px',
         marginBottom: '30px',
         marginTop: '20px',
@@ -274,7 +273,7 @@ function PersonalInfo({ profile, universities, studyPrograms, classesProfile, cl
                                     variant="outlined"
                                     label='First name'
                                 />
-                                <div style={{ position: 'absolute', left: '70%', top: '50%' }} >
+                                <div style={{ position: 'absolute', left: '70%', top: '23%' }} >
                                     <EditIcon />
                                 </div>
                             </div>
@@ -422,7 +421,6 @@ function PersonalInfo({ profile, universities, studyPrograms, classesProfile, cl
                                             type='text'
                                             id='personalStatement'
                                             name='personalStatement'
-                                            variant='outlined'
                                             placeholder={`Enter personal description here...`}
                                             as="textarea"
                                             label='Personal Information'
@@ -430,7 +428,7 @@ function PersonalInfo({ profile, universities, studyPrograms, classesProfile, cl
                                     </FormControl> : null
                             }
 
-                            <div style={{ marginLeft: '73px' }}>
+                            <div style={{ marginLeft: '73px', display: 'inline-block' }}>
                                 <label htmlFor="userImage">
                                     <input style={{ display: "none" }} id="userImage" type="file" onChange={fileSelectedHandler} />
                                     <Fab

@@ -18,7 +18,7 @@ function ProfileSubjects({ classesProfile, classesSelect, profile, classesField,
     const [severity, setSeverity] = useState('');
 
     const initialValues = {
-        subject: subjects[0] || ''
+        subject: ''
     }
 
     // define the validation object schema
