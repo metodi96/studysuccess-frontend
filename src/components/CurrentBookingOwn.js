@@ -17,6 +17,7 @@ import { Button } from '@material-ui/core';
 import moment from 'moment';
 import InviteFriend from './InviteFriend';
 import CancelBooking from './CancelBooking';
+import MailOutlineIcon from '@material-ui/icons/MailOutline';
 
 const useStylesList = makeStyles((theme) => ({
     root: {
@@ -97,6 +98,15 @@ function CurrentBookingOwn({ booking }) {
                         }
                     </ListItemAvatar>
                     <ListItemText primary="Tutor" secondary={booking.tutor.firstname} />
+                </ListItem>
+                <Divider variant="inset" component="li" />
+                <ListItem>
+                    <ListItemAvatar>
+                        <Avatar classes={classesAvatar}>
+                            <MailOutlineIcon color='primary' />
+                        </Avatar>
+                    </ListItemAvatar>
+                    <ListItemText primary="Email" secondary={booking.tutor.email} />
                 </ListItem>
                 <Divider variant="inset" component="li" />
                 <ListItem>

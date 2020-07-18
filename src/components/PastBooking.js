@@ -24,6 +24,7 @@ import Rating from '@material-ui/lab/Rating';
 import Typography from '@material-ui/core/Typography';
 import Alert from './Alert';
 import CreateIcon from '@material-ui/icons/Create';
+import MailOutlineIcon from '@material-ui/icons/MailOutline';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -202,6 +203,15 @@ function PastBooking({ booking }) {
                         }
                     </ListItemAvatar>
                     <ListItemText primary="Tutor" secondary={ booking.tutor !== null ? booking.tutor.firstname : 'No tutor defined for this booking'} />
+                </ListItem>
+                <Divider variant="inset" component="li" />
+                <ListItem>
+                    <ListItemAvatar>
+                        <Avatar classes={classesAvatar}>
+                            <MailOutlineIcon color='primary' />
+                        </Avatar>
+                    </ListItemAvatar>
+                    <ListItemText primary="Email" secondary={booking.tutor.email} />
                 </ListItem>
                 <Divider variant="inset" component="li" />
                 <ListItem>

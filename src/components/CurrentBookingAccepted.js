@@ -12,6 +12,7 @@ import GroupSharpIcon from '@material-ui/icons/GroupSharp';
 import EuroSharpIcon from '@material-ui/icons/EuroSharp';
 import Divider from '@material-ui/core/Divider';
 import moment from 'moment';
+import MailOutlineIcon from '@material-ui/icons/MailOutline';
 
 const useStylesList = makeStyles((theme) => ({
     root: {
@@ -83,6 +84,15 @@ function CurrentBookingAccepted({ invitation }) {
                             }
                         </ListItemAvatar>
                         <ListItemText primary="Invited by" secondary={invitation.fromUser.firstname} />
+                    </ListItem>
+                    <Divider variant="inset" component="li" />
+                    <ListItem>
+                        <ListItemAvatar>
+                            <Avatar classes={classesAvatar}>
+                                <MailOutlineIcon color='primary' />
+                            </Avatar>
+                        </ListItemAvatar>
+                        <ListItemText primary="Email" secondary={invitation.booking.tutor.email} />
                     </ListItem>
                     <Divider variant="inset" component="li" />
                     <ListItem>

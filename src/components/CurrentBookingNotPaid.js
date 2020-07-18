@@ -14,7 +14,8 @@ import Divider from '@material-ui/core/Divider';
 import { Button } from '@material-ui/core';
 import { Typography } from '@material-ui/core';
 import moment from 'moment';
-import axios from 'axios'
+import axios from 'axios';
+import MailOutlineIcon from '@material-ui/icons/MailOutline';
 
 const useStylesList = makeStyles((theme) => ({
     root: {
@@ -117,6 +118,15 @@ function CurrentBookingNotPaid({ booking, token }) {
                         }
                     </ListItemAvatar>
                     <ListItemText primary="Tutor" secondary={booking.tutor.firstname} />
+                </ListItem>
+                <Divider variant="inset" component="li" />
+                <ListItem>
+                    <ListItemAvatar>
+                        <Avatar classes={classesAvatar}>
+                            <MailOutlineIcon color='primary' />
+                        </Avatar>
+                    </ListItemAvatar>
+                    <ListItemText primary="Email" secondary={booking.tutor.email} />
                 </ListItem>
                 <Divider variant="inset" component="li" />
                 <ListItem>
