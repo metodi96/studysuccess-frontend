@@ -64,8 +64,16 @@ const useStylesTutor = makeStyles(() => ({
 
 const useStylesComment = makeStyles(() => ({
     root: {
-        minWidth: '200px',
-        minHeight: '100px'
+        height: '150px',
+        padding: '12px 20px',
+        boxSizing: 'border-box',
+        border: '1px solid #ccc',
+        borderRadius: '4px',
+        resize: 'vertical horizontal',
+        fontFamily: '"Titillium Web", sans-serif',
+        minWidth: '300px',
+        maxWidth: '300px',
+        marginLeft: '3%'
     }
 }))
 
@@ -184,9 +192,14 @@ function PastBooking({ booking }) {
                 <Divider variant="inset" component="li" />
                 <ListItem>
                     <ListItemAvatar>
-                        <Avatar classes={classesAvatar}>
-                            <PersonOutlineSharpIcon color='primary' />
-                        </Avatar>
+                        {
+                            booking.tutor.userImage ?
+                                <Avatar alt={`${booking.tutor.firstname} ${booking.tutor.lastname}`} src={`http://localhost:5000/${booking.tutor.userImage}`} />
+                                :
+                                <Avatar classes={classesAvatar}>
+                                    <PersonOutlineSharpIcon color='primary' />
+                                </Avatar>
+                        }
                     </ListItemAvatar>
                     <ListItemText primary="Tutor" secondary={ booking.tutor !== null ? booking.tutor.firstname : 'No tutor defined for this booking'} />
                 </ListItem>
