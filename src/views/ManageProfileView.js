@@ -104,6 +104,7 @@ function ManageProfileView(props) {
                 })
                 .then(res => {
                     if (isMounted) {
+                        console.log(res.data);
                         setProfile(res.data);
                         setLoading(false);
                     }

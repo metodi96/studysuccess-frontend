@@ -171,7 +171,7 @@ function TutorsList(props) {
     else {
         return (
             <Box bgcolor="rgba(152, 158, 157, 0.438)" width="80%" py={2} pl={3}>
-                0 tutors match your search
+                0 tutors match your search!
             </Box>
         )
     }

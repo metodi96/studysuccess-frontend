@@ -34,13 +34,16 @@ function ProfileSubjects({ classesProfile, classesSelect, profile, classesField,
                 if (isMounted) {
                     const allSubjects = res.data;
                     const profileSubjects = profile.subjectsToTakeLessonsIn;
-                    console.log(allSubjects);
-                    console.log(profileSubjects);
-                    setSubjects(allSubjects.filter(function (subject) {
-                        return !profileSubjects.find(function (subjectProfile) {
-                            return subject._id === subjectProfile._id
-                        })
-                    }));
+                    if(profileSubjects) {
+                        setSubjects(allSubjects.filter(function (subject) {
+                            return !profileSubjects.find(function (subjectProfile) {
+                                return subject._id === subjectProfile._id;
+                            })
+                        }));
+                    }                
+                    else {
+                        setSubjects(allSubjects);
+                    }
                     setLoading(false);
                 }
             })

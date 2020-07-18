@@ -19,7 +19,7 @@ function SubjectToTakeLessonsIn({ subject, classesField }) {
             const headers = {
                 Authorization: `Bearer ${token.slice(10, -2)}`
             }
-            console.log(headers)
+            console.log(subject);
             axios
                 .put(`http://localhost:5000/profile/removeSubjectToTakeLessonsIn`,
                     { subjectId: subject._id },

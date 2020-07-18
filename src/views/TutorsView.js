@@ -10,7 +10,9 @@ function TutorsView({ match }) {
     const [tutorsForSubject, setTutorsForSubject] = useState([]);
     return (
         <Box>
-            <Search subjectIdParam={match.params.subjectId}></Search>
+            <div style={{marginLeft: '1%'}}>
+                <Search subjectIdParam={match.params.subjectId}></Search>
+            </div>
             <Box style={{ display: "flex", minWidth: '1280px' }} mt="1%">
                 <TutorsContext.Provider value={{ tutorsForSubject, setTutorsForSubject }}>
                     <Filters subjectId={match.params.subjectId}></Filters>

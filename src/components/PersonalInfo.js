@@ -3,7 +3,7 @@ import * as Yup from 'yup';
 import { TextField } from 'formik-material-ui';
 import { Formik, Form, Field } from 'formik';
 import { makeStyles } from '@material-ui/core/styles';
-import { Button, Avatar, MenuItem, Fab } from '@material-ui/core';
+import { Button, Avatar, MenuItem, Fab, InputLabel, Select, Input, Checkbox, FormControl, ListItemText } from '@material-ui/core';
 import axios from 'axios';
 import EditIcon from '@material-ui/icons/Edit';
 import AddIcon from '@material-ui/icons/AddAPhoto';
@@ -24,10 +24,39 @@ const useStylesEmail = makeStyles(() => ({
         marginLeft: '33px'
     }
 }));
+    
+const useStylesTextArea = makeStyles(() => ({
+    root: {
+        height: '150px',
+        padding: '12px 20px',
+        boxSizing: 'border-box',
+        border: '1px solid #ddd',
+        borderRadius: '4px',
+        backgroundColor: '#f8f8f8',
+        fontSize: '16px',
+        resize: 'vertical horizontal',
+        maxWidth: '300px',
+        marginBottom: '30px',
+        marginTop: '20px',
+        marginLeft: '3%'
+    }
+}));
+
+const ITEM_HEIGHT = 48;
+const ITEM_PADDING_TOP = 8;
+const MenuProps = {
+    PaperProps: {
+        style: {
+            maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
+            width: 250,
+        },
+    },
+};
 
 function PersonalInfo({ profile, universities, studyPrograms, classesProfile, classesField, classesSelect, classesButton}) {
-    
+
     const classesEmail = useStylesEmail();
+    const classesTextArea = useStylesTextArea();
     const [disabled, setDisabled] = useState(false);
     const [typeImageRight, setTypeImageRight] = useState(true);
     const [thumbnail, setThumbnail] = useState(null);
@@ -41,6 +70,9 @@ function PersonalInfo({ profile, universities, studyPrograms, classesProfile, cl
     const [severity, setSeverity] = useState('');
     const [hasCertificateOfEnrolment, setHasCertificateOfEnrolment] = useState(profile.hasCertificateOfEnrolment);
     const [hasGradeExcerpt, setHasGradeExcerpt] = useState(profile.hasGradeExcerpt);
+    const [selectedLanguages, setSelectedLanguages] = useState([]);
+    const languages = ['English', 'German', 'French', 'Italian', 'Russian', 'Chineese', 'Indian', 'Spanish'];
+
 
     const initialValues = {
         firstname: profile.firstname,
@@ -50,7 +82,9 @@ function PersonalInfo({ profile, universities, studyPrograms, classesProfile, cl
         studyProgram: profile.studyProgram || '',
         semester: profile.semester || '',
         degree: profile.degree || '',
-        subjectsToTakeLessonsIn: profile.subjectsToTakeLessonsIn
+        subjectsToTakeLessonsIn: profile.subjectsToTakeLessonsIn,
+        pricePerHour: profile.pricePerHour || '',
+        personalStatement: profile.personalStatement || ''
     }
 
     // define the validation object schema
@@ -136,6 +170,20 @@ function PersonalInfo({ profile, universities, studyPrograms, classesProfile, cl
         if (selectedFileGrade !== null) {
             formData.append('hasGradeExcerpt', hasGradeExcerpt);
         }
+        if (profile.hasCertificateOfEnrolment && profile.hasGradeExcerpt) {
+            if (values.pricePerHour !== undefined && values.pricePerHour !== '') {
+                formData.append("pricePerHour", values.pricePerHour);
+            }
+            if (values.personalStatement !== undefined && values.personalStatement !== '') {
+                formData.append("personalStatement", values.personalStatement);
+            }
+            if (selectedLanguages.length > 0) {
+                console.log(selectedLanguages);
+                for (let i = 0; i < selectedLanguages.length; i++) {
+                    formData.append('languages[]', selectedLanguages[i]);
+                }
+            }
+        }
         console.log(...formData);
 
         if (window.localStorage.getItem('jwtToken') !== null) {
@@ -165,6 +213,11 @@ function PersonalInfo({ profile, universities, studyPrograms, classesProfile, cl
 
     const handleOpenSnackbar = () => {
         setOpenSnackbar(true);
+    };
+
+    const handleChange = (event) => {
+        console.log(selectedLanguages);
+        setSelectedLanguages(event.target.value);
     };
 
     const handleCloseSnackbar = (event, reason) => {
@@ -320,6 +373,63 @@ function PersonalInfo({ profile, universities, studyPrograms, classesProfile, cl
                                     <EditIcon />
                                 </div>
                             </div>
+                            {
+                                profile.hasCertificateOfEnrolment && profile.hasGradeExcerpt ? <div style={{ position: 'relative' }}>
+                                    <Field
+                                        component={TextField}
+                                        classes={classesField}
+                                        type='text'
+                                        id='pricePerHour'
+                                        name='pricePerHour'
+                                        variant="outlined"
+                                        label='Price per Hour'
+                                    />
+                                    <div style={{ position: 'absolute', left: '70%', top: '20%' }} >
+                                        <EditIcon />
+                                    </div>
+
+                                </div>
+                                    : null
+                            }
+                            {
+                                profile.hasCertificateOfEnrolment && profile.hasGradeExcerpt ?
+                                    <FormControl style={{ maxWidth: '250px', minWidth: '250px', marginBottom: '5%', marginLeft: '10%' }}>
+                                        <InputLabel id='languages-input-label'>Languages</InputLabel>
+                                        <Select
+                                            labelId='languages-input-label'
+                                            id='languages-input-select'
+                                            multiple
+                                            value={selectedLanguages}
+                                            onChange={handleChange}
+                                            input={<Input />}
+                                            renderValue={(selected) => selected.join(', ')}
+                                            MenuProps={MenuProps}
+                                        >
+                                            {languages.map((language, index) => (
+                                                <MenuItem key={index} value={language}>
+                                                    <Checkbox checked={selectedLanguages.indexOf(language) > -1} />
+                                                    <ListItemText primary={language} />
+                                                </MenuItem>
+                                            ))}
+                                        </Select>
+                                    </FormControl> : null
+                            }
+                            {
+                                profile.hasCertificateOfEnrolment && profile.hasGradeExcerpt ?
+                                    <FormControl style={{display: 'flex', justifyContent: 'center'}}>
+                                        <Field
+                                            className={classesTextArea.root}
+                                            type='text'
+                                            id='personalStatement'
+                                            name='personalStatement'
+                                            variant='outlined'
+                                            placeholder={`Enter personal description here...`}
+                                            as="textarea"
+                                            label='Personal Information'
+                                        />
+                                    </FormControl> : null
+                            }
+
                             <div style={{ marginLeft: '73px' }}>
                                 <label htmlFor="userImage">
                                     <input style={{ display: "none" }} id="userImage" type="file" onChange={fileSelectedHandler} />
@@ -396,6 +506,7 @@ function PersonalInfo({ profile, universities, studyPrograms, classesProfile, cl
             {
                 renderSwitchForSnackbar(severity)
             }
+
         </div>
     )
 }
