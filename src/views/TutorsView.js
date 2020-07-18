@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import Filters from '../components/Filters'
 import TutorsList from '../components/TutorsList'
 import { TutorsContext } from '../components/TutorsContext'
+import { SortMethodContext } from '../components/SortMethodContext'
 import Search from '../components/Search'
 import Box from '@material-ui/core/Box';
 import { Button } from '@material-ui/core'
@@ -11,6 +12,7 @@ import UserService from '../services/UserService'
 
 function TutorsView({ match }) {
     const [tutorsForSubject, setTutorsForSubject] = useState([]);
+    const [sortMethod, setSortMethod] = useState(1);
     return (
         <Box>
             <div style={{ textAlign: 'center', position: 'relative' }}>
@@ -34,8 +36,10 @@ function TutorsView({ match }) {
             </div>
             <Box style={{ display: "flex", minWidth: '1280px' }} mt="1%">
                 <TutorsContext.Provider value={{ tutorsForSubject, setTutorsForSubject }}>
-                    <Filters subjectId={match.params.subjectId}></Filters>
-                    <TutorsList subjectId={match.params.subjectId}></TutorsList>
+                    <SortMethodContext.Provider value={{sortMethod, setSortMethod}}>
+                        <Filters subjectId={match.params.subjectId}></Filters>
+                        <TutorsList subjectId={match.params.subjectId}></TutorsList>
+                    </SortMethodContext.Provider>                    
                 </TutorsContext.Provider>
             </Box>
         </Box>

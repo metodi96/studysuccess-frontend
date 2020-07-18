@@ -15,6 +15,7 @@ import InputLabel from '@material-ui/core/InputLabel';
 import Select from '@material-ui/core/Select';
 import Rating from '@material-ui/lab/Rating';
 import { TutorsContext } from './TutorsContext';
+import { SortMethodContext } from './SortMethodContext'
 import { MenuItem } from '@material-ui/core';
 
 const useStyles = makeStyles((theme) => ({
@@ -70,30 +71,27 @@ const useStyles = makeStyles((theme) => ({
 
 function TutorsList(props) {
     const classes = useStyles();
-    const [sortMethod, setSortMethod] = useState(1);
+    const {sortMethod, setSortMethod} = useContext(SortMethodContext);
     const { tutorsForSubject, setTutorsForSubject } = useContext(TutorsContext);
     const handleChangeSortMethod = (event) => {
         setSortMethod(event.target.value);
-        if (event.target.value == 1) {
-
+        if (event.target.value === 1) {
             setTutorsForSubject(tutorsForSubject.sort((a, b) => { return a.avgRating - b.avgRating }));
         }
-        else if (event.target.value == 2) {
+        else if (event.target.value === 2) {
             setTutorsForSubject(tutorsForSubject.sort((a, b) => { return a.pricePerHour - b.pricePerHour }));
         }
-        else if (event.target.value == 3) {
+        else if (event.target.value === 3) {
             setTutorsForSubject(tutorsForSubject.sort((a, b) => { return b.pricePerHour - a.pricePerHour }));
         }
     }
 
     useEffect(() => {
         let isMounted = true;
-        axios.post(`http://localhost:5000/tutors/${props.subjectId}/filtered`)
+        axios.get(`http://localhost:5000/tutors/${props.subjectId}`)
             .then(res => {
                 if (isMounted) {
-                    console.log(res.data);
-                    setTutorsForSubject(res.data);
-                    //setTutorsForSubject(res.data.sort((a, b) => {return a.avgRating - b.avgRating} ));  
+                    setTutorsForSubject(res.data.sort((a, b) => {return a.avgRating - b.avgRating} ));  
                 }
             })
             .catch(err => {
@@ -171,7 +169,7 @@ function TutorsList(props) {
     else {
         return (
             <Box bgcolor="rgba(152, 158, 157, 0.438)" width="80%" py={2} pl={3}>
-                0 tutors match your search!
+                0 tutors match your search! Please refilter (if enabled) or search for another subject!
             </Box>
         )
     }

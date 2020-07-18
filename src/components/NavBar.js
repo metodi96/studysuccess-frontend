@@ -197,7 +197,7 @@ function Navbar() {
                                                     fontSize: 'initial',
                                                     fontFamily: '"Titillium Web", sans-serif'
                                                 }}>{profile.firstname}</span><ArrowDropDownIcon style={{ color: 'black', paddingTop: '10px' }}></ArrowDropDownIcon>
-                                                    <Avatar classes={profile.userImage ? classesAvatar : classesAvatarNoPic} src={`http://localhost:5000/${profile.userImage}`} alt="Avatar" />
+                                                    <Avatar classes={profile.userImage ? classesAvatar : classesAvatarNoPic} src={`http://localhost:5000/${profile.userImage}`} alt={profile.firstname} />
                                                 </div> : null
                                         }
 

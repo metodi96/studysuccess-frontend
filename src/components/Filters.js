@@ -16,6 +16,7 @@ import Box from '@material-ui/core/Box';
 import Button from '@material-ui/core/Button';
 import axios from 'axios';
 import { TutorsContext } from './TutorsContext';
+import { SortMethodContext } from './SortMethodContext';
 
 const useStyles = makeStyles((theme) => ({
   heading: {
@@ -72,28 +73,22 @@ function valueLabelFormat(value) {
 function Filters(props) {
   const [dayTime, setDayTime] = useState(0);
   const [language, setLanguage] = useState('');
-  const [token, setToken] = useState(window.localStorage.getItem('jwtToken'));
   const [languages, setLanguages] = useState([]);
   const { tutorsForSubject, setTutorsForSubject } = useContext(TutorsContext);
+  const { sortMethod, setSortMethod } = useContext(SortMethodContext);
   const [maxTutorPriceVisible, setMaxTutorPriceVisible] = useState(0);
   const [marks, setMarks] = useState([]);
   const classesIcon = useStylesIcon();
   const isInitialMount = useRef(true);
+   
   useEffect(() => {
-    if (maxTutorPriceVisible == 0 && tutorsForSubject.length > 0) {
-      console.log("I am in isMounted");
+    if (maxTutorPriceVisible === 0 && tutorsForSubject.length > 0) {
       var maxPriceVisible = tutorsForSubject.map(tutor => tutor.pricePerHour).sort((a, b) => { return b - a })[0];
-      if (maxPriceVisible !== undefined) {
-        setMaxTutorPriceVisible(maxPriceVisible);
-      } else {
-        maxPriceVisible = 40;
-        setMaxTutorPriceVisible(maxPriceVisible);
-      }
+      setMaxTutorPriceVisible(maxPriceVisible);
       setMarks([{ value: 0, label: '0 €' }, { value: maxPriceVisible, label: maxPriceVisible + ' €' }]);
       setLanguages(() => {
         return tutorsForSubject.map(tutor => tutor.languages).flat().filter((v, i, a) => a.indexOf(v) === i);
       });
-      console.log(tutorsForSubject);
     }
   });
   useEffect(() => {
@@ -107,8 +102,6 @@ function Filters(props) {
   }, [props.subjectId]);
   const [maxTutorPrice, setMaxTutorPrice] = useState(0);
   const submit = () => {
-    setToken(window.localStorage.getItem('jwtToken'));
-    //if(token != null) {
     let filtersObject = {};
     if (dayTime > 0) {
       filtersObject.dayTime = dayTime;
@@ -121,25 +114,19 @@ function Filters(props) {
     }
     axios.post(`http://localhost:5000/tutors/${props.subjectId}/filtered`, filtersObject)
       .then(result => {
-        setTutorsForSubject(result.data);
-        var maxPriceVisible = result.data.map(tutor => tutor.pricePerHour).sort((a, b) => { return b - a })[0];
-        if (maxPriceVisible !== undefined) {
-          setMaxTutorPriceVisible(maxPriceVisible);
-        } else {
-          maxPriceVisible = 40;
-          setMaxTutorPriceVisible(maxPriceVisible);
+        if (sortMethod === 1) {
+          setTutorsForSubject(result.data.sort((a, b) => { return a.avgRating - b.avgRating }));
         }
-
-        setMarks([{ value: 0, label: '0 €' }, { value: maxPriceVisible, label: maxPriceVisible + ' €' }]);
-        setLanguages(() => {
-          return result.data.map(tutor => tutor.languages)[0];
-        });
-        console.log(result.data);
+        else if (sortMethod === 2) {
+          setTutorsForSubject(result.data.sort((a, b) => { return a.pricePerHour - b.pricePerHour }));
+        }
+        else if (sortMethod === 3) {
+          setTutorsForSubject(result.data.sort((a, b) => { return b.pricePerHour - a.pricePerHour }));
+        }
       })
       .catch(err => {
         console.log(`Something went wrong ${err}`);
       })
-    //}
   }
   const clearFilters = () => {
     setDayTime(0);
@@ -150,42 +137,47 @@ function Filters(props) {
   const classes = useStyles();
   return (
       <Box className={classes.wrapperBox} width="90%" height="80%" bgcolor="white" py={2} pl={3} mr={3}>
-        <Box fontSize='h5.fontSize' fontWeight='fontWeightMedium' textAlign='-webkit-center'>
+        <Box style={{color: maxTutorPriceVisible === 0 && tutorsForSubject.length === 0 ? '#bdbdbd' : ''}}  
+              fontSize='h5.fontSize' fontWeight='fontWeightMedium' textAlign='-webkit-center'>
           Filters
         </Box>
-        <Box border={1} width='90%' mt={2} mb={3} textAlign='-webkit-center'>
-          <Typography id="select-language-label" gutterBottom>
+        <Box style={{borderColor: maxTutorPriceVisible === 0 && tutorsForSubject.length === 0 ? '#bdbdbd' : ''}} 
+              border={1} width='90%' mt={2} mb={3} textAlign='-webkit-center'>
+          <Typography id="select-language-label" 
+                      style={{color: maxTutorPriceVisible === 0 && tutorsForSubject.length === 0 ? '#bdbdbd' : ''}} 
+                      gutterBottom>
             Your availability
-              </Typography>
-          <IconButton onClick={() => { setDayTime(1) }}>
-            <div className={dayTime == 1 ? classes.markedButton : classes.buttons}>
-              <WbSunnyOutlinedIcon className={dayTime == 1 ? classesIcon.clickedIcon : ''}></WbSunnyOutlinedIcon>
-                  8 AM - 2 PM
-                </div>
+          </Typography>
+          <IconButton disabled={maxTutorPriceVisible === 0 && tutorsForSubject.length === 0} onClick={() => { setDayTime(1) }}>
+            <div className={dayTime === 1 ? classes.markedButton : classes.buttons}>
+              <WbSunnyOutlinedIcon className={dayTime === 1 ? classesIcon.clickedIcon : ''}></WbSunnyOutlinedIcon>
+              8 AM - 2 PM
+            </div>
           </IconButton>
-          <IconButton onClick={() => { setDayTime(2) }}>
-            <div className={dayTime == 2 ? classes.markedButton : classes.buttons}>
-              <WbCloudyOutlinedIcon className={dayTime == 2 ? classesIcon.clickedIcon : ''}></WbCloudyOutlinedIcon>
-                  2-8 PM
-                </div>
+          <IconButton disabled={maxTutorPriceVisible === 0 && tutorsForSubject.length === 0} onClick={() => { setDayTime(2) }}>
+            <div className={dayTime === 2 ? classes.markedButton : classes.buttons}>
+              <WbCloudyOutlinedIcon className={dayTime === 2 ? classesIcon.clickedIcon : ''}></WbCloudyOutlinedIcon>
+              2-8 PM
+            </div>
           </IconButton>
-          <IconButton onClick={() => { setDayTime(3) }}>
-            <div className={dayTime == 3 ? classes.markedButton : classes.buttons}>
-              <NightsStayOutlinedIcon className={dayTime == 3 ? classesIcon.clickedIcon : ''}></NightsStayOutlinedIcon>
-                  8-11 PM
-                </div>
+          <IconButton disabled={maxTutorPriceVisible === 0 && tutorsForSubject.length === 0} onClick={() => { setDayTime(3) }}>
+            <div className={dayTime === 3 ? classes.markedButton : classes.buttons}>
+              <NightsStayOutlinedIcon className={dayTime === 3 ? classesIcon.clickedIcon : ''}></NightsStayOutlinedIcon>
+              8-11 PM
+            </div>
           </IconButton>
-          <IconButton onClick={() => { setDayTime(4) }}>
-            <div style={{ textAlign: '-webkit-center' }} className={dayTime == 4 ? classes.markedButton : classes.buttons}>
-              <WeekendOutlinedIcon className={dayTime == 4 ? classesIcon.clickedIcon : ''}></WeekendOutlinedIcon>
-                  Weekends
-                </div>
+          <IconButton disabled={maxTutorPriceVisible === 0 && tutorsForSubject.length === 0} onClick={() => { setDayTime(4) }}>
+            <div style={{ textAlign: '-webkit-center' }} className={dayTime === 4 ? classes.markedButton : classes.buttons}>
+              <WeekendOutlinedIcon className={dayTime === 4 ? classesIcon.clickedIcon : ''}></WeekendOutlinedIcon>
+              Weekends
+            </div>
           </IconButton>
         </Box>
         <Box mb={3}>
           <FormControl>
             <InputLabel id="select-language-label">Tutor speaks</InputLabel>
             <Select
+              disabled={maxTutorPriceVisible === 0 && tutorsForSubject.length === 0}
               labelId="select-language-label"
               id="select-language"
               value={language}
@@ -201,24 +193,26 @@ function Filters(props) {
           </FormControl>
         </Box>
         <Box mb={5}>
-          <Typography id="price-slider" gutterBottom>
+          <Typography id="price-slider" 
+                      style={{color: maxTutorPriceVisible === 0 && tutorsForSubject.length === 0 ? '#bdbdbd' : ''}} 
+                      gutterBottom>
             Price per hour:
-            </Typography>
+          </Typography>
           <Grid container spacing={7}>
             <Grid item xs={8}>
-              <Slider value={maxTutorPrice} min={0} max={maxTutorPriceVisible} valueLabelDisplay="auto"
+              <Slider value={maxTutorPrice} disabled={maxTutorPriceVisible === 0 && tutorsForSubject.length === 0} min={0}
+                max={maxTutorPriceVisible} valueLabelDisplay="auto"
                 marks={marks} step={1} onChange={(event, newValue) => { setMaxTutorPrice(newValue) }} aria-labelledby="price-slider"
                 valueLabelFormat={valueLabelFormat} />
-
             </Grid>
           </Grid>
         </Box>
         <Box mb={2} ml="15%" className={classes.actionButtons}>
           <Box mr="28%">
-            <Button variant="outlined" onClick={clearFilters}>Clear</Button>
+            <Button variant="outlined" disabled={maxTutorPriceVisible === 0 && tutorsForSubject.length === 0} onClick={clearFilters}>Clear</Button>
           </Box>
           <Box>
-            <Button variant="outlined" onClick={submit}>Apply</Button>
+            <Button variant="outlined" disabled={maxTutorPriceVisible === 0 && tutorsForSubject.length === 0} onClick={submit}>Apply</Button>
           </Box>
         </Box>
       </Box>

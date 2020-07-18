@@ -69,7 +69,7 @@ function PersonalInfo({ profile, universities, studyPrograms, classesProfile, cl
     const [severity, setSeverity] = useState('');
     const [hasCertificateOfEnrolment, setHasCertificateOfEnrolment] = useState(profile.hasCertificateOfEnrolment);
     const [hasGradeExcerpt, setHasGradeExcerpt] = useState(profile.hasGradeExcerpt);
-    const [selectedLanguages, setSelectedLanguages] = useState([]);
+    const [selectedLanguages, setSelectedLanguages] = profile.languages ? useState(profile.languages) : useState([]);
     const languages = ['English', 'German', 'French', 'Italian', 'Russian', 'Chineese', 'Indian', 'Spanish'];
 
 
@@ -177,7 +177,6 @@ function PersonalInfo({ profile, universities, studyPrograms, classesProfile, cl
                 formData.append("personalStatement", values.personalStatement);
             }
             if (selectedLanguages.length > 0) {
-                console.log(selectedLanguages);
                 for (let i = 0; i < selectedLanguages.length; i++) {
                     formData.append('languages[]', selectedLanguages[i]);
                 }
@@ -196,10 +195,13 @@ function PersonalInfo({ profile, universities, studyPrograms, classesProfile, cl
                 }
             )
                 .then(res => {
+                    console.log("I am here");
+                    console.log(res);
+                    //setSelectedLanguages(res.languages);
                     setDisabled(false);
                     resetForm({ values: values });
                     setSeverity('success');
-                    console.log(res.data)
+                    //console.log(res.data)
                 })
                 .catch(err => {
                     resetForm({ values: values });
@@ -215,7 +217,6 @@ function PersonalInfo({ profile, universities, studyPrograms, classesProfile, cl
     };
 
     const handleChange = (event) => {
-        console.log(selectedLanguages);
         setSelectedLanguages(event.target.value);
     };
 
