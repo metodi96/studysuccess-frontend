@@ -1,9 +1,11 @@
-import React, { useState, useEffect } from 'react'
-import UserService from '../services/UserService'
+import React, { useState, useEffect } from 'react';
+import UserService from '../services/UserService';
 import axios from 'axios';
 import PendingBooking from '../components/PendingBooking';
 import { makeStyles, Box, InputLabel, Select, MenuItem } from '@material-ui/core';
-import confused from '../images/confused-cat.png'
+import confused from '../images/confused-cat.png';
+import ArrowUpwardIcon from '@material-ui/icons/ArrowUpward';
+import ArrowDownwardIcon from '@material-ui/icons/ArrowDownward';
 
 const useStylesBooking = makeStyles(() => ({
     container: {
@@ -92,11 +94,12 @@ function PendingBookingsView(props) {
                                 id="sort-by"
                                 value={sortMethodBookings}
                                 onChange={handleChangeSortBookings}
+                                classes={props.classesSort}
                             >
                                 <MenuItem value={1}>{"Oldest created"}</MenuItem>
                                 <MenuItem value={2}>{"Newest created"}</MenuItem>
-                                <MenuItem value={3}>{"Last bookings"}</MenuItem>
-                                <MenuItem value={4}>{"Next bookings"}</MenuItem>
+                                <MenuItem value={3}>{"Date and time"}<ArrowDownwardIcon /></MenuItem>
+                                <MenuItem value={4}>{"Date and time"}<ArrowUpwardIcon /></MenuItem>
                             </Select>
                         </Box>
                     </div>

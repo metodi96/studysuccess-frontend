@@ -46,7 +46,8 @@ const useStylesTutor = makeStyles(() => ({
         width: '1300px',
         height: '350px',
         marginLeft:'70px',
-        marginTop: '40px'
+        marginTop: '40px',
+        borderRadius: '4px'
     },
     content: {
         backgroundColor: 'white',

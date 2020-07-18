@@ -17,12 +17,20 @@ import UserService from './services/UserService';
 import LogInView from './views/LogInView';
 import PendingBookingsTutorView from './views/PendingBookingsTutorView';
 import axios from 'axios';
+import { makeStyles } from '@material-ui/styles';
+
+const useStylesSort = makeStyles(() => ({
+  root: {
+    display: 'flex'
+  }
+}));
 
 function App() {
 
   const [profile, setProfile] = useState(undefined);
   const [token, setToken] = useState(window.localStorage.getItem('jwtToken'));
   const [loading, setLoading] = useState(true);
+  const classesSort = useStylesSort();
 
   const universities = [
     {
@@ -53,7 +61,7 @@ function App() {
   useEffect(() => {
     let isMounted = true; // note this flag denote mount status
     setToken(window.localStorage.getItem('jwtToken'));
-    if (window.localStorage.getItem('jwtToken') !== null && UserService.isAuthenticated()) {
+    if (UserService.isAuthenticated()) {
       console.log(token)
       axios
         .get('http://localhost:5000/profile', {
@@ -105,7 +113,7 @@ function App() {
                 }} />
                 <Route path='/bookings/pendingTutor' render={props => {
                   if (UserService.isAuthenticated() && profile.hasCertificateOfEnrolment && profile.hasGradeExcerpt) {
-                    return <PendingBookingsTutorView {...props} />
+                    return <PendingBookingsTutorView {...props} classesSort={classesSort} />
                   } else if (!UserService.isAuthenticated()) {
                     return <Redirect to={'/auth/login'} />
                   } else if (!profile.hasCertificateOfEnrolment || !profile.hasGradeExcerpt) {
@@ -129,7 +137,7 @@ function App() {
                 }} />
                 <Route path='/bookings/current' exact render={props => {
                   if (UserService.isAuthenticated()) {
-                    return <CurrentBookingsView {...props} />
+                    return <CurrentBookingsView {...props} classesSort={classesSort} />
                   } else {
                     return <Redirect to={'/auth/login'} />
                   }
@@ -150,14 +158,14 @@ function App() {
                 }} />
                 <Route path='/bookings/past' exact render={props => {
                   if (UserService.isAuthenticated()) {
-                    return <PastBookingsView {...props} />
+                    return <PastBookingsView {...props} classesSort={classesSort} />
                   } else {
                     return <Redirect to={'/auth/login'} />
                   }
                 }} />
                 <Route path='/bookings/pending' exact render={props => {
                   if (UserService.isAuthenticated()) {
-                    return <PendingBookingsView {...props} />
+                    return <PendingBookingsView {...props} classesSort={classesSort} />
                   } else {
                     return <Redirect to={'/auth/login'} />
                   }

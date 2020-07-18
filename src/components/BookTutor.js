@@ -22,13 +22,14 @@ const useStylesBox = makeStyles(() => ({
     root: {
         maxWidth: 1200,
         maxHeight: 500,
-        borderRadius: '5px',
+        borderRadius: '4px',
         backgroundColor: 'white',
         justifyContent: 'center',
         paddingTop: '20px',
         paddingBottom: '20px',
         marginBottom: '5px',
-        display: 'block'
+        display: 'block',
+        boxShadow: '0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)'
     }
 }));
 
@@ -36,13 +37,14 @@ const useStylesBoxButtons = makeStyles(() => ({
     root: {
         maxWidth: 1200,
         maxHeight: 500,
-        borderRadius: '5px',
+        borderRadius: '4px',
         backgroundColor: 'white',
         justifyContent: 'center',
         paddingTop: '20px',
         paddingBottom: '20px',
         marginBottom: '5px',
-        display: 'flex'
+        display: 'flex',
+        boxShadow: '0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)'
     }
 }));
 
@@ -526,7 +528,7 @@ function BookTutor({ tutor, subjectId }) {
                                 </div>
                                 <div className={classesButton.root}>
                                     <Button
-                                        disabled={disabled}
+                                        disabled={disabled || proposeOptionChosen}
                                         variant="outlined"
                                         onClick={onSubmitBackup}
                                     >Book (backup)</Button>

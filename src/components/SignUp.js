@@ -128,13 +128,13 @@ function SignUp({ universities }) {
                 //use this to precisely tell what the response from the server is
                 console.log('response: ', err.response.data);
                 resetForm({ values: values });
-                if (err.response.status === 409) {                    
+                if (err.response.status === 409) {
                     setDisabled(false);
                     setSeverity('errorEmail');
                     setOpenSnackbar(true);
                 } else {
                     setSeverity('error');
-                }                
+                }
                 setOpenSnackbar(true);
             });
     }

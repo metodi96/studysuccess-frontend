@@ -16,7 +16,9 @@ const useStylesProfile = makeStyles(() => ({
         paddingTop: '50px',
         paddingBottom: '25px',
         maxWidth: '350px',
-        minWidth: '350px'
+        minWidth: '350px',
+        borderRadius: '4px',
+        boxShadow: '0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)'
     }
 }));
 
@@ -29,7 +31,8 @@ const useStylesBox = makeStyles(() => ({
         paddingLeft: '25px',
         paddingTop: '25px',
         paddingBottom: '25px',
-        width: '1270px'
+        width: '1270px',
+        borderRadius: '4px'
     }
 }));
 
@@ -72,7 +75,7 @@ const useStylesButton = makeStyles(() => ({
 
 const useStylesFavourites = makeStyles(() => ({
     container: {
-        margin: '20px 40px 40px 20px'
+        margin: '20px 40px 40px 20px',
     }
 }));
 

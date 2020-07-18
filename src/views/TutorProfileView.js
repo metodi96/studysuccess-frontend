@@ -17,10 +17,13 @@ const useStylesTutor = makeStyles(() => ({
         padding: '1em',
         margin: 'auto',
         width: '70%',
+        borderRadius: '4px'
     },
     content: {
         backgroundColor: 'white',
-        padding: '0.5em'
+        padding: '0.5em',
+        borderRadius: '4px',
+        boxShadow: '0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)'
     },
     grid: {
         flexGrow: '1'
@@ -34,7 +37,9 @@ const useStylesTutor = makeStyles(() => ({
     headline: {
         backgroundColor: 'white',
         padding: '0.5em',
-        textAlign: 'center'
+        textAlign: 'center',
+        borderRadius: '4px',
+        boxShadow: '0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)'
     }
 
 }));

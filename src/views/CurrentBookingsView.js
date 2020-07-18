@@ -5,7 +5,8 @@ import CurrentBookingAccepted from '../components/CurrentBookingAccepted';
 import CurrentBookingNotPaid from '../components/CurrentBookingNotPaid';
 import { makeStyles, Box, InputLabel, Select, MenuItem } from '@material-ui/core';
 import confused from '../images/confused-cat.png';
-import Search from '../components/Search';
+import ArrowUpwardIcon from '@material-ui/icons/ArrowUpward';
+import ArrowDownwardIcon from '@material-ui/icons/ArrowDownward';
 
 const useStylesBooking = makeStyles(() => ({
     container: {
@@ -23,8 +24,7 @@ const useStylesBooking = makeStyles(() => ({
     },
     headingSecondary: {
         marginLeft: '200px',
-        marginTop: '10px',
-        minWidth: '950px'
+        minWidth: '925px'
     },
     booking: {
         marginLeft: '100px',
@@ -36,7 +36,7 @@ const useStylesBooking = makeStyles(() => ({
     }
 }));
 
-function CurrentBookingsView(props) {
+function CurrentBookingsView({ classesSort }) {
     const [bookings, setBookings] = useState([]);
     const [acceptedInvitations, setAcceptedInvitations] = useState([]);
     const [bookingsNotPaid, setBookingsNotPaid] = useState([]);
@@ -185,8 +185,8 @@ function CurrentBookingsView(props) {
     if (!loading && !loadingSecond && !loadingThird) {
         if (bookings.length > 0 || acceptedInvitations.length > 0 || bookingsNotPaid.length > 0) {
             return (
-                <div>
-                    <h3 className={classesBooking.heading}>You have {bookings.length + acceptedInvitations.length} scheduled lessons in total.</h3>
+                <div> 
+                <h3 className={classesBooking.heading}>You have {bookings.length + acceptedInvitations.length} scheduled lessons in total.</h3>    
                     {
                         bookings.length > 0 ?
                             <div style={{ display: 'flex' }}>
@@ -198,11 +198,12 @@ function CurrentBookingsView(props) {
                                         id="sort-by"
                                         value={sortMethodBookings}
                                         onChange={handleChangeSortBookings}
+                                        classes={classesSort}
                                     >
                                         <MenuItem value={1}>{"Newest created"}</MenuItem>
                                         <MenuItem value={2}>{"Oldest created"}</MenuItem>
-                                        <MenuItem value={3}>{"Last bookings"}</MenuItem>
-                                        <MenuItem value={4}>{"Next bookings"}</MenuItem>
+                                        <MenuItem value={3}>{"Date and time"}<ArrowDownwardIcon /></MenuItem>
+                                        <MenuItem value={4}>{"Date and time"}<ArrowUpwardIcon /></MenuItem>
                                     </Select>
                                 </Box>
                             </div>
@@ -222,11 +223,12 @@ function CurrentBookingsView(props) {
                                         id="sort-by"
                                         value={sortMethodInvitations}
                                         onChange={handleChangeSortInvitations}
+                                        classes={classesSort}
                                     >
                                         <MenuItem value={1}>{"Oldest created"}</MenuItem>
                                         <MenuItem value={2}>{"Newest created"}</MenuItem>
-                                        <MenuItem value={3}>{"Last bookings"}</MenuItem>
-                                        <MenuItem value={4}>{"Next bookings"}</MenuItem>
+                                        <MenuItem value={3}>{"Date and time"}<ArrowDownwardIcon /></MenuItem>
+                                        <MenuItem value={4}>{"Date and time"}<ArrowUpwardIcon /></MenuItem>
                                     </Select>
                                 </Box>
                             </div>
@@ -247,11 +249,12 @@ function CurrentBookingsView(props) {
                                         id="sort-by"
                                         value={sortMethodPending}
                                         onChange={handleChangeSortPending}
+                                        classes={classesSort}
                                     >
                                         <MenuItem value={1}>{"Oldest created"}</MenuItem>
                                         <MenuItem value={2}>{"Newest created"}</MenuItem>
-                                        <MenuItem value={3}>{"Last bookings"}</MenuItem>
-                                        <MenuItem value={4}>{"Next bookings"}</MenuItem>
+                                        <MenuItem value={3}>{"Date and time"}<ArrowDownwardIcon /></MenuItem>
+                                        <MenuItem value={4}>{"Date and time"}<ArrowUpwardIcon /></MenuItem>
                                     </Select>
                                 </Box>
                             </div>

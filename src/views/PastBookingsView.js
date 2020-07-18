@@ -4,6 +4,8 @@ import PastBooking from '../components/PastBooking'
 import { makeStyles, Box, InputLabel, Select, MenuItem } from '@material-ui/core';
 import confused from '../images/confused-cat.png'
 import Search from '../components/Search';
+import ArrowUpwardIcon from '@material-ui/icons/ArrowUpward';
+import ArrowDownwardIcon from '@material-ui/icons/ArrowDownward';
 
 const useStylesBooking = makeStyles(() => ({
     container: {
@@ -16,7 +18,7 @@ const useStylesBooking = makeStyles(() => ({
     },
     heading: {
         marginLeft: '200px',
-        minWidth: '925px'
+        minWidth: '900px'
     },
     booking: {
         marginLeft: '100px',
@@ -28,7 +30,7 @@ const useStylesBooking = makeStyles(() => ({
     }
 }));
 
-function PastBookingsView(props) {
+function PastBookingsView({classesSort}) {
     const [bookings, setBookings] = useState(undefined);
     const [loading, setLoading] = useState(true);
     const [token, setToken] = useState(window.localStorage.getItem('jwtToken'));
@@ -91,11 +93,12 @@ function PastBookingsView(props) {
                                 id="sort-by"
                                 value={sortMethodBookings}
                                 onChange={handleChangeSortBookings}
+                                classes={classesSort}
                             >
                                 <MenuItem value={1}>{"Oldest created"}</MenuItem>
                                 <MenuItem value={2}>{"Newest created"}</MenuItem>
-                                <MenuItem value={3}>{"Last bookings"}</MenuItem>
-                                <MenuItem value={4}>{"Next bookings"}</MenuItem>
+                                <MenuItem value={3}>{"Date and time"}<ArrowDownwardIcon /></MenuItem>
+                                <MenuItem value={4}>{"Date and time"}<ArrowUpwardIcon /></MenuItem>
                             </Select>
                         </Box>
                     </div>
