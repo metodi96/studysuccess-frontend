@@ -51,7 +51,10 @@ function PendingBookingsView(props) {
                 .then(res => {
                     if (isMounted) {
                         console.log(res.data);
-                        setInvitations(res.data.sort((bookingA, bookingB) => bookingB.booking.createdAt.localeCompare(bookingA.booking.createdAt)));
+                        setInvitations(res.data.filter(invitation => {
+                            const date = new Date(invitation.booking.timeslotStart);
+                            return date >= new Date()
+                        }).sort((bookingA, bookingB) => bookingB.booking.createdAt.localeCompare(bookingA.booking.createdAt)));
                         setLoading(false);
                     }
                 })

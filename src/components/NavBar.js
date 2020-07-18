@@ -95,7 +95,10 @@ function Navbar() {
                 })
                 .then(res => {
                     if (isMounted) {
-                        setPendingNumber(res.data.length);
+                        setPendingNumber(res.data.filter(invitation => {
+                            const date = new Date(invitation.booking.timeslotStart);
+                            return date >= new Date()
+                        }).length);
                     }
                 })
                 .catch(err => {
