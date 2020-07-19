@@ -5,7 +5,6 @@ import TutorsView from './views/TutorsView';
 import MainView from './views/MainView'
 import CurrentBookingsView from './views/CurrentBookingsView';
 import NavBar from './components/NavBar';
-import Footer from './components/Footer';
 import BookTutorView from './views/BookTutorView';
 import BookingAddSuccessView from './views/BookingAddSuccessView';
 import PastBookingsView from './views/PastBookingsView';
@@ -22,6 +21,16 @@ import { makeStyles } from '@material-ui/styles';
 const useStylesSort = makeStyles(() => ({
   root: {
     display: 'flex'
+  },
+
+  footer: {
+    position: 'fixed',
+    left: '0',
+    bottom: '0',
+    width: '100%',
+    backgroundColor: 'rgba(152, 158, 157)',
+    color: 'white',
+    textAlign: 'center'
   }
 }));
 
@@ -176,8 +185,10 @@ function App() {
               </Switch>
             </div>
           </div>
-          <Footer />
-        </div>
+            <div className={classesSort.footer}>
+              <p>{new Date().getFullYear()} StudySuccess. All rights reserved.</p>
+            </div>
+         </div>
       </Router> : <div style={{marginBottom: '1080px'}}>Loading page...</div>
   );
 }
