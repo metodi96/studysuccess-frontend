@@ -58,25 +58,40 @@ function FavouriteTutorsList({ profile }) {
     const classesTutor = useStylesTutor();
     return (
         <div className={classesFavourites.container}>
-            <div className={classesFavourites.containerTwo}>
-                <div className={classesFavourites.headline}>
-                    <Typography style={{ color: 'slategray', fontSize: '1.5em' }} component="h2">
-                        <b>Your favourite tutors</b>
-                    </Typography>
-                </div>
-            </div>
             {
-                profile.favouriteTutors?.map(favouriteTutor => (
-                    <FavouriteTutor key={favouriteTutor._id} tutor={favouriteTutor} classesTutor={classesTutor} />
-                ))
+                profile.favouriteTutors !== undefined && profile.favouriteTutors.length > 0 ?
+                    <div>
+                        <div className={classesFavourites.containerTwo}>
+                            <div className={classesFavourites.headline}>
+                                <Typography style={{ color: 'slategray', fontSize: '1.5em' }} component="h2">
+                                    <b>Your favourite tutors</b>
+                                </Typography>
+                            </div>
+                        </div>
+                        {
+                            profile.favouriteTutors?.map(favouriteTutor => (
+                                <FavouriteTutor key={favouriteTutor._id} tutor={favouriteTutor} classesTutor={classesTutor} />
+                            ))
+                        }
+                    </div>
+                    :
+                    <div>
+                        <div className={classesFavourites.containerTwo}>
+                            <div className={classesFavourites.headline}>
+                                <Typography style={{ color: 'slategray', fontSize: '1.5em' }} component="h2">
+                                    <b>Your favourite tutors</b>
+                                </Typography>
+                            </div>
+                        </div>
+                        <div className={classesTutor.container}>
+                            <div className={classesTutor.content} style={{textAlign: 'center'}}>
+                                <Typography component="h3">
+                                    You currently don't have any favourite tutors.
+                                </Typography>
+                            </div>
+                        </div>
+                    </div>
             }
-            <div className={classesTutor.container}>
-                <div className={classesTutor.content}>
-                    <Typography component="h3">
-                        You currently don't have any favourite tutors.
-                    </Typography>
-                </div>
-            </div>
         </div>
     )
 }
