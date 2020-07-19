@@ -19,10 +19,11 @@ import { SortMethodContext } from './SortMethodContext'
 import { MenuItem } from '@material-ui/core';
 
 const useStyles = makeStyles((theme) => ({
-    root: {
-        width: '100%',
-        maxWidth: '36ch',
-        backgroundColor: theme.palette.background.paper,
+    content: {
+        backgroundColor: 'white',
+        padding: '0.5em',
+        borderRadius: '4px',
+        boxShadow: '0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)'
     },
     inline: {
         display: 'flex',
@@ -34,13 +35,6 @@ const useStyles = makeStyles((theme) => ({
         marginTop: theme.spacing(1),
         marginLeft: theme.spacing(1)
     },
-    listItem: {
-        display: 'block',
-        width: theme.spacing(120),
-        backgroundColor: theme.palette.background.paper,
-        borderRadius: '4px',
-        boxShadow: '0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)'
-    },
     tutorDescription: {
         overflow: 'hidden',
         whiteSpace: 'nowrap',
@@ -50,7 +44,7 @@ const useStyles = makeStyles((theme) => ({
         fontWeight: 400,
         lineHeight: '1.5em',
         letterSpacing: '0.00938em',
-        marginLeft: '12.5%',
+        marginLeft: '7.6em',
         marginRight: '8%'
     },
     pricePerHour: {
@@ -58,14 +52,17 @@ const useStyles = makeStyles((theme) => ({
         fontWeight: 400,
         lineHeight: '1.5em',
         letterSpacing: '0.00938em',
-        marginRight: '3%',
+        marginRight: '0.5em',
         marginTop: '1%',
     },
-    tutorInfo: {
-        overflow: 'hidden',
-        whiteSpace: 'nowrap',
-        textOverflow: 'ellipsis',
-        width: '90%',
+    container: {
+        backgroundColor: 'rgba(152, 158, 157, 0.438)',
+        padding: '1em',
+        margin: 'auto',
+        minWidth: '60em',
+        minHeight: '29em',
+        maxWidth: '70em',
+        borderRadius: '4px',
     }
 }));
 
@@ -101,10 +98,10 @@ function TutorsList(props) {
     }, [])
     if (tutorsForSubject.length > 0) {
         return (
-            <Box style={{ borderRadius: '4px' }} bgcolor="rgba(152, 158, 157, 0.438)" width="80%" py={2} pl={3}>
-                <Box pl={2} display='flex'>
+            <Box className={classes.container} style={{ borderRadius: '4px' }} bgcolor="rgba(152, 158, 157, 0.438)">
+                <Box pl={2}  display='flex'>
                     <Box mr="60%">{tutorsForSubject.length} tutor(s) match(es) your search</Box>
-                    <Box>
+                    <Box style={{paddingRight: '1em'}}>
                         <InputLabel id="sort-by-label">Sort by</InputLabel>
                         <Select
                             labelId="sort-by-label"
@@ -123,7 +120,7 @@ function TutorsList(props) {
                     {
                         tutorsForSubject.map(tutor => {
                             return <ListItem key={tutor._id}>
-                                <Box style={{ borderRadius: '4px' }} bgcolor="white" width="80%" className={classes.listItem}>
+                                <Box style={{ borderRadius: '4px', margin: 'auto' }} bgcolor="white" width="80%" className={classes.content}>
                                     <Box className={classes.inline}>
                                         <ListItemAvatar>
                                             <Avatar alt={tutor.firstname} src={`http://localhost:5000/${tutor.userImage}`} className={classes.avatar} />
@@ -151,13 +148,15 @@ function TutorsList(props) {
                                             </Typography>
                                         </div>
                                     </Box>
-                                    <Box style={{ display: "flex" }}>
+                                    <Box style={{ display: 'flex'}}>
                                         <div className={classes.tutorDescription}>
                                             {tutor.personalStatement !== undefined ? tutor.personalStatement : <i>No description</i>}
-                                        </div>
-                                        <Button variant="outlined" style={{ marginBottom: '2%' }} endIcon={<DoubleArrowOutlinedIcon />} component={Link}
-                                            to={`/tutors/${props.subjectId}/profiles/${tutor._id}`}>See full profile</Button>
+                                        </div>              
                                     </Box>
+                                    <div style={{ textAlign: 'right' }}>
+                                        <Button variant="outlined" style={{ marginBottom: '2%'}} endIcon={<DoubleArrowOutlinedIcon />} component={Link}
+                                            to={`/tutors/${props.subjectId}/profiles/${tutor._id}`}>See full profile</Button>                                        
+                                    </div>                                    
                                 </Box>
                             </ListItem>
                         })

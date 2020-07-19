@@ -16,7 +16,7 @@ function TutorsView({ match }) {
     return (
         <Box>
             <div style={{ textAlign: 'center', position: 'relative' }}>
-                <div style={{ marginLeft: '1%' }}>
+                <div style={{ marginLeft: '1em' }}>
                     <Search subjectIdParam={match.params.subjectId}></Search>
                 </div>
                 {
@@ -34,7 +34,7 @@ function TutorsView({ match }) {
                     </div> : null
                 }
             </div>
-            <Box style={{ display: "flex", minWidth: '1280px' }} mt="1%">
+            <Box style={{ display: "flex"}} mt="1%" maxWidth = "70%">
                 <TutorsContext.Provider value={{ tutorsForSubject, setTutorsForSubject }}>
                     <SortMethodContext.Provider value={{sortMethod, setSortMethod}}>
                         <Filters subjectId={match.params.subjectId}></Filters>

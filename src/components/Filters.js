@@ -34,7 +34,10 @@ const useStyles = makeStyles((theme) => ({
     marginBottom: 20
   },
   actionButtons: {
-    display: 'flex'
+    display: 'flex',
+    paddingBottom: '8em',
+    marginLeft: '5em',
+    marginBottom: '2em'
   },
   markedButton: {
     fontSize: 'small',
@@ -44,12 +47,14 @@ const useStyles = makeStyles((theme) => ({
   },
   wrapperBox: {
     backgroundColor: 'white',
-    marginRight: '3%',
+    marginRight: '2em',
     borderRadius: '4px',
-    minWidth: '26%',
-    maxWidth: '26%',
+    minWidth: '26em',
+    maxWidth: '26em',
+    minHeight: '29em',
+    maxHeight: '29em',
     boxShadow: '0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)',
-    marginLeft: '1%'
+    marginLeft: '1em',
     //marginLeft: '1%'
     //width: '100%',
     //maxWidth: 360,
@@ -136,7 +141,7 @@ function Filters(props) {
 
   const classes = useStyles();
   return (
-      <Box className={classes.wrapperBox} width="90%" height="80%" bgcolor="white" py={2} pl={3} mr={3}>
+      <Box className={classes.wrapperBox} bgcolor="white" py={2} pl={3}>
         <Box style={{color: maxTutorPriceVisible === 0 && tutorsForSubject.length === 0 ? '#bdbdbd' : ''}}  
               fontSize='h5.fontSize' fontWeight='fontWeightMedium' textAlign='-webkit-center'>
           Filters
@@ -207,8 +212,8 @@ function Filters(props) {
             </Grid>
           </Grid>
         </Box>
-        <Box mb={2} ml="15%" className={classes.actionButtons}>
-          <Box mr="28%">
+        <Box className={classes.actionButtons}>
+          <Box style={{marginRight: '5em'}}>
             <Button variant="outlined" disabled={maxTutorPriceVisible === 0 && tutorsForSubject.length === 0} onClick={clearFilters}>Clear</Button>
           </Box>
           <Box>
