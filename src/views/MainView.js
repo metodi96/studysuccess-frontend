@@ -42,9 +42,10 @@ const useStylesTutor = makeStyles(() => ({
     container: {
         backgroundColor: 'rgba(152, 158, 157, 0.438)',
         padding: '2em',
-        width: '75%',
+        width: '90%',
         height: '25%',
-        marginLeft: '10%',
+        marginLeft: '3%',
+        marginRight: '5%',
         marginTop: '5%',
         borderRadius: '4px'
     },

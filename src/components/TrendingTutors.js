@@ -25,7 +25,7 @@ function TrendingTutors() {
 
     if (!loading) {
         return (
-            <div style={{ display: 'flex' }}>
+            <div style={{ display: 'flex', justifyContent: 'center' }}>
                 {tutors.map(tutor => (
                     <TrendingTutor key={tutor._id} tutor={tutor} />
                 ))}
