@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import Box from '@material-ui/core/Box';
-import { Button, Typography, Snackbar, Tooltip, Divider } from '@material-ui/core';
+import { Button, Typography, Snackbar, Tooltip, Divider, MenuItem } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 import MomentUtils from '@date-io/moment';
 import { MuiPickersUtilsProvider, KeyboardDatePicker } from '@material-ui/pickers';
 import moment from 'moment';
-import { Formik, Form } from 'formik';
+import { Formik, Form, Field } from 'formik';
 import axios from 'axios';
 import Radio from '@material-ui/core/Radio';
 import RadioGroup from '@material-ui/core/RadioGroup';
@@ -21,7 +21,7 @@ import Alert from './Alert';
 const useStylesBox = makeStyles(() => ({
     root: {
         maxWidth: 1200,
-        maxHeight: 500,
+        maxHeight: 550,
         borderRadius: '4px',
         backgroundColor: 'white',
         justifyContent: 'center',
@@ -91,7 +91,19 @@ const useStylesSuggest = makeStyles((theme) => ({
     }
 }));
 
-
+const useStylesSelect = makeStyles(() => ({
+    root: {
+        '& .MuiSelect-select.MuiSelect-select': {
+            backgroundColor: 'white !important',
+            fontSize: '14px',
+        },
+        marginBottom: '20px',
+        marginRight: '-20px',
+        minWidth: '250px',
+        maxWidth: '250px',
+        marginLeft: '33px'
+    }
+}));
 
 function BookTutor({ tutor, subjectId }) {
     const [subject, setSubject] = useState(undefined);
@@ -114,12 +126,14 @@ function BookTutor({ tutor, subjectId }) {
     const [openSnackbar, setOpenSnackbar] = useState(false);
     const [severity, setSeverity] = useState('');
     const [forwardLink, setForwardLink] = useState('');
+    const [subjectIdSelected, setSubjectIdSelected] = useState(subjectId);
     const classesBox = useStylesBox();
     const classesBoxButtons = useStylesBoxButtons();
     const classesDatePicker = useStylesDatePicker();
     const classesButton = useStylesButton();
     const classesTimePicker = useStylesTimepicker();
     const classesSuggest = useStylesSuggest();
+    const classesSelect = useStylesSelect();
 
     const initialValues = {
         timeFrom: proposedTimeslotFrom,
@@ -160,7 +174,7 @@ function BookTutor({ tutor, subjectId }) {
             .catch(err => {
                 console.log(`Something went wrong with getting time preferences ${err}`);
             })
-        axios.get(`http://localhost:5000/subjects/${subjectId}`)
+        axios.get(`http://localhost:5000/subjects/${subjectIdSelected}`)
             .then(res => {
                 if (res.status === 200 && isMounted) {
                     setSubject(res.data);
@@ -264,7 +278,7 @@ function BookTutor({ tutor, subjectId }) {
                     timeslotEnd: timeslotEnd,
                     participantNumber: 1,
                     tutor: tutor._id,
-                    subject: subjectId,
+                    subject: subjectIdSelected,
                 },
                 {
                     headers: headers
@@ -302,7 +316,7 @@ function BookTutor({ tutor, subjectId }) {
                     timeslotEnd: timeslotEnd,
                     participantNumber: 1,
                     tutor: tutor._id,
-                    subject: subjectId,
+                    subject: subjectIdSelected,
                     week: week,
                     timePreferenceId: timePreferenceId,
                 },
@@ -345,7 +359,7 @@ function BookTutor({ tutor, subjectId }) {
                     timeslotEnd: timeslotEnd,
                     participantNumber: 1,
                     tutor: tutor._id,
-                    subject: subjectId,
+                    subject: subjectIdSelected,
                     week: week,
                     timePreferenceId: timePreferenceId,
                 },
@@ -398,6 +412,10 @@ function BookTutor({ tutor, subjectId }) {
         }
     };
 
+    const handleSelectChange = event => {
+        setSubjectIdSelected(event.target.value)
+    }
+
     return (
         <div>
             {
@@ -410,8 +428,26 @@ function BookTutor({ tutor, subjectId }) {
                                 {
                                     !loadingSubject ?
                                         <div style={{ textAlign: 'center', paddingBottom: '20px', fontSize: '1.25rem' }}>
-                                            <span ><b>Subject:</b> {subject.name}</span>
-                                        </div> : null
+                                            <div style={{position: 'relative'}}><b style={{position: 'absolute', left: '20%', top: '18%'}}>Subject:</b> <Field
+                                                component={TextField}
+                                                type="text"
+                                                name="subject"
+                                                label="Subject"
+                                                select
+                                                variant="outlined"
+                                                classes={classesSelect}
+                                                onChange={handleSelectChange}
+                                                value={subjectIdSelected}
+                                            >
+                                                {tutor.subjectsToTeach.map(option => (
+                                                    <MenuItem key={option._id} value={option._id}>
+                                                        {option.name}
+                                                    </MenuItem>
+                                                ))}
+                                            </Field>
+                                            </div>
+                                        </div>
+                                        : null
                                 }
                                 <Divider />
                                 <div style={{ padding: 20 }}>
@@ -526,7 +562,7 @@ function BookTutor({ tutor, subjectId }) {
                                         disabled={disabled}
                                         variant="outlined"
                                         type="submit"
-                                    >{ !proposeOptionChosen ? 'Book and pay tutorial' : 'Propose time' }</Button>
+                                    >{!proposeOptionChosen ? 'Book and pay tutorial' : 'Propose time'}</Button>
                                 </div>
                                 <div className={classesButton.root}>
                                     <Button
