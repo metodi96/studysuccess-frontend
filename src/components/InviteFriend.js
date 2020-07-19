@@ -92,11 +92,12 @@ function InviteFriend({ booking, classesAvatar, openInvitationAlert, setOpenInvi
     const inviteFriend = values => {
         setToken(window.localStorage.getItem('jwtToken'));
         let friendAlreadyInvited = invitations.some(invitation => invitation.toUser.email === values.email);
+        let friendIsTutor = values.email === booking.tutor.email;
         let friendIsMe = UserService.getCurrentUser().email === values.email;
         console.log('Booking ID')
         if (window.localStorage.getItem('jwtToken') !== null) {
             console.log(`Inviting friend with email ${values.email} ${booking._id} now...`);
-            if (booking._id !== undefined && !friendAlreadyInvited && !friendIsMe) {
+            if (booking._id !== undefined && !friendAlreadyInvited && !friendIsMe && !friendIsTutor) {
                 axios.post(`http://localhost:5000/bookings/current/invite/`,
                     {
                         friendEmail: values.email,
@@ -117,7 +118,10 @@ function InviteFriend({ booking, classesAvatar, openInvitationAlert, setOpenInvi
                     })
             } else if (friendAlreadyInvited) {
                 setSeverity('warning');
-            } else if (friendIsMe) {
+            } else if (friendIsTutor) {
+                setSeverity('warningTutor');
+            }
+            else if (friendIsMe) {
                 setSeverity('warningMe');
             }
         }
@@ -191,6 +195,12 @@ function InviteFriend({ booking, classesAvatar, openInvitationAlert, setOpenInvi
                             You can't invite yourself!
                         </Alert>
                     </Snackbar>
+            case 'warningTutor':
+                return <Snackbar open={openSnackbar} autoHideDuration={2500} onClose={handleCloseSnackbar}>
+                    <Alert onClose={handleCloseSnackbar} severity='warning'>
+                        You can't invite the tutor!
+                        </Alert>
+                </Snackbar>        
             default:
                 return null
         }

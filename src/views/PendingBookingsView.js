@@ -10,8 +10,8 @@ import ArrowDownwardIcon from '@material-ui/icons/ArrowDownward';
 const useStylesBooking = makeStyles(() => ({
     container: {
         backgroundColor: 'rgba(152, 158, 157, 0.438)',
-        marginLeft: '200px',
-        marginRight: '200px',
+        marginLeft: '180px',
+        marginRight: '180px',
         minWidth: '1100px',
         marginBottom: '30px',
         textAlign: 'center'
@@ -21,7 +21,7 @@ const useStylesBooking = makeStyles(() => ({
         minWidth: '950px'
     },
     booking: {
-        marginLeft: '100px',
+        marginLeft: '70px',
         marginRight: '50px',
         display: 'inline-block',
         marginBottom: '50px',

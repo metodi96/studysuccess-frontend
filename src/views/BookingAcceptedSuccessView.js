@@ -22,7 +22,7 @@ function BookingAcceptedSuccessView(props) {
                         console.log(res.data);
                         setLoading(false);
                         console.log(props.location.search);
-                        //props.history.push('/bookings/current')
+                        props.history.push('/bookings/current')
                     }
                 })
                 .catch(err => {

@@ -12,7 +12,7 @@ function TrendingTutors() {
             .then(res => {
                 if (isMounted) {
                     console.log(res.data);
-                    setTutors(res.data.sort((a, b) => { return a.avgRating - b.avgRating })
+                    setTutors(res.data.filter(tutor => tutor.subjectsToTeach !== undefined && tutor.subjectsToTeach.length > 0 && tutor.avgRating !== undefined).sort((a, b) => { return b.avgRating - a.avgRating })
                         .slice(0, 4));
                     setLoading(false);
                 }
