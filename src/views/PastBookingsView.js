@@ -10,15 +10,15 @@ import ArrowDownwardIcon from '@material-ui/icons/ArrowDownward';
 const useStylesBooking = makeStyles(() => ({
     container: {
         backgroundColor: 'rgba(152, 158, 157, 0.438)',
-        marginLeft: '200px',
-        marginRight: '200px',
-        minWidth: '1100px',
+        marginLeft: '13%',
+        marginRight: '17%',
+        minWidth: '75%',
         marginBottom: '30px',
+        display: 'block',
         textAlign: 'center'
     },
     heading: {
-        marginLeft: '200px',
-        minWidth: '900px'
+        marginLeft: '13%',
     },
     booking: {
         marginLeft: '100px',
@@ -30,7 +30,7 @@ const useStylesBooking = makeStyles(() => ({
     }
 }));
 
-function PastBookingsView({classesSort}) {
+function PastBookingsView({ classesSort }) {
     const [bookings, setBookings] = useState(undefined);
     const [loading, setLoading] = useState(true);
     const [token, setToken] = useState(window.localStorage.getItem('jwtToken'));
@@ -86,7 +86,9 @@ function PastBookingsView({classesSort}) {
                 <div>
                     <div style={{ display: 'flex', marginTop: '60px' }}>
                         <h3 className={classesBooking.heading}>You completed {bookings.length} lessons.</h3>
-                        <Box>
+                    </div>
+                    <div className={classesBooking.container}>
+                        <Box style={{ paddingRight: '2em', paddingTop: '2em', float: 'right' }}>
                             <InputLabel id="sort-by-label">Sort by</InputLabel>
                             <Select
                                 labelId="sort-by-label"
@@ -101,9 +103,9 @@ function PastBookingsView({classesSort}) {
                                 <MenuItem value={4}>{"Date and time"}<ArrowUpwardIcon /></MenuItem>
                             </Select>
                         </Box>
-                    </div>
-                    <div className={classesBooking.container}>
-                        {bookings.map((booking) => (<div key={booking._id} className={classesBooking.booking}><PastBooking booking={booking} /></div>))}
+                        <div style={{paddingTop: '8.5%'}}>
+                            {bookings.map((booking) => (<div key={booking._id} className={classesBooking.booking}><PastBooking booking={booking} /></div>))}
+                        </div>
                     </div>
                 </div>
             )

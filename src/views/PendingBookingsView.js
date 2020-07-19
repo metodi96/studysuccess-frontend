@@ -10,15 +10,15 @@ import ArrowDownwardIcon from '@material-ui/icons/ArrowDownward';
 const useStylesBooking = makeStyles(() => ({
     container: {
         backgroundColor: 'rgba(152, 158, 157, 0.438)',
-        marginLeft: '180px',
-        marginRight: '180px',
-        minWidth: '1100px',
+        marginLeft: '13%',
+        marginRight: '17%',
+        minWidth: '75%',
         marginBottom: '30px',
+        display: 'block',
         textAlign: 'center'
     },
     heading: {
-        marginLeft: '200px',
-        minWidth: '950px'
+        marginLeft: '13%',
     },
     booking: {
         marginLeft: '70px',
@@ -92,7 +92,9 @@ function PendingBookingsView(props) {
                 <div>
                     <div style={{ display: 'flex', marginTop: '60px' }}>
                         <h3 className={classesBooking.heading}>You have {invitations.length} invitations to participate in tutorials.</h3>
-                        <Box>
+                    </div>
+                    <div className={classesBooking.container}>
+                        <Box style={{ paddingRight: '2em', paddingTop: '2em', float: 'right' }}>
                             <InputLabel id="sort-by-label">Sort by</InputLabel>
                             <Select
                                 labelId="sort-by-label"
@@ -107,10 +109,11 @@ function PendingBookingsView(props) {
                                 <MenuItem value={4}>{"Date and time"}<ArrowUpwardIcon /></MenuItem>
                             </Select>
                         </Box>
+                        <div style={{ paddingTop: '8.5%' }}>
+                            {invitations.map((invitation) => (<div key={invitation._id} className={classesBooking.booking}><PendingBooking history={props.history} invitation={invitation} /></div>))}
+                        </div>
                     </div>
-                    <div className={classesBooking.container}>
-                        {invitations.map((invitation) => (<div key={invitation._id} className={classesBooking.booking}><PendingBooking history={props.history} invitation={invitation} /></div>))}
-                    </div>
+
                 </div>
             )
         } else {

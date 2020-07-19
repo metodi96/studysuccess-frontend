@@ -21,13 +21,14 @@ const useStylesTutor = makeStyles(() => ({
 const useStylesBox = makeStyles(() => ({
     container: {
         backgroundColor: 'rgba(152, 158, 157, 0.438)',
-        marginLeft: '100px',
+        marginLeft: '0%',
         marginBottom: '30px',
         padding: '25px 0px 25px 25px',
         maxWidth: '375px',
         minWidth: '375px',
         borderRadius: '4px',
-        maxHeight: '500px'
+        maxHeight: '500px',
+        marginTop: '6%'
     }
 }));
 
@@ -107,8 +108,7 @@ function BookTutorView(props) {
     if (!loading) {
         return (
             <div>
-                <h2 style={{ marginLeft: '100px' }}>Book an online lesson</h2>
-                <div style={{ display: 'flex' }}>
+                <div style={{ display: 'flex', justifyContent: 'center' }}>
                     <div className={classesBox.container}>
                         <div className={classesTutor.container}>
                             <Card className={classesCard.root}>
@@ -142,7 +142,10 @@ function BookTutorView(props) {
                             </Card>
                         </div>
                     </div>
-                    <div>
+                    <div style={{ display: 'block' }}>
+                        <div style={{marginLeft: '13%'}}>
+                            <h2>Book an online lesson</h2>
+                        </div>
                         <div className={classesTutor.availability}>
                             <div className={classesBoxRight.container}>
                                 <BookTutor tutor={tutor} subjectId={subjectId} />

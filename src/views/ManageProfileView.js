@@ -25,9 +25,7 @@ const useStylesProfile = makeStyles(() => ({
 const useStylesBox = makeStyles(() => ({
     container: {
         backgroundColor: 'rgba(152, 158, 157, 0.3)',
-        marginLeft: '100px',
-        marginBottom: '30px',
-        marginTop: '25px',
+        margin: 'auto',
         paddingLeft: '25px',
         paddingTop: '25px',
         paddingBottom: '25px',

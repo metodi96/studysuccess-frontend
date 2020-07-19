@@ -16,7 +16,7 @@ const useStylesTutor = makeStyles(() => ({
         backgroundColor: 'rgba(152, 158, 157, 0.438)',
         padding: '1em',
         margin: 'auto',
-        width: '70%',
+        width: '70em',
         borderRadius: '4px'
     },
     content: {

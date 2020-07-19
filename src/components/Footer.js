@@ -7,14 +7,14 @@ const useStylesFooter = makeStyles(() => ({
     root: {
         maxHeight: '35px',
         marginTop: `calc(10% + 60px)`,
-        fontFamily: '"Titillium Web", sans-serif',
         marginLeft: '-7px',
+        fontFamily: '"Titillium Web", sans-serif',
         "& .MuiBottomNavigation-root": {
-            height: '33px',
+            height: '35px',
             justifyContent: 'left',
             backgroundColor: "rgba(152, 158, 157, 0.438)",
             position: 'absolute',
-            width: '1518px'
+            width: '101%'
         },
         "& .MuiBottomNavigationAction-label": {
             width: 'max-content'

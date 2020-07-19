@@ -10,14 +10,15 @@ import ArrowDownwardIcon from '@material-ui/icons/ArrowDownward';
 const useStylesBooking = makeStyles(() => ({
     container: {
         backgroundColor: 'rgba(152, 158, 157, 0.438)',
-        marginLeft: '180px',
-        marginRight: '180px',
+        marginLeft: '13%',
+        marginRight: '17%',
+        minWidth: '75%',
         marginBottom: '30px',
+        display: 'block',
         textAlign: 'center'
     },
     heading: {
-        marginLeft: '200px',
-        minWidth: '950px'
+        marginLeft: '13%',
     },
     booking: {
         marginLeft: '70px',
@@ -29,7 +30,7 @@ const useStylesBooking = makeStyles(() => ({
     }
 }));
 
-function PendingBookingsTutorView({classesSort}) {
+function PendingBookingsTutorView({ classesSort }) {
     const [bookingsPending, setBookingsPending] = useState([]);
     const [loading, setLoading] = useState(true);
     const [token, setToken] = useState(window.localStorage.getItem('jwtToken'));
@@ -85,7 +86,9 @@ function PendingBookingsTutorView({classesSort}) {
                 <div>
                     <div style={{ display: 'flex', marginTop: '60px' }}>
                         <h3 className={classesBooking.heading}>You have {bookingsPending.length} invitations with suggested timeslots from students.</h3>
-                        <Box>
+                    </div>
+                    <div className={classesBooking.container}>
+                        <Box style={{ paddingRight: '2em', paddingTop: '2em', float: 'right' }}>
                             <InputLabel id="sort-by-label">Sort by</InputLabel>
                             <Select
                                 labelId="sort-by-label"
@@ -100,9 +103,9 @@ function PendingBookingsTutorView({classesSort}) {
                                 <MenuItem value={4}>{"Date and time"}<ArrowUpwardIcon /></MenuItem>
                             </Select>
                         </Box>
-                    </div>
-                    <div className={classesBooking.container}>
-                        {bookingsPending.map((bookingPending) => (<div key={bookingPending._id} className={classesBooking.booking}><PendingBookingTutor bookingPending={bookingPending} /></div>))}
+                        <div style={{ paddingTop: '8.5%' }}>
+                            {bookingsPending.map((bookingPending) => (<div key={bookingPending._id} className={classesBooking.booking}><PendingBookingTutor bookingPending={bookingPending} /></div>))}
+                        </div>
                     </div>
                 </div>
             )

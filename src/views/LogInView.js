@@ -12,13 +12,10 @@ const useStylesContainer = makeStyles(() => ({
     homepagebox: {
         marginTop: "5%",
         textAlign: 'center',
-        marginLeft: '530px'
     },
     login: {
-        textAlign: 'center', 
-        height: '39vh', 
-        marginTop: '100px',
-        marginLeft: '550px'
+        textAlign: 'center',
+        height: '45vh',
     }
 }));
 
@@ -26,14 +23,20 @@ function LogInView(props) {
     const classesBox = useStylesContainer();
 
     return (
-        <div style={{ display: 'flex' }}>
+        <div style={{ display: 'flex', justifyContent: 'center' }}>
             <div>
                 <div className={classesBox.homepagebox}>
-                    <h1 className={classesBox.text}>StudySuccess</h1>
-                    <h4 className={classesBox.text} style={{ marginTop: '-12px' }}>Come to improve your studies.</h4>
-                    <h4 className={classesBox.text} style={{ marginTop: '-20px' }}>Stay because you enjoy the success.</h4>
+                    <div style={{ display: 'flex', justifyContent: 'center' }}>
+                        <div>
+                            <div style={{ display: 'flex' }}>
+                                <Avatar src={logo} alt="StudySuccess" style={{ display: 'flex' }} />
+                                <h1 className={classesBox.text} style={{ marginBottom: '0%', marginTop: '0%' }}>StudySuccess</h1>
+                            </div>
+                            <h4 className={classesBox.text} style={{ marginTop: '0%', marginBottom: '0%' }}>Come to improve your studies.</h4>
+                            <h4 className={classesBox.text} style={{ marginTop: '0%' }}>Stay because you enjoy the success.</h4>
+                        </div>
+                    </div>
                 </div>
-                <Avatar src={logo} alt="StudySuccess" style={{ position: 'absolute', marginLeft: '648px', marginTop: '-130px' }} />
                 <div className={classesBox.login}>
                     <LogIn {...props} />
                 </div>
