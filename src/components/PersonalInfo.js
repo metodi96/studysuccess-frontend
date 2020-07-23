@@ -70,7 +70,7 @@ function PersonalInfo({ profile, universities, studyPrograms, classesProfile, cl
     const [hasCertificateOfEnrolment, setHasCertificateOfEnrolment] = useState(profile.hasCertificateOfEnrolment);
     const [hasGradeExcerpt, setHasGradeExcerpt] = useState(profile.hasGradeExcerpt);
     const [selectedLanguages, setSelectedLanguages] = useState(profile.languages || []);
-    const languages = ['English', 'German', 'French', 'Italian', 'Russian', 'Chineese', 'Indian', 'Spanish'];
+    const languages = ['English', 'German', 'French', 'Italian', 'Russian', 'Chinese', 'Indian', 'Spanish'];
 
     const initialValues = {
         firstname: profile.firstname,
