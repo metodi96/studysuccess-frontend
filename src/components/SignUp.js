@@ -97,7 +97,7 @@ function SignUp({ universities }) {
         email: Yup.string().email('Invalid email format').required('This field is obligatory'),
         password: Yup.string().required('This field is obligatory'),
         university: Yup.string().required('This field is obligatory'),
-        terms: Yup.boolean(true).required("You need to agree to the terms.").oneOf([true], "Error")
+        terms: Yup.bool().oneOf([true], "You need to agree to the terms and conditions.")
     });
 
     const handleCloseSnackbar = (event, reason) => {
@@ -178,7 +178,7 @@ function SignUp({ universities }) {
                                 validationSchema={validationSchema}
                                 onSubmit={onSubmit}>
                                 {
-                                    formik => (
+                                    ({ errors, touched }) => (
                                         <Form>
                                             <div>
                                                 <Field
@@ -259,7 +259,7 @@ function SignUp({ universities }) {
                                                             />}
                                                             label="I agree to the terms and conditions.*"
                                                         />
-                                                        {formik.getFieldMeta('terms').error ? <FormHelperText error style={{ textAlign: 'center' }}>You need to agree to the terms and conditions.</FormHelperText> : null}
+                                                       { errors.terms && touched.terms ? <FormHelperText error style={{ textAlign: 'center' }}>{errors.terms}</FormHelperText> : null }
                                                     </FormGroup>
                                                 </FormControl>
                                             </div>

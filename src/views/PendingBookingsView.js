@@ -103,8 +103,8 @@ function PendingBookingsView(props) {
                                 onChange={handleChangeSortBookings}
                                 classes={props.classesSort}
                             >
-                                <MenuItem value={1}>{"Oldest created"}</MenuItem>
-                                <MenuItem value={2}>{"Newest created"}</MenuItem>
+                                <MenuItem value={1}>{"Newest created"}</MenuItem>
+                                <MenuItem value={2}>{"Oldest created"}</MenuItem>
                                 <MenuItem value={3}>{"Date and time"}<ArrowDownwardIcon /></MenuItem>
                                 <MenuItem value={4}>{"Date and time"}<ArrowUpwardIcon /></MenuItem>
                             </Select>
