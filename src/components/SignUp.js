@@ -130,7 +130,7 @@ function SignUp({ universities }) {
                 resetForm({ values: values });
                 if (err.response.status === 409) {
                     setDisabled(false);
-                    setSeverity('errorEmail');
+                    setSeverity('emailError');
                     setOpenSnackbar(true);
                 } else {
                     setSeverity('error');
