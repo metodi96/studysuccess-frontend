@@ -152,11 +152,13 @@ function PersonalInfo({ profile, universities, studyPrograms, classesProfile, cl
         formData.append("lastname", values.lastname);
         formData.append("email", values.email);
         formData.append("university", values.university);
-        formData.append("semester", values.semester);
+        if (values.semester !== undefined && values.semester !== '') {
+            formData.append("semester", values.semester);
+        }
         if (values.studyProgram !== '' && values.studyProgram !== undefined) {
             formData.append("studyProgram", values.studyProgram);
         }
-        if (values.degree !== undefined) {
+        if (values.degree !== undefined && values.degree !== '') {
             formData.append("degree", values.degree);
         }
         if (selectedFile !== null) {
