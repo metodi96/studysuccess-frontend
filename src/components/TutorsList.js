@@ -1,4 +1,4 @@
-import React, { useState, useContext, useEffect } from 'react'
+import React, { useContext, useEffect } from 'react'
 import { makeStyles } from '@material-ui/core/styles';
 import Box from '@material-ui/core/Box';
 import axios from 'axios';
@@ -95,7 +95,7 @@ function TutorsList(props) {
                 console.log(err);
             })
         return () => { isMounted = false } // use effect cleanup to set flag false, if unmounted
-    }, [])
+    }, [props.subjectId, setTutorsForSubject])
     if (tutorsForSubject.length > 0) {
         return (
             <Box className={classes.container} style={{ borderRadius: '4px' }} bgcolor="rgba(152, 158, 157, 0.438)">

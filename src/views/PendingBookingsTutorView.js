@@ -66,16 +66,16 @@ function PendingBookingsTutorView({ classesSort }) {
     const handleChangeSortBookings = (event) => {
         setSortMethodBookings(event.target.value);
         console.log(sortMethodBookings)
-        if (event.target.value == 1) {
+        if (event.target.value === 1) {
             setBookingsPending(bookingsPending.sort((bookingA, bookingB) => bookingB.createdAt.localeCompare(bookingA.createdAt)));
         }
-        else if (event.target.value == 2) {
+        else if (event.target.value === 2) {
             setBookingsPending(bookingsPending.sort((bookingA, bookingB) => bookingA.createdAt.localeCompare(bookingB.createdAt)));
         }
-        else if (event.target.value == 3) {
+        else if (event.target.value === 3) {
             setBookingsPending(bookingsPending.sort((bookingA, bookingB) => bookingB.timeslotEnd.localeCompare(bookingA.timeslotEnd)))
         }
-        else if (event.target.value == 4) {
+        else if (event.target.value === 4) {
             setBookingsPending(bookingsPending.sort((bookingA, bookingB) => bookingA.createdAt.localeCompare(bookingB.timeslotEnd)))
         }
     }
@@ -115,7 +115,7 @@ function PendingBookingsTutorView({ classesSort }) {
                     <div>
                         <span>You currently don't have any pending invitations from students.</span>
                     </div>
-                    <img width='150px' height='150px' src={confused} />
+                    <img width='150px' height='150px' alt='confused' src={confused} />
                 </div>
             )
         }

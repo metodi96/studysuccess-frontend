@@ -80,7 +80,7 @@ function Filters(props) {
   const [language, setLanguage] = useState('');
   const [languages, setLanguages] = useState([]);
   const { tutorsForSubject, setTutorsForSubject } = useContext(TutorsContext);
-  const { sortMethod, setSortMethod } = useContext(SortMethodContext);
+  const { sortMethod } = useContext(SortMethodContext);
   const [maxTutorPriceVisible, setMaxTutorPriceVisible] = useState(0);
   const [marks, setMarks] = useState([]);
   const classesIcon = useStylesIcon();
@@ -95,7 +95,7 @@ function Filters(props) {
         return tutorsForSubject.map(tutor => tutor.languages).flat().filter((v, i, a) => a.indexOf(v) === i);
       });
     }
-  });
+  }, [maxTutorPriceVisible, tutorsForSubject]);
   useEffect(() => {
     console.log(props.subjectId);
     if (isInitialMount.current) {

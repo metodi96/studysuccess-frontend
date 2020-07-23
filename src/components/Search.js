@@ -58,7 +58,7 @@ function Search({ subjectIdParam }) {
                 console.log(err);
             });
         return () => { isMounted = false } // use effect cleanup to set flag false, if unmounted
-    }, []);
+    }, [subjectIdParam]);
 
     const handleSearchInput = event => {
         setDisabled(true);

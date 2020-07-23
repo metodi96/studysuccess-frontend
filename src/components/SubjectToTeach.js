@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { TextField, Tooltip, IconButton } from '@material-ui/core';
 import HighlightOffIcon from '@material-ui/icons/HighlightOff';
 import axios from 'axios';
@@ -42,7 +42,7 @@ function SubjectToTeach({ subject, classesField }) {
                 </Snackbar>
             case 'error':
                 return <Snackbar open={openSnackbarSubjectsToTeach} autoHideDuration={1500} onClose={handleCloseSnackbarSubjectsToTeach}>
-                    <Alert onClose={handleCloseSnackbarSubjects} severity='error'>
+                    <Alert onClose={handleCloseSnackbarSubjectsToTeach} severity='error'>
                         Couldn't remove selected subject. Try again!
                         </Alert>
                 </Snackbar>
