@@ -81,7 +81,7 @@ function TutorProfileView(props) {
                 })
         }
         return () => { isMounted = false } // use effect cleanup to set flag false, if unmounted
-    }, [token, tutorIsInFavourites]);
+    }, [token, tutorIsInFavourites, tutorId]);
 
     useEffect(() => {
         let isMounted = true; // note this flag denote mount status

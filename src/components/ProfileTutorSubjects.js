@@ -121,7 +121,7 @@ function ProfileTutorSubjects({ classesProfile, classesSelect, profile, classesF
                 console.log(err);
             });
         return () => { isMounted = false } // use effect cleanup to set flag false, if unmounted
-    }, []);
+    }, [profile.subjectsToTeach]);
 
     useEffect(() => {
         let isMounted = true; // note this flag denote mount status
@@ -145,7 +145,7 @@ function ProfileTutorSubjects({ classesProfile, classesSelect, profile, classesF
                 });
         }
         return () => { isMounted = false } // use effect cleanup to set flag false, if unmounted
-    }, []);
+    }, [token]);
 
     const addSubject = (values) => {
         console.log(values);

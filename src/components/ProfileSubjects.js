@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import SubjectToTakeLessonsIn from './SubjectToTakeLessonsIn';
-import { MenuItem, Button, Divider } from '@material-ui/core';
+import { MenuItem, Button } from '@material-ui/core';
 import { TextField } from 'formik-material-ui';
 import axios from 'axios';
 import { Formik, Form, Field } from 'formik';
@@ -51,7 +51,7 @@ function ProfileSubjects({ classesProfile, classesSelect, profile, classesField,
                 console.log(err);
             });
         return () => { isMounted = false } // use effect cleanup to set flag false, if unmounted
-    }, []);
+    }, [profile.subjectsToTakeLessonsIn]);
 
     const addSubject = (values) => {
         console.log(values);

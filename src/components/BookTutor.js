@@ -106,7 +106,6 @@ const useStylesSelect = makeStyles(() => ({
 }));
 
 function BookTutor({ tutor, subjectId }) {
-    const [subject, setSubject] = useState(undefined);
     const [loadingSubject, setLoadingSubject] = useState(true);
     const [timePreferences, setTimePreferences] = useState([]);
     const [selectedDate, setSelectedDate] = useState(moment().add(1, 'days'));
@@ -177,13 +176,12 @@ function BookTutor({ tutor, subjectId }) {
         axios.get(`http://localhost:5000/subjects/${subjectIdSelected}`)
             .then(res => {
                 if (res.status === 200 && isMounted) {
-                    setSubject(res.data);
                     setLoadingSubject(false);
                 }
             })
             .catch(err => console.log(`Something went wrong with getting the subject from params: ${err.response.data}`))
         return () => { isMounted = false } // use effect cleanup to set flag false, if unmounted
-    }, [tutor._id])
+    }, [tutor._id, subjectIdSelected])
 
     const onChangeFrom = (event) => {
         setProposedTimeslotFrom(event.target.value);
@@ -496,7 +494,7 @@ function BookTutor({ tutor, subjectId }) {
                                                     })
                                                 }
                                                 <div className={timePreferences.length > 0 ? classesSuggest.root : classesSuggest.rootBackup}>
-                                                    <Tooltip title='Tip' aria-label='tip'><img style={{ position: 'absolute', right: '-10%', top: '-35%' }} src={tips} width='50px' height='50px' /></Tooltip>
+                                                    <Tooltip title='Tip' aria-label='tip'><img style={{ position: 'absolute', right: '-10%', top: '-35%' }} src={tips} alt='Tip' width='50px' height='50px' /></Tooltip>
                                                     <div>
                                                         <Typography style={{ fontSize: '1rem', textAlign: 'center' }}>These time slots don't work for you?</Typography>
                                                         <Typography style={{ fontSize: '1rem', textAlign: 'center' }}>Feel free to suggest another time slot to the tutor!</Typography>
@@ -569,7 +567,7 @@ function BookTutor({ tutor, subjectId }) {
                                         disabled={disabled || proposeOptionChosen}
                                         variant="outlined"
                                         onClick={onSubmitBackup}
-                                    >Book (backup)</Button>
+                                    >Book (without payment)</Button>
                                 </div>
                             </Box>
                             <div>

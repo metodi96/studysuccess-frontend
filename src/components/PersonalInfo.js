@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState} from 'react';
 import * as Yup from 'yup';
 import { TextField } from 'formik-material-ui';
 import { Formik, Form, Field } from 'formik';
@@ -69,9 +69,8 @@ function PersonalInfo({ profile, universities, studyPrograms, classesProfile, cl
     const [severity, setSeverity] = useState('');
     const [hasCertificateOfEnrolment, setHasCertificateOfEnrolment] = useState(profile.hasCertificateOfEnrolment);
     const [hasGradeExcerpt, setHasGradeExcerpt] = useState(profile.hasGradeExcerpt);
-    const [selectedLanguages, setSelectedLanguages] = profile.languages ? useState(profile.languages) : useState([]);
+    const [selectedLanguages, setSelectedLanguages] = useState(profile.languages || []);
     const languages = ['English', 'German', 'French', 'Italian', 'Russian', 'Chineese', 'Indian', 'Spanish'];
-
 
     const initialValues = {
         firstname: profile.firstname,

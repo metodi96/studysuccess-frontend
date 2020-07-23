@@ -68,7 +68,7 @@ function TrendingTutor({ tutor }) {
                 })
         }
         return () => { isMounted = false } // use effect cleanup to set flag false, if unmounted
-    }, [token]);
+    }, [token, tutor._id]);
 
     const addRemoveFavourite = () => {
         setToken(window.localStorage.getItem('jwtToken'));

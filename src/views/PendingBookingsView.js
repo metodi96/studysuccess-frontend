@@ -71,16 +71,16 @@ function PendingBookingsView(props) {
     const handleChangeSortBookings = (event) => {
         setSortMethodBookings(event.target.value);
         console.log(sortMethodBookings)
-        if (event.target.value == 1) {
+        if (event.target.value === 1) {
             setInvitations(invitations.sort((bookingA, bookingB) => bookingB.booking.createdAt.localeCompare(bookingA.booking.createdAt)));
         }
-        else if (event.target.value == 2) {
+        else if (event.target.value === 2) {
             setInvitations(invitations.sort((bookingA, bookingB) => bookingA.booking.createdAt.localeCompare(bookingB.booking.createdAt)));
         }
-        else if (event.target.value == 3) {
+        else if (event.target.value === 3) {
             setInvitations(invitations.sort((bookingA, bookingB) => bookingB.booking.timeslotEnd.localeCompare(bookingA.booking.timeslotEnd)))
         }
-        else if (event.target.value == 4) {
+        else if (event.target.value === 4) {
             setInvitations(invitations.sort((bookingA, bookingB) => bookingA.booking.createdAt.localeCompare(bookingB.booking.timeslotEnd)))
         }
     }
@@ -122,7 +122,7 @@ function PendingBookingsView(props) {
                     <div>
                         <span>You currently don't have any pending invitations.</span>
                     </div>
-                    <img width='150px' height='150px' src={confused} />
+                    <img width='150px' height='150px' alt='confused' src={confused} />
                 </div>
             )
         }

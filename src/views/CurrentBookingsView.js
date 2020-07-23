@@ -135,48 +135,48 @@ function CurrentBookingsView({ classesSort }) {
     const handleChangeSortBookings = (event) => {
         setSortMethodBookings(event.target.value);
         console.log(sortMethodBookings)
-        if (event.target.value == 1) {
+        if (event.target.value === 1) {
             setBookings(bookings.sort((bookingA, bookingB) => bookingB.createdAt.localeCompare(bookingA.createdAt)));
         }
-        else if (event.target.value == 2) {
+        else if (event.target.value === 2) {
             setBookings(bookings.sort((bookingA, bookingB) => bookingA.createdAt.localeCompare(bookingB.createdAt)));
         }
-        else if (event.target.value == 3) {
+        else if (event.target.value === 3) {
             setBookings(bookings.sort((bookingA, bookingB) => bookingB.timeslotEnd.localeCompare(bookingA.timeslotEnd)))
         }
-        else if (event.target.value == 4) {
+        else if (event.target.value === 4) {
             setBookings(bookings.sort((bookingA, bookingB) => bookingA.createdAt.localeCompare(bookingB.timeslotEnd)))
         }
     }
 
     const handleChangeSortInvitations = (event) => {
         setSortMethodInvitations(event.target.value)
-        if (event.target.value == 1) {
+        if (event.target.value === 1) {
             setAcceptedInvitations(acceptedInvitations.sort((bookingA, bookingB) => bookingB.booking.createdAt.localeCompare(bookingA.booking.createdAt)));
         }
-        else if (event.target.value == 2) {
+        else if (event.target.value === 2) {
             setAcceptedInvitations(acceptedInvitations.sort((bookingA, bookingB) => bookingA.booking.createdAt.localeCompare(bookingB.booking.createdAt)));
         }
-        else if (event.target.value == 3) {
+        else if (event.target.value === 3) {
             setAcceptedInvitations(acceptedInvitations.sort((bookingA, bookingB) => bookingB.booking.timeslotEnd.localeCompare(bookingA.booking.timeslotEnd)))
         }
-        else if (event.target.value == 4) {
+        else if (event.target.value === 4) {
             setAcceptedInvitations(acceptedInvitations.sort((bookingA, bookingB) => bookingA.booking.timeslotEnd.localeCompare(bookingB.booking.timeslotEnd)))
         }
     }
 
     const handleChangeSortPending = (event) => {
         setSortMethodPending(event.target.value)
-        if (event.target.value == 1) {
+        if (event.target.value === 1) {
             setBookingsNotPaid(bookingsNotPaid.sort((bookingA, bookingB) => bookingB.createdAt.localeCompare(bookingA.createdAt)));
         }
-        else if (event.target.value == 2) {
+        else if (event.target.value === 2) {
             setBookingsNotPaid(bookingsNotPaid.sort((bookingA, bookingB) => bookingA.createdAt.localeCompare(bookingB.createdAt)));
         }
-        else if (event.target.value == 3) {
+        else if (event.target.value === 3) {
             setBookingsNotPaid(bookingsNotPaid.sort((bookingA, bookingB) => bookingB.timeslotEnd.localeCompare(bookingA.timeslotEnd)))
         }
-        else if (event.target.value == 4) {
+        else if (event.target.value === 4) {
             setBookingsNotPaid(bookingsNotPaid.sort((bookingA, bookingB) => bookingA.createdAt.localeCompare(bookingB.timeslotEnd)))
         }
     }
@@ -279,7 +279,7 @@ function CurrentBookingsView({ classesSort }) {
                     <div>
                         <span>You currently don't have any bookings.</span>
                     </div>
-                    <img width='150px' height='150px' src={confused} />
+                    <img width='150px' height='150px' alt='confused' src={confused} />
                     <div style={{ marginTop: '25px' }}>
                         <span>Search for a subject with which you struggle and we'll find tutors for you.</span>
                     </div>
