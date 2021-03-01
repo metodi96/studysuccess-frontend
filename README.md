@@ -1,3 +1,5 @@
+Prerequisite: You need to run the backend located at this [repository](https://github.com/metodi96/studysuccess-backend) on port 5000
+
 ## Step 1:
 npm install // to get all dependencies
 ## Step 2: 
